@@ -77,10 +77,10 @@ export const Sidebar: React.FC<SidebarProps> = ({ className, currentPage, onPage
       {/* Footer */}
       <div className="p-4 border-t border-secondary-200">
         <div className="flex items-center justify-center space-x-2 text-xs text-secondary-500">
-          <span>© 2024</span>
+          <span>© 2025 - 2026</span>
           <span>•</span>
           <span>Powered by</span>
-          <span className="font-semibold text-primary-600">Websparks AI</span>
+          <span className="font-semibold text-primary-600">Bekir Filizdağ</span>
         </div>
       </div>
     </aside>

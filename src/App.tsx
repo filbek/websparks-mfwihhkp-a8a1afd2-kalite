@@ -50,11 +50,11 @@ function App() {
           <div className="max-w-7xl mx-auto px-6 lg:px-8">
             <div className="flex flex-col sm:flex-row justify-between items-center">
               <div className="flex items-center space-x-2 text-sm text-secondary-600">
-                <span>© 2024 Anadolu Hastaneleri. Tüm hakları saklıdır.</span>
+                <span>© 2025 Anadolu Hastaneleri. Tüm hakları saklıdır.</span>
               </div>
               <div className="flex items-center space-x-2 text-sm text-secondary-600 mt-2 sm:mt-0">
                 <span>Powered by</span>
-                <span className="font-semibold text-primary-600">Websparks AI</span>
+                <span className="font-semibold text-primary-600">Bekir Filizdağ</span>
               </div>
             </div>
           </div>

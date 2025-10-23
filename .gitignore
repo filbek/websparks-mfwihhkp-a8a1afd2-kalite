@@ -445,8 +445,8 @@ known_hosts
 .yarn/install-state.gz
 .pnp.*
 *.md
-kilocode/
-roo/
+.kilocode/
+.roo/
 # =================================
 # END OF FILE (DOSYA SONU)
 # =================================

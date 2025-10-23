@@ -1,0 +1,4 @@
+export const supabaseConfig = {
+  url: 'https://vrdpaqndholgfowlcghl.supabase.co',
+  anonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZyZHBhcW5kaG9sZ2Zvd2xjZ2hsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTc2Nzc3MzMsImV4cCI6MjA3MzI1MzczM30.QOmgYEhv1WtVm3AYFqqB75iTzCKgA0pDcIw5OI4cA4A'
+};

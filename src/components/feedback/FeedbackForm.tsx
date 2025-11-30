@@ -101,6 +101,21 @@ export const FeedbackForm: React.FC<FeedbackFormProps> = ({
     label: category.name
   }));
 
+  // Kategori seçimini kontrol et
+  const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+    
+    // Kategori seçildiğinde form hatalarını temizle
+    if (name === 'category_id' && value) {
+      setFormErrors(prev => {
+        const newErrors = { ...prev };
+        delete newErrors.category_id;
+        return newErrors;
+      });
+    }
+  };
+
   const priorityOptions = [
     { value: 'düşük', label: 'Düşük' },
     { value: 'orta', label: 'Orta' },

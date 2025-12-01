@@ -8,6 +8,7 @@ interface DocumentListProps {
   error: string | null;
   onDelete?: (documentId: string) => void;
   onDownload: (document: Document) => void;
+  onPreview?: (document: Document) => void;
   showActions?: boolean;
 }
 
@@ -17,6 +18,7 @@ export const DocumentList: React.FC<DocumentListProps> = ({
   error,
   onDelete,
   onDownload,
+  onPreview,
   showActions = true
 }) => {
   if (loading) {
@@ -66,6 +68,7 @@ export const DocumentList: React.FC<DocumentListProps> = ({
             document={document}
             onDownload={onDownload}
             onDelete={onDelete}
+            onPreview={onPreview}
             showActions={showActions}
           />
         ))}

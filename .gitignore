@@ -239,6 +239,7 @@ temp/
 *.db-journal
 *.sqlite-shm
 *.sqlite-wal
+*.sql
 
 # =================================
 # SUPABASE SPECIFIC (SUPABASE ÖZEL DOSYALAR)
@@ -450,4 +451,7 @@ known_hosts
 # =================================
 # END OF FILE (DOSYA SONU)
 # =================================
+
+# Supabase Config
+src/config/supabase.ts
 ```

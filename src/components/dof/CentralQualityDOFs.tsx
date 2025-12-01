@@ -4,13 +4,21 @@ import { Button } from '../ui/Button';
 import { Badge } from '../ui/Badge';
 import { SearchInput } from '../ui/SearchInput';
 import { FilterDropdown } from '../ui/FilterDropdown';
+import { Input } from '../ui/Input';
+import { Select } from '../ui/Select';
 import { DOF } from '../../types';
 import { formatDate, getStatusColor } from '../../lib/utils';
+import { useAuth } from '../../contexts/AuthContext';
+import { useDofKaynaklari } from '../../hooks/useDofKaynaklari';
+import { useDofKategorileri } from '../../hooks/useDofKategorileri';
+import { useDofKisaAciklamalar } from '../../hooks/useDofKisaAciklamalar';
+import { useDofLocations } from '../../hooks/useDofLocations';
 
 interface CentralQualityDOFsProps {
   dofs: DOF[];
   loading: boolean;
   onView: (dof: DOF) => void;
+  onEdit: (dof: DOF) => void;
   onAssign: (dof: DOF) => void;
   onClose: (dof: DOF) => void;
   onExportExcel: (facilityId?: number) => void;
@@ -20,23 +28,39 @@ export const CentralQualityDOFs: React.FC<CentralQualityDOFsProps> = ({
   dofs,
   loading,
   onView,
+  onEdit,
   onAssign,
   onClose,
   onExportExcel
 }) => {
+  const { canEditDOF } = useAuth();
+  const { kaynaklar } = useDofKaynaklari();
+  const { kategoriler } = useDofKategorileri();
+  const { locations } = useDofLocations();
+
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
   const [priorityFilter, setPriorityFilter] = useState('all');
   const [facilityFilter, setFacilityFilter] = useState('all');
+  const [tespitTarihi, setTespitTarihi] = useState('');
+  const [dofTuruFilter, setDofTuruFilter] = useState('all');
+  const [tespitEdilenYerFilter, setTespitEdilenYerFilter] = useState('all');
+  const [dofKaynagiFilter, setDofKaynagiFilter] = useState('all');
+  const [dofKategorisiFilter, setDofKategorisiFilter] = useState('all');
+  const [kisaAciklamaFilter, setKisaAciklamaFilter] = useState('all');
+
+  const { aciklamalar } = useDofKisaAciklamalar(
+    dofKategorisiFilter !== 'all' ? dofKategorisiFilter : null
+  );
 
   const statusOptions = [
     { value: 'all', label: 'Tüm Durumlar' },
-    { value: 'atanmayi_bekleyen', label: 'Atanmayı Bekleyen' },
+    { value: 'atanmayı_bekleyen', label: 'Atanmayı Bekleyen' },
     { value: 'atanan', label: 'Atanan' },
-    { value: 'kapatma_onayinda', label: 'Kapatma Onayında' },
-    { value: 'kapatildi', label: 'Kapatıldı' },
+    { value: 'kapatma_onayında', label: 'Kapatma Onayında' },
+    { value: 'kapatıldı', label: 'Kapatıldı' },
     { value: 'iptal', label: 'İptal' },
-    { value: 'reddedilen', label: 'Reddedilen' }
+    { value: 'reddedildi', label: 'Reddedildi' }
   ];
 
   const priorityOptions = [
@@ -54,14 +78,48 @@ export const CentralQualityDOFs: React.FC<CentralQualityDOFsProps> = ({
     { value: '3', label: 'Ereğli Şubesi' }
   ];
 
+  const dofTuruOptions = [
+    { value: 'all', label: 'Tüm Türler' },
+    { value: 'duzeltici', label: 'Düzeltici' },
+    { value: 'onleyici', label: 'Önleyici' }
+  ];
+
+  const tespitEdilenYerOptions = [
+    { value: 'all', label: 'Tüm Yerler' },
+    ...locations.map(loc => ({ value: loc.value, label: loc.label }))
+  ];
+
+  const dofKaynagiOptions = [
+    { value: 'all', label: 'Tüm Kaynaklar' },
+    ...kaynaklar.map(k => ({ value: k.value, label: k.label }))
+  ];
+
+  const dofKategorisiOptions = [
+    { value: 'all', label: 'Tüm Kategoriler' },
+    ...kategoriler.map(k => ({ value: k.value, label: k.label }))
+  ];
+
+  const kisaAciklamaOptions = [
+    { value: 'all', label: 'Tüm Açıklamalar' },
+    ...aciklamalar.map(a => ({ value: a.value, label: a.label }))
+  ];
+
   const filteredDOFs = dofs.filter(dof => {
     const matchesSearch = dof.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          dof.description.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesStatus = statusFilter === 'all' || dof.status === statusFilter;
     const matchesPriority = priorityFilter === 'all' || dof.priority === priorityFilter;
     const matchesFacility = facilityFilter === 'all' || dof.facility_id.toString() === facilityFilter;
+    const matchesTespitTarihi = !tespitTarihi || dof.tespit_tarihi === tespitTarihi;
+    const matchesDofTuru = dofTuruFilter === 'all' || dof.dof_turu === dofTuruFilter;
+    const matchesTespitEdilenYer = tespitEdilenYerFilter === 'all' || dof.tespit_edilen_yer === tespitEdilenYerFilter;
+    const matchesDofKaynagi = dofKaynagiFilter === 'all' || dof.dof_kaynagi === dofKaynagiFilter;
+    const matchesDofKategorisi = dofKategorisiFilter === 'all' || dof.dof_kategorisi === dofKategorisiFilter;
+    const matchesKisaAciklama = kisaAciklamaFilter === 'all' || dof.kisa_aciklama === kisaAciklamaFilter;
 
-    return matchesSearch && matchesStatus && matchesPriority && matchesFacility;
+    return matchesSearch && matchesStatus && matchesPriority && matchesFacility &&
+           matchesTespitTarihi && matchesDofTuru && matchesTespitEdilenYer &&
+           matchesDofKaynagi && matchesDofKategorisi && matchesKisaAciklama;
   });
 
   // Group DOFs by facility for stats
@@ -125,7 +183,7 @@ export const CentralQualityDOFs: React.FC<CentralQualityDOFsProps> = ({
                 <div className="grid grid-cols-2 gap-4 text-sm">
                   <div className="text-center p-3 bg-warning-50 rounded-lg">
                     <p className="text-2xl font-bold text-warning-600">
-                      {facilityDOFs.filter(d => d.status === 'atanmayi_bekleyen').length}
+                      {facilityDOFs.filter(d => d.status === 'atanmayı_bekleyen').length}
                     </p>
                     <p className="text-warning-700">Atanmayı Bekleyen</p>
                   </div>
@@ -137,13 +195,13 @@ export const CentralQualityDOFs: React.FC<CentralQualityDOFsProps> = ({
                   </div>
                   <div className="text-center p-3 bg-accent-50 rounded-lg">
                     <p className="text-2xl font-bold text-accent-600">
-                      {facilityDOFs.filter(d => d.status === 'kapatma_onayinda').length}
+                      {facilityDOFs.filter(d => d.status === 'kapatma_onayında').length}
                     </p>
                     <p className="text-accent-700">Kapatma Onayında</p>
                   </div>
                   <div className="text-center p-3 bg-success-50 rounded-lg">
                     <p className="text-2xl font-bold text-success-600">
-                      {facilityDOFs.filter(d => d.status === 'kapatildi').length}
+                      {facilityDOFs.filter(d => d.status === 'kapatıldı').length}
                     </p>
                     <p className="text-success-700">Kapatıldı</p>
                   </div>
@@ -163,7 +221,8 @@ export const CentralQualityDOFs: React.FC<CentralQualityDOFsProps> = ({
       {/* Filters */}
       <Card>
         <CardContent className="p-6">
-          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between space-y-4 lg:space-y-0">
+          <div className="space-y-4">
+            {/* First Row - Search */}
             <div className="flex-1 max-w-md">
               <SearchInput
                 placeholder="DÖF ara..."
@@ -171,7 +230,96 @@ export const CentralQualityDOFs: React.FC<CentralQualityDOFsProps> = ({
                 onSearch={setSearchTerm}
               />
             </div>
-            
+
+            {/* Second Row - Main Filters */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-secondary-700 mb-2">
+                  <i className="bi bi-calendar mr-1"></i>
+                  DÖF Tespit Tarihi
+                </label>
+                <Input
+                  type="date"
+                  value={tespitTarihi}
+                  onChange={(e) => setTespitTarihi(e.target.value)}
+                  className="w-full"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-secondary-700 mb-2">
+                  <i className="bi bi-tag mr-1"></i>
+                  DÖF Türü
+                </label>
+                <Select
+                  value={dofTuruFilter}
+                  onChange={(e) => setDofTuruFilter(e.target.value)}
+                  options={dofTuruOptions}
+                  className="w-full"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-secondary-700 mb-2">
+                  <i className="bi bi-geo-alt mr-1"></i>
+                  DÖF Tespit Edilen Bölüm/Yer
+                </label>
+                <Select
+                  value={tespitEdilenYerFilter}
+                  onChange={(e) => setTespitEdilenYerFilter(e.target.value)}
+                  options={tespitEdilenYerOptions}
+                  className="w-full"
+                />
+              </div>
+            </div>
+
+            {/* Third Row - Additional Filters */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-secondary-700 mb-2">
+                  <i className="bi bi-diagram-3 mr-1"></i>
+                  DÖF Kaynağı
+                </label>
+                <Select
+                  value={dofKaynagiFilter}
+                  onChange={(e) => setDofKaynagiFilter(e.target.value)}
+                  options={dofKaynagiOptions}
+                  className="w-full"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-secondary-700 mb-2">
+                  <i className="bi bi-folder mr-1"></i>
+                  DÖF Kategorisi
+                </label>
+                <Select
+                  value={dofKategorisiFilter}
+                  onChange={(e) => {
+                    setDofKategorisiFilter(e.target.value);
+                    setKisaAciklamaFilter('all');
+                  }}
+                  options={dofKategorisiOptions}
+                  className="w-full"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-secondary-700 mb-2">
+                  <i className="bi bi-card-text mr-1"></i>
+                  DÖF Kısa Açıklama
+                </label>
+                <Select
+                  value={kisaAciklamaFilter}
+                  onChange={(e) => setKisaAciklamaFilter(e.target.value)}
+                  options={kisaAciklamaOptions}
+                  className="w-full"
+                  disabled={dofKategorisiFilter === 'all'}
+                />
+              </div>
+            </div>
+
+            {/* Fourth Row - Status, Priority and Facility */}
             <div className="flex flex-wrap items-center gap-3">
               <FilterDropdown
                 label="Durum"
@@ -180,7 +328,7 @@ export const CentralQualityDOFs: React.FC<CentralQualityDOFsProps> = ({
                 onChange={setStatusFilter}
                 icon="bi-circle-fill"
               />
-              
+
               <FilterDropdown
                 label="Öncelik"
                 options={priorityOptions}
@@ -197,7 +345,9 @@ export const CentralQualityDOFs: React.FC<CentralQualityDOFsProps> = ({
                 icon="bi-building"
               />
 
-              {(searchTerm || statusFilter !== 'all' || priorityFilter !== 'all' || facilityFilter !== 'all') && (
+              {(searchTerm || statusFilter !== 'all' || priorityFilter !== 'all' || facilityFilter !== 'all' ||
+                tespitTarihi || dofTuruFilter !== 'all' || tespitEdilenYerFilter !== 'all' ||
+                dofKaynagiFilter !== 'all' || dofKategorisiFilter !== 'all' || kisaAciklamaFilter !== 'all') && (
                 <Button
                   variant="ghost"
                   size="sm"
@@ -206,10 +356,16 @@ export const CentralQualityDOFs: React.FC<CentralQualityDOFsProps> = ({
                     setStatusFilter('all');
                     setPriorityFilter('all');
                     setFacilityFilter('all');
+                    setTespitTarihi('');
+                    setDofTuruFilter('all');
+                    setTespitEdilenYerFilter('all');
+                    setDofKaynagiFilter('all');
+                    setDofKategorisiFilter('all');
+                    setKisaAciklamaFilter('all');
                   }}
                 >
                   <i className="bi bi-x-circle mr-1"></i>
-                  Temizle
+                  Tüm Filtreleri Temizle
                 </Button>
               )}
             </div>
@@ -283,27 +439,40 @@ export const CentralQualityDOFs: React.FC<CentralQualityDOFsProps> = ({
                           size="sm"
                           variant="ghost"
                           onClick={() => onView(dof)}
+                          title="Görüntüle"
                         >
                           <i className="bi bi-eye"></i>
                         </Button>
-                        
-                        {['atanmayi_bekleyen', 'reddedilen'].includes(dof.status) && (
+
+                        {canEditDOF(dof) && (
                           <Button
                             size="sm"
                             variant="ghost"
-                            onClick={() => onAssign(dof)}
-                            className="text-primary-600 hover:text-primary-700"
+                            onClick={() => onEdit(dof)}
+                            className="text-warning-600 hover:text-warning-700"
+                            title="Düzenle"
                           >
-                            <i className="bi bi-person-plus"></i>
+                            <i className="bi bi-pencil"></i>
                           </Button>
                         )}
-                        
-                        {dof.status === 'kapatma_onayinda' && (
+
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          onClick={() => onAssign(dof)}
+                          className="text-primary-600 hover:text-primary-700"
+                          title="Atama Yap"
+                        >
+                          <i className="bi bi-person-plus"></i>
+                        </Button>
+
+                        {dof.status === 'kapatma_onayında' && (
                           <Button
                             size="sm"
                             variant="ghost"
                             onClick={() => onClose(dof)}
                             className="text-success-600 hover:text-success-700"
+                            title="Kapat"
                           >
                             <i className="bi bi-check-circle"></i>
                           </Button>

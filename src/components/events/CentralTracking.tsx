@@ -11,7 +11,7 @@ import { eventClassifications } from '../../data/eventData';
 interface CentralTrackingProps {
   events: Event[];
   loading: boolean;
-  onExport: (format: 'csv' | 'xlsx', facilityId: number, dateFrom: string, dateTo: string) => void;
+  onExport: (format: 'csv' | 'xlsx') => void;
 }
 
 export const CentralTracking: React.FC<CentralTrackingProps> = ({
@@ -73,7 +73,7 @@ export const CentralTracking: React.FC<CentralTrackingProps> = ({
 
   const handleExport = (format: 'csv' | 'xlsx') => {
     if (!canList) return;
-    onExport(format, parseInt(filters.facility), filters.dateFrom, filters.dateTo);
+    onExport(format);
   };
 
   const generateEventCode = (event: Event) => {

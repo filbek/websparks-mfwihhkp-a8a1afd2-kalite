@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Button } from '../ui/Button';
+import { useAuth } from '../../contexts/AuthContext';
 
 type Page = 'dashboard' | 'dof-management' | 'event-reporting' | 'document-management' | 'feedback-management' | 'committees' | 'reports' | 'settings';
 
@@ -10,6 +11,13 @@ interface HeaderProps {
 
 export const Header: React.FC<HeaderProps> = ({ currentPage, onPageChange }) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const { user, logout } = useAuth();
+
+  const handleLogout = async () => {
+    if (confirm('Çıkış yapmak istediğinizden emin misiniz?')) {
+      await logout();
+    }
+  };
 
   const menuItems = [
     { id: 'dashboard' as Page, label: 'Dashboard', icon: 'bi-speedometer2' },
@@ -58,11 +66,11 @@ export const Header: React.FC<HeaderProps> = ({ currentPage, onPageChange }) => 
                 <i className="bi bi-person text-primary-600"></i>
               </div>
               <div className="text-sm">
-                <p className="font-medium text-secondary-900">Dr. Mehmet Yılmaz</p>
-                <p className="text-secondary-600">Silivri Şubesi</p>
+                <p className="font-medium text-secondary-900">{user?.display_name || 'Kullanıcı'}</p>
+                <p className="text-secondary-600">{user?.department_name || 'Şube'}</p>
               </div>
             </div>
-            <Button variant="outline" size="sm">
+            <Button variant="outline" size="sm" onClick={handleLogout}>
               <i className="bi bi-box-arrow-right mr-2"></i>
               Çıkış
             </Button>
@@ -104,11 +112,11 @@ export const Header: React.FC<HeaderProps> = ({ currentPage, onPageChange }) => 
                     <i className="bi bi-person text-primary-600"></i>
                   </div>
                   <div className="text-sm">
-                    <p className="font-medium text-secondary-900">Dr. Mehmet Yılmaz</p>
-                    <p className="text-secondary-600">Silivri Şubesi</p>
+                    <p className="font-medium text-secondary-900">{user?.display_name || 'Kullanıcı'}</p>
+                    <p className="text-secondary-600">{user?.department_name || 'Şube'}</p>
                   </div>
                 </div>
-                <Button variant="outline" size="sm" className="mx-3 mt-2">
+                <Button variant="outline" size="sm" className="mx-3 mt-2" onClick={handleLogout}>
                   <i className="bi bi-box-arrow-right mr-2"></i>
                   Çıkış
                 </Button>

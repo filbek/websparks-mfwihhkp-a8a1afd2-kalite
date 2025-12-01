@@ -52,3 +52,17 @@ export function getPriorityColor(priority: string) {
       return 'bg-secondary-100 text-secondary-700';
   }
 }
+
+export function getStatusLabel(status: string) {
+  const statusLabels: Record<string, string> = {
+    'taslak': 'Taslak',
+    'atanmayı_bekleyen': 'Atanmayı Bekleyen',
+    'atanan': 'Atanan',
+    'çözüm_bekleyen': 'Çözüm Bekleyen',
+    'kapatma_onayında': 'Kapatma Onayında',
+    'kapatıldı': 'Kapatıldı',
+    'reddedildi': 'Reddedildi',
+    'iptal': 'İptal'
+  };
+  return statusLabels[status] || status;
+}

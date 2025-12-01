@@ -3,7 +3,8 @@ import { Card, CardContent } from '../ui/Card';
 import { Badge } from '../ui/Badge';
 import { Button } from '../ui/Button';
 import { DOF } from '../../types';
-import { formatDate, getStatusColor, getPriorityColor } from '../../lib/utils';
+import { formatDate, getStatusColor, getPriorityColor, getStatusLabel } from '../../lib/utils';
+import { useAuth } from '../../contexts/AuthContext';
 
 interface DOFCardProps {
   dof: DOF;
@@ -18,6 +19,7 @@ export const DOFCard: React.FC<DOFCardProps> = ({
   onDelete,
   onView
 }) => {
+  const { canEditDOF } = useAuth();
   const handleDelete = () => {
     if (window.confirm('Bu DÖF kaydını silmek istediğinizden emin misiniz?')) {
       onDelete(dof.id);
@@ -41,7 +43,7 @@ export const DOFCard: React.FC<DOFCardProps> = ({
               {dof.priority.charAt(0).toUpperCase() + dof.priority.slice(1)}
             </span>
             <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusColor(dof.status)}`}>
-              {dof.status.replace('_', ' ').charAt(0).toUpperCase() + dof.status.replace('_', ' ').slice(1)}
+              {getStatusLabel(dof.status)}
             </span>
           </div>
         </div>
@@ -75,6 +77,25 @@ export const DOFCard: React.FC<DOFCardProps> = ({
               <span>Bitiş: {formatDate(dof.due_date)}</span>
             </div>
           )}
+
+          {(dof.comment_count && dof.comment_count > 0) && (
+            <div className="flex items-center text-sm text-secondary-600">
+              <i className="bi bi-chat-left-text mr-2"></i>
+              <span>{dof.comment_count} Yorum</span>
+            </div>
+          )}
+
+          {dof.last_comment && (
+            <div className="mt-2 p-2 bg-secondary-50 rounded border-l-2 border-primary-500">
+              <div className="flex items-center text-xs text-secondary-500 mb-1">
+                <i className="bi bi-chat mr-1"></i>
+                <span className="font-medium">{dof.last_comment.user?.display_name}</span>
+                <span className="mx-1">•</span>
+                <span>{formatDate(dof.last_comment.created_at)}</span>
+              </div>
+              <p className="text-sm text-secondary-700 line-clamp-2">{dof.last_comment.comment}</p>
+            </div>
+          )}
         </div>
 
         <div className="flex items-center justify-between pt-4 border-t border-secondary-200">
@@ -87,14 +108,16 @@ export const DOFCard: React.FC<DOFCardProps> = ({
               <i className="bi bi-eye mr-1"></i>
               Görüntüle
             </Button>
-            <Button
-              size="sm"
-              variant="ghost"
-              onClick={() => onEdit(dof)}
-            >
-              <i className="bi bi-pencil mr-1"></i>
-              Düzenle
-            </Button>
+            {canEditDOF(dof) && (
+              <Button
+                size="sm"
+                variant="ghost"
+                onClick={() => onEdit(dof)}
+              >
+                <i className="bi bi-pencil mr-1"></i>
+                Düzenle
+              </Button>
+            )}
           </div>
           <Button
             size="sm"

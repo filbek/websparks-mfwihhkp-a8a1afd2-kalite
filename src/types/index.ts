@@ -5,6 +5,7 @@ export interface User {
   role: ('personel' | 'sube_kalite' | 'merkez_kalite' | 'admin')[];
   facility_id: number;
   department_id: number | null;
+  department_name?: string;
   is_active: boolean;
   created_at: string;
   updated_at: string;
@@ -24,6 +25,7 @@ export interface DOF {
   tespit_tarihi?: string;
   dof_turu?: 'duzeltici' | 'onleyici';
   tespit_edilen_bolum?: string;
+  tespit_edilen_yer?: string;
   dof_kaynagi?: string;
   dof_kategorisi?: string;
   kisa_aciklama?: string;
@@ -36,7 +38,8 @@ export interface DOF {
   facility_id: number;
   reporter_id: string;
   assigned_to: string | null;
-  status: 'yeni' | 'atanmayi_bekleyen' | 'atanan' | 'cozum_bekliyor' | 'kapatma_onayinda' | 'kapatildi' | 'iptal' | 'reddedilen';
+  cc_users?: string[];
+  status: 'taslak' | 'atanmayı_bekleyen' | 'atanan' | 'çözüm_bekleyen' | 'kapatma_onayında' | 'kapatıldı' | 'iptal' | 'reddedildi';
   priority: 'düşük' | 'orta' | 'yüksek' | 'kritik';
   due_date: string | null;
   created_at: string;
@@ -44,6 +47,17 @@ export interface DOF {
   facility?: Facility;
   reporter?: User;
   assignee?: User;
+  cc_users_details?: User[];
+  comment_count?: number;
+  last_comment?: {
+    id: string;
+    comment: string;
+    created_at: string;
+    user?: {
+      id: string;
+      display_name: string;
+    };
+  };
 }
 
 export interface TaskAssignmentData {

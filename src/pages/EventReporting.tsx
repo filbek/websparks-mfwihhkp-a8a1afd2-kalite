@@ -9,6 +9,7 @@ import { CentralTracking } from '../components/events/CentralTracking';
 import { AssignmentModal } from '../components/events/AssignmentModal';
 import { RejectModal } from '../components/events/RejectModal';
 import { AttachmentsPanel } from '../components/events/AttachmentsPanel';
+import { EventDetailModal } from '../components/events/EventDetailModal';
 import { useEvents } from '../hooks/useEvents';
 import { Event } from '../types/events';
 
@@ -20,7 +21,7 @@ export const EventReporting: React.FC = () => {
   const [currentView, setCurrentView] = useState<EventView>('create');
   const [currentForm, setCurrentForm] = useState<EventFormType>(null);
   const [formLoading, setFormLoading] = useState(false);
-  
+
   // Modal states
   const [assignmentModal, setAssignmentModal] = useState<{ isOpen: boolean; event: Event | null }>({
     isOpen: false,
@@ -34,17 +35,32 @@ export const EventReporting: React.FC = () => {
     isOpen: false,
     event: null
   });
+  const [detailsModal, setDetailsModal] = useState<{ isOpen: boolean; event: Event | null }>({
+    isOpen: false,
+    event: null
+  });
+  const [editEvent, setEditEvent] = useState<Event | null>(null);
 
   // Mock user role - this should come from auth context
   const userRole = 'merkez_kalite'; // 'personel' | 'sube_kalite' | 'merkez_kalite' | 'admin'
 
+  // Helper function to generate event code for display
+  const generateEventCodeDisplay = (eventType: string, createdAt: string, id: string): string => {
+    const prefix = eventType === 'acil_durum' ? 'ACL' :
+                   eventType === 'hasta_guvenlik' ? 'HG' : 'CG';
+    const year = new Date(createdAt).getFullYear();
+    return `${prefix}-${year}-${id.padStart(3, '0')}`;
+  };
+
   const handleCreateEvent = async (data: Partial<Event>) => {
     setFormLoading(true);
     try {
-      await createEvent(data);
+      const newEvent = await createEvent(data);
       setCurrentForm(null);
+      return newEvent;
     } catch (error) {
       console.error('Error creating event:', error);
+      throw error;
     } finally {
       setFormLoading(false);
     }
@@ -57,9 +73,11 @@ export const EventReporting: React.FC = () => {
         status: 'atanan',
         manager_evaluation: notes
       });
-      console.log('Event assigned successfully');
+      setAssignmentModal({ isOpen: false, event: null });
+      alert('Olay başarıyla atandı ve ilgili kişiye bildirim gönderildi.');
     } catch (error) {
       console.error('Error assigning event:', error);
+      alert('Olay atanamadı. Lütfen tekrar deneyin.');
     }
   };
 
@@ -69,16 +87,60 @@ export const EventReporting: React.FC = () => {
         status: 'reddedildi',
         manager_evaluation: reason
       });
-      console.log('Event rejected successfully');
+      setRejectModal({ isOpen: false, event: null });
+      alert('Olay reddedildi ve bildiren kişiye bildirim gönderildi.');
     } catch (error) {
       console.error('Error rejecting event:', error);
+      alert('Olay reddedilemedi. Lütfen tekrar deneyin.');
     }
   };
 
   const handlePrintReport = (event: Event) => {
-    // Generate PDF report
-    console.log('Printing report for event:', event.id);
-    // In a real app, this would generate and download a PDF
+    try {
+      const printContent = `
+        OLAY BİLDİRİM RAPORU
+        ========================
+
+        Kod: ${generateEventCodeDisplay(event.event_type, event.created_at, event.id)}
+        Sınıf: ${event.event_class}
+        Tarih: ${new Date(event.event_date).toLocaleDateString('tr-TR')} ${event.event_time}
+        Yer: ${event.location}
+        Durum: ${event.status}
+
+        OLAY DETAYLARI:
+        ${event.event_details || 'Belirtilmemiş'}
+
+        ÖNERİLER:
+        ${event.suggestions || 'Belirtilmemiş'}
+
+        Rapor Tarihi: ${new Date().toLocaleString('tr-TR')}
+      `;
+
+      const printWindow = window.open('', '_blank');
+      if (printWindow) {
+        printWindow.document.write(`
+          <html>
+            <head>
+              <title>Olay Raporu - ${event.id}</title>
+              <style>
+                body { font-family: Arial, sans-serif; padding: 20px; }
+                pre { white-space: pre-wrap; }
+              </style>
+            </head>
+            <body>
+              <pre>${printContent}</pre>
+              <script>
+                window.onload = function() { window.print(); }
+              </script>
+            </body>
+          </html>
+        `);
+        printWindow.document.close();
+      }
+    } catch (error) {
+      console.error('Error printing report:', error);
+      alert('Rapor yazdırılamadı. Lütfen tekrar deneyin.');
+    }
   };
 
   const handleViewAttachments = (event: Event) => {
@@ -89,57 +151,134 @@ export const EventReporting: React.FC = () => {
     if (window.confirm('Bu olay kaydını silmek istediğinizden emin misiniz?')) {
       try {
         await updateEvent(event.id, { status: 'iptal' });
-        console.log('Event deleted successfully');
+        alert('Olay başarıyla iptal edildi.');
       } catch (error) {
         console.error('Error deleting event:', error);
+        alert('Olay iptal edilemedi. Lütfen tekrar deneyin.');
       }
     }
   };
 
   const handleViewDetails = (event: Event) => {
-    console.log('Viewing details for event:', event.id);
-    // In a real app, this would open a detailed view modal
+    setDetailsModal({ isOpen: true, event });
   };
 
-  const handleExport = (format: 'csv' | 'xlsx', facilityId?: number, dateFrom?: string, dateTo?: string) => {
-    console.log('Exporting events:', { format, facilityId, dateFrom, dateTo });
-    // In a real app, this would generate and download the export file
+  const handleEditEvent = (event: Event) => {
+    setEditEvent(event);
+    // Determine which form to open based on event type
+    if (event.event_type === 'acil_durum') {
+      setCurrentForm('emergency-code');
+    } else if (event.event_type === 'calisan_guvenlik') {
+      setCurrentForm('employee-safety');
+    } else {
+      setCurrentForm('patient-safety');
+    }
+  };
+
+  const handleUpdateEvent = async (data: Partial<Event>) => {
+    if (!editEvent) return;
+
+    setFormLoading(true);
+    try {
+      await updateEvent(editEvent.id, data);
+      setEditEvent(null);
+      setCurrentForm(null);
+      alert('Olay başarıyla güncellendi.');
+    } catch (error) {
+      console.error('Error updating event:', error);
+      alert('Olay güncellenemedi. Lütfen tekrar deneyin.');
+      throw error;
+    } finally {
+      setFormLoading(false);
+    }
+  };
+
+  const handleExport = (format: 'csv' | 'xlsx') => {
+    try {
+      const exportData = events.map(event => ({
+        'Kod': generateEventCodeDisplay(event.event_type, event.created_at, event.id),
+        'Sınıf': event.event_class,
+        'Ana Kategori': event.main_category,
+        'Alt Kategori': event.sub_category,
+        'Tarih': new Date(event.event_date).toLocaleDateString('tr-TR'),
+        'Saat': event.event_time,
+        'Yer': event.location,
+        'Puan': event.score,
+        'Durum': event.status,
+        'Şube': event.facility_id,
+        'Detaylar': event.event_details,
+        'Oluşturma Tarihi': new Date(event.created_at).toLocaleDateString('tr-TR')
+      }));
+
+      if (format === 'csv') {
+        const headers = Object.keys(exportData[0] || {});
+        const csvContent = [
+          headers.join(','),
+          ...exportData.map(row =>
+            headers.map(header => `"${row[header as keyof typeof row] || ''}"`).join(',')
+          )
+        ].join('\n');
+
+        const blob = new Blob([`\uFEFF${csvContent}`], { type: 'text/csv;charset=utf-8;' });
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = `olaylar_${new Date().toISOString().split('T')[0]}.csv`;
+        link.click();
+      } else {
+        console.log('XLSX export requires xlsx library');
+        alert('Excel export özelliği şu anda geliştirme aşamasındadır.');
+      }
+    } catch (error) {
+      console.error('Error exporting events:', error);
+      alert('Dışa aktarım başarısız. Lütfen tekrar deneyin.');
+    }
   };
 
   const getModalTitle = () => {
+    const prefix = editEvent ? 'Düzenle: ' : '';
     switch (currentForm) {
-      case 'patient-safety': return 'Hasta Güvenliği Olay Bildirimi';
-      case 'employee-safety': return 'Çalışan Güvenliği Olay Bildirimi';
-      case 'emergency-code': return 'Acil Durum Kodları';
+      case 'patient-safety': return prefix + 'Hasta Güvenliği Olay Bildirimi';
+      case 'employee-safety': return prefix + 'Çalışan Güvenliği Olay Bildirimi';
+      case 'emergency-code': return prefix + 'Acil Durum Kodları';
       default: return '';
     }
   };
 
   const renderCurrentForm = () => {
+    const isEditMode = editEvent !== null;
+    const handleSubmit = isEditMode ? handleUpdateEvent : handleCreateEvent;
+    const handleCancel = () => {
+      setCurrentForm(null);
+      setEditEvent(null);
+    };
+
     switch (currentForm) {
       case 'patient-safety':
         return (
           <PatientSafetyForm
-            onSubmit={handleCreateEvent}
-            onCancel={() => setCurrentForm(null)}
+            onSubmit={handleSubmit}
+            onCancel={handleCancel}
             loading={formLoading}
+            initialData={editEvent || undefined}
           />
         );
       case 'employee-safety':
         return (
           <EmployeeSafetyForm
-            onSubmit={handleCreateEvent}
-            onCancel={() => setCurrentForm(null)}
+            onSubmit={handleSubmit}
+            onCancel={handleCancel}
             loading={formLoading}
+            initialData={editEvent || undefined}
           />
         );
       case 'emergency-code':
         return (
           <EmergencyCodeForm
-            onSubmit={handleCreateEvent}
-            onCancel={() => setCurrentForm(null)}
+            onSubmit={handleSubmit}
+            onCancel={handleCancel}
             onGenerateCode={generateEventCode}
             loading={formLoading}
+            initialData={editEvent || undefined}
           />
         );
       default:
@@ -381,6 +520,7 @@ export const EventReporting: React.FC = () => {
             onViewAttachments={handleViewAttachments}
             onDelete={handleDeleteEvent}
             onViewDetails={handleViewDetails}
+            onEdit={handleEditEvent}
             onExport={handleExport}
           />
         );
@@ -443,8 +583,11 @@ export const EventReporting: React.FC = () => {
       {/* Form Modal */}
       <Modal
         isOpen={currentForm !== null}
-        onClose={() => setCurrentForm(null)}
-        title=""
+        onClose={() => {
+          setCurrentForm(null);
+          setEditEvent(null);
+        }}
+        title={getModalTitle()}
         size="xl"
       >
         {renderCurrentForm()}
@@ -471,6 +614,13 @@ export const EventReporting: React.FC = () => {
         isOpen={attachmentsPanel.isOpen}
         onClose={() => setAttachmentsPanel({ isOpen: false, event: null })}
         event={attachmentsPanel.event}
+      />
+
+      {/* Event Details Modal */}
+      <EventDetailModal
+        isOpen={detailsModal.isOpen}
+        onClose={() => setDetailsModal({ isOpen: false, event: null })}
+        event={detailsModal.event}
       />
     </div>
   );

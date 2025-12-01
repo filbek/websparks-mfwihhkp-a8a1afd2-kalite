@@ -4,6 +4,7 @@ import { Button } from '../ui/Button';
 import { Select } from '../ui/Select';
 import { Textarea } from '../ui/Textarea';
 import { DOF, User, TaskAssignmentData } from '../../types';
+import { getStatusLabel } from '../../lib/utils';
 
 interface TaskAssignmentProps {
   users: User[];
@@ -268,11 +269,11 @@ export const TaskAssignment: React.FC<TaskAssignmentProps> = ({
                               {dof.priority.charAt(0).toUpperCase() + dof.priority.slice(1)}
                             </span>
                             <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
-                              dof.status === 'kapatildi' ? 'bg-success-100 text-success-700' :
+                              dof.status === 'kapatıldı' ? 'bg-success-100 text-success-700' :
                               dof.status === 'atanan' ? 'bg-primary-100 text-primary-700' :
                               'bg-warning-100 text-warning-700'
                             }`}>
-                              {dof.status.replace('_', ' ').charAt(0).toUpperCase() + dof.status.replace('_', ' ').slice(1)}
+                              {getStatusLabel(dof.status)}
                             </span>
                           </div>
                         </div>

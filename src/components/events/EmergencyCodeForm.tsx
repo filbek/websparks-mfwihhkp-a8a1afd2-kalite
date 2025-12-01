@@ -12,15 +12,28 @@ interface EmergencyCodeFormProps {
   onCancel: () => void;
   onGenerateCode: (eventType: string) => string;
   loading?: boolean;
+  initialData?: Event;
 }
 
 export const EmergencyCodeForm: React.FC<EmergencyCodeFormProps> = ({
   onSubmit,
   onCancel,
   onGenerateCode,
-  loading = false
+  loading = false,
+  initialData
 }) => {
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState(initialData ? {
+    event_type: initialData.event_type || 'acil_durum' as const,
+    main_category: initialData.main_category || '',
+    sub_category: initialData.sub_category || '',
+    location: initialData.location || '',
+    event_date: initialData.event_date || new Date().toISOString().split('T')[0],
+    event_time: initialData.event_time || new Date().toTimeString().slice(0, 5),
+    event_code: initialData.event_code || '',
+    event_details: initialData.event_details || '',
+    event_class: initialData.event_class || 'acil_durum',
+    reporter_name: initialData.reporter_name || 'Mevcut Kullanıcı'
+  } : {
     event_type: 'acil_durum' as const,
     main_category: '',
     sub_category: '',

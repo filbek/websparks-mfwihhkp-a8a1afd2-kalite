@@ -11,18 +11,28 @@ interface SidebarProps {
 }
 
 export const Sidebar: React.FC<SidebarProps> = ({ className, currentPage, onPageChange }) => {
-  const { user } = useAuth();
-  
+  const { user, hasRole, logout } = useAuth();
+
+  const handleLogout = async () => {
+    if (confirm('Çıkış yapmak istediğinizden emin misiniz?')) {
+      await logout();
+    }
+  };
+
   const menuItems = [
-    { id: 'dashboard' as Page, icon: 'bi-speedometer2', label: 'Dashboard' },
-    { id: 'dof-management' as Page, icon: 'bi-clipboard-check', label: 'DÖF Yönetimi' },
-    { id: 'event-reporting' as Page, icon: 'bi-exclamation-triangle', label: 'Olay Bildirimi' },
-    { id: 'document-management' as Page, icon: 'bi-file-earmark-text', label: 'Doküman Yönetimi' },
-    { id: 'feedback-management' as Page, icon: 'bi-chat-dots', label: 'Görüş-Öneri' },
-    { id: 'committees' as Page, icon: 'bi-people', label: 'Komiteler' },
-    { id: 'reports' as Page, icon: 'bi-bar-chart', label: 'Raporlar' },
-    { id: 'settings' as Page, icon: 'bi-gear', label: 'Ayarlar' }
+    { id: 'dashboard' as Page, icon: 'bi-speedometer2', label: 'Dashboard', roles: ['personel', 'sube_kalite', 'merkez_kalite', 'admin'] },
+    { id: 'dof-management' as Page, icon: 'bi-clipboard-check', label: 'DÖF Yönetimi', roles: ['personel', 'sube_kalite', 'merkez_kalite', 'admin'] },
+    { id: 'event-reporting' as Page, icon: 'bi-exclamation-triangle', label: 'Olay Bildirimi', roles: ['personel', 'sube_kalite', 'merkez_kalite', 'admin'] },
+    { id: 'document-management' as Page, icon: 'bi-file-earmark-text', label: 'Doküman Yönetimi', roles: ['personel', 'sube_kalite', 'merkez_kalite', 'admin'] },
+    { id: 'feedback-management' as Page, icon: 'bi-chat-dots', label: 'Görüş-Öneri', roles: ['personel', 'sube_kalite', 'merkez_kalite', 'admin'] },
+    { id: 'committees' as Page, icon: 'bi-people', label: 'Komiteler', roles: ['personel', 'sube_kalite', 'merkez_kalite', 'admin'] },
+    { id: 'reports' as Page, icon: 'bi-bar-chart', label: 'Raporlar', roles: ['sube_kalite', 'merkez_kalite', 'admin'] },
+    { id: 'settings' as Page, icon: 'bi-gear', label: 'Ayarlar', roles: ['admin'] }
   ];
+
+  const filteredMenuItems = menuItems.filter(item =>
+    item.roles.some(role => hasRole(role))
+  );
 
   return (
     <aside className={cn('w-64 bg-white border-r border-secondary-200 h-full flex flex-col', className)}>
@@ -48,6 +58,13 @@ export const Sidebar: React.FC<SidebarProps> = ({ className, currentPage, onPage
               <p className="text-sm font-medium text-secondary-900 truncate">{user.display_name}</p>
               <p className="text-xs text-secondary-500 truncate">{user.role.join(', ')}</p>
             </div>
+            <button
+              onClick={handleLogout}
+              className="p-2 text-secondary-500 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+              title="Çıkış Yap"
+            >
+              <i className="bi bi-box-arrow-right text-lg"></i>
+            </button>
           </div>
         </div>
       )}
@@ -56,14 +73,14 @@ export const Sidebar: React.FC<SidebarProps> = ({ className, currentPage, onPage
       <div className="flex-1 p-6">
         <h3 className="text-sm font-semibold text-secondary-900 mb-4">Menü</h3>
         <nav className="space-y-2">
-          {menuItems.map((item) => (
+          {filteredMenuItems.map((item) => (
             <button
               key={item.id}
               onClick={() => onPageChange(item.id)}
               className={cn(
                 'flex items-center space-x-3 px-3 py-2 rounded-lg transition-colors w-full text-left',
-                currentPage === item.id 
-                  ? 'bg-primary-50 text-primary-700 border-r-2 border-primary-600' 
+                currentPage === item.id
+                  ? 'bg-primary-50 text-primary-700 border-r-2 border-primary-600'
                   : 'text-secondary-700 hover:bg-secondary-50'
               )}
             >

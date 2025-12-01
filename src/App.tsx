@@ -6,12 +6,32 @@ import { DOFManagement } from './pages/DOFManagement';
 import { EventReporting } from './pages/EventReporting';
 import { DocumentManagement } from './pages/DocumentManagement';
 import { FeedbackManagement } from './pages/FeedbackManagement';
-import { AuthProvider } from './contexts/AuthContext';
+import { Settings } from './pages/Settings';
+import { Login } from './pages/Login';
+import { UnderConstruction } from './pages/UnderConstruction';
+import { AuthProvider, useAuth } from './contexts/AuthContext';
 
 type Page = 'dashboard' | 'dof-management' | 'event-reporting' | 'document-management' | 'feedback-management' | 'committees' | 'reports' | 'settings';
 
-function App() {
+const AppContent: React.FC = () => {
+  const { user, loading } = useAuth();
   const [currentPage, setCurrentPage] = useState<Page>('dashboard');
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-secondary-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600 mx-auto mb-4"></div>
+          <p className="text-secondary-600">Yükleniyor...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!user) {
+    return <Login />;
+  }
 
   const renderPage = () => {
     switch (currentPage) {
@@ -25,20 +45,59 @@ function App() {
         return <DocumentManagement />;
       case 'feedback-management':
         return <FeedbackManagement />;
+      case 'committees':
+        return <UnderConstruction title="Komiteler" description="Komite yönetimi modülü şu anda geliştirilme aşamasındadır. Yakında komite toplantılarını, üyeleri ve kararları yönetebileceksiniz." />;
+      case 'reports':
+        return <UnderConstruction title="Raporlar" description="Raporlama modülü şu anda geliştirilme aşamasındadır. Yakında detaylı analiz ve raporlara erişebileceksiniz." />;
+      case 'settings':
+        return <Settings />;
       default:
         return <Dashboard />;
     }
   };
 
   return (
-    <AuthProvider>
-      <div className="min-h-screen bg-secondary-50">
+    <div className="min-h-screen bg-secondary-50">
+        {/* Mobile Menu Button */}
+        <div className="lg:hidden fixed top-4 left-4 z-50">
+          <button
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            className="p-2 bg-white rounded-lg shadow-lg border border-secondary-200 hover:bg-secondary-50 transition-colors"
+          >
+            <i className={`bi ${isMobileMenuOpen ? 'bi-x-lg' : 'bi-list'} text-xl text-secondary-700`}></i>
+          </button>
+        </div>
+
+        {/* Mobile Menu Overlay */}
+        {isMobileMenuOpen && (
+          <div
+            className="lg:hidden fixed inset-0 bg-black bg-opacity-50 z-40"
+            onClick={() => setIsMobileMenuOpen(false)}
+          />
+        )}
+
         <div className="flex">
+          {/* Desktop Sidebar */}
           <div className="hidden lg:block">
             <Sidebar currentPage={currentPage} onPageChange={setCurrentPage} />
           </div>
-          
-          <main className="flex-1 p-6 lg:p-8">
+
+          {/* Mobile Sidebar */}
+          <div
+            className={`lg:hidden fixed inset-y-0 left-0 z-40 transform transition-transform duration-300 ease-in-out ${
+              isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'
+            }`}
+          >
+            <Sidebar
+              currentPage={currentPage}
+              onPageChange={(page) => {
+                setCurrentPage(page);
+                setIsMobileMenuOpen(false);
+              }}
+            />
+          </div>
+
+          <main className="flex-1 p-6 lg:p-8 pt-20 lg:pt-6">
             <div className="max-w-7xl mx-auto">
               {renderPage()}
             </div>
@@ -59,7 +118,14 @@ function App() {
             </div>
           </div>
         </footer>
-      </div>
+    </div>
+  );
+};
+
+function App() {
+  return (
+    <AuthProvider>
+      <AppContent />
     </AuthProvider>
   );
 }

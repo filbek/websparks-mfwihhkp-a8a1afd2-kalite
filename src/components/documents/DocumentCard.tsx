@@ -8,6 +8,7 @@ interface DocumentCardProps {
   document: Document;
   onDownload: (document: Document) => void;
   onDelete?: (documentId: string) => void;
+  onPreview?: (document: Document) => void;
   showActions?: boolean;
 }
 
@@ -15,8 +16,11 @@ export const DocumentCard: React.FC<DocumentCardProps> = ({
   document,
   onDownload,
   onDelete,
+  onPreview,
   showActions = true
 }) => {
+  const isPDF = document.file_type.includes('pdf');
+
   const getFileIcon = (fileType: string) => {
     if (fileType.includes('pdf')) return 'bi-file-earmark-pdf text-danger-600';
     if (fileType.includes('word') || fileType.includes('document')) return 'bi-file-earmark-word text-primary-600';
@@ -83,6 +87,17 @@ export const DocumentCard: React.FC<DocumentCardProps> = ({
         
         {showActions && (
           <div className="flex items-center space-x-2 ml-4">
+            {isPDF && onPreview && (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => onPreview(document)}
+                className="text-info-600 border-info-600 hover:bg-info-50"
+              >
+                <i className="bi bi-eye mr-1"></i>
+                Önizle
+              </Button>
+            )}
             <Button
               variant="outline"
               size="sm"
@@ -92,7 +107,7 @@ export const DocumentCard: React.FC<DocumentCardProps> = ({
               <i className="bi bi-download mr-1"></i>
               İndir
             </Button>
-            
+
             {onDelete && (
               <Button
                 variant="outline"

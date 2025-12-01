@@ -1,114 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Event } from '../types/events';
-
-// Mock events data
-const mockEvents: Event[] = [
-  {
-    id: '1',
-    event_type: 'hasta_guvenlik',
-    privacy_request: false,
-    department: 'acil_servis',
-    patient_type: 'hasta',
-    affected_person_name: 'Ahmet Yılmaz',
-    birth_date: '1980-05-15',
-    admission_date: '2024-01-15',
-    entry_date: '2024-01-15T10:30:00Z',
-    reporter_name: 'Dr. Mehmet Kaya',
-    event_date: '2024-01-15',
-    event_time: '14:30',
-    repeat_count: 1,
-    score: 3,
-    event_class: 'hasta_guvenlik',
-    main_category: 'hasta_dusme',
-    sub_category: 'yatak_dusme',
-    location: 'hasta_odasi',
-    event_category: 'hafif_zarar',
-    event_details: 'Hasta yataktan düşerek hafif yaralandı. Yatak korkulukları kontrol edilmeli.',
-    suggestions: 'Yatak korkuluklarının düzenli kontrolü yapılmalı.',
-    is_medication_error: false,
-    quality_note: 'Hasta güvenlik protokolleri gözden geçirilmeli.',
-    manager_evaluation: 'Önleyici tedbirler alınacak.',
-    ministry_integration: false,
-    facility_id: 1,
-    reporter_id: 'user-1',
-    assigned_to: 'user-2',
-    status: 'atanan',
-    created_at: '2024-01-15T10:30:00Z',
-    updated_at: '2024-01-15T15:20:00Z',
-    facility: { id: 1, name: 'Silivri Şubesi' },
-    reporter: { id: 'user-1', display_name: 'Dr. Mehmet Kaya' },
-    assignee: { id: 'user-2', display_name: 'Ayşe Demir' }
-  },
-  {
-    id: '2',
-    event_type: 'calisan_guvenlik',
-    privacy_request: false,
-    department: 'laboratuvar',
-    affected_person_name: 'Fatma Özkan',
-    entry_date: '2024-01-16T09:15:00Z',
-    reporter_name: 'Fatma Özkan',
-    event_date: '2024-01-16',
-    event_time: '09:00',
-    repeat_count: 1,
-    score: 5,
-    event_class: 'calisan_guvenlik',
-    main_category: 'is_kazasi',
-    sub_category: 'kesici_alet',
-    location: 'laboratuvar',
-    event_category: 'orta_zarar',
-    event_details: 'Laboratuvar teknisyeni cam kırığı ile yaralandı.',
-    suggestions: 'Koruyucu eldiven kullanımı zorunlu hale getirilmeli.',
-    is_medication_error: false,
-    quality_note: 'İş güvenliği eğitimi verilmeli.',
-    manager_evaluation: 'Koruyucu ekipman kontrolü yapılacak.',
-    ministry_integration: true,
-    job_title: 'tekniker',
-    damage_status: 'orta',
-    impact_duration: 'kisa',
-    legal_action: false,
-    facility_id: 2,
-    reporter_id: 'user-3',
-    status: 'inceleme',
-    created_at: '2024-01-16T09:15:00Z',
-    updated_at: '2024-01-16T11:30:00Z',
-    facility: { id: 2, name: 'Avcılar Şubesi' },
-    reporter: { id: 'user-3', display_name: 'Fatma Özkan' }
-  },
-  {
-    id: '3',
-    event_type: 'acil_durum',
-    privacy_request: false,
-    department: 'ameliyathane',
-    affected_person_name: 'Sistem Geneli',
-    entry_date: '2024-01-17T16:45:00Z',
-    reporter_name: 'Güvenlik Amiri',
-    event_date: '2024-01-17',
-    event_time: '16:30',
-    event_class: 'acil_durum',
-    main_category: 'yangin',
-    sub_category: 'elektrik_yangin',
-    location: 'ameliyathane',
-    event_category: 'ramak_kala',
-    event_details: 'Ameliyathane elektrik panosunda kısa devre. Yangın söndürme sistemi devreye girdi.',
-    suggestions: 'Elektrik sistemleri periyodik kontrolden geçirilmeli.',
-    is_medication_error: false,
-    quality_note: 'Acil durum protokolleri başarıyla uygulandı.',
-    manager_evaluation: 'Elektrik altyapısı yenilenecek.',
-    ministry_integration: true,
-    event_code: 'ACL-2024-001',
-    facility_id: 3,
-    reporter_id: 'user-4',
-    assigned_to: 'user-5',
-    status: 'kapatildi',
-    closed_at: '2024-01-18T10:00:00Z',
-    close_duration: 1050,
-    created_at: '2024-01-17T16:45:00Z',
-    updated_at: '2024-01-18T10:00:00Z',
-    facility: { id: 3, name: 'Ereğli Şubesi' },
-    reporter: { id: 'user-4', display_name: 'Güvenlik Amiri' },
-    assignee: { id: 'user-5', display_name: 'Teknik Müdür' }
-  }
-];
+import { supabase } from '../lib/supabase';
 
 export const useEvents = () => {
   const [events, setEvents] = useState<Event[]>([]);
@@ -118,11 +10,20 @@ export const useEvents = () => {
   const fetchEvents = async () => {
     try {
       setLoading(true);
-      await new Promise(resolve => window.setTimeout(resolve, 1000));
-      setEvents(mockEvents);
+
+      const { data, error: fetchError } = await supabase
+        .from('events')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (fetchError) throw fetchError;
+
+      setEvents(data || []);
       setError(null);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Bir hata oluştu');
+      const errorMessage = err instanceof Error ? err.message : 'Bir hata oluştu';
+      setError(errorMessage);
+      console.error('Error fetching events:', err);
     } finally {
       setLoading(false);
     }
@@ -130,85 +31,125 @@ export const useEvents = () => {
 
   const createEvent = async (eventData: Partial<Event>) => {
     try {
-      await new Promise(resolve => window.setTimeout(resolve, 500));
-      
-      const newEvent: Event = {
-        id: Date.now().toString(),
+      const { data: { user } } = await supabase.auth.getUser();
+
+      if (!user) {
+        throw new Error('Kullanıcı oturumu bulunamadı');
+      }
+
+      const newEvent: any = {
         event_type: eventData.event_type || 'hasta_guvenlik',
         privacy_request: eventData.privacy_request || false,
-        department: eventData.department || '',
-        patient_type: eventData.patient_type,
-        affected_person_name: eventData.affected_person_name || '',
-        birth_date: eventData.birth_date,
-        admission_date: eventData.admission_date,
-        entry_date: new Date().toISOString(),
-        reporter_name: eventData.reporter_name || 'Mevcut Kullanıcı',
-        event_date: eventData.event_date || new Date().toISOString().split('T')[0],
-        event_time: eventData.event_time || new Date().toTimeString().slice(0, 5),
         repeat_count: eventData.repeat_count || 1,
         score: eventData.score || 0,
-        event_class: eventData.event_class || '',
-        main_category: eventData.main_category || '',
-        sub_category: eventData.sub_category || '',
-        location: eventData.location || '',
-        event_category: eventData.event_category || '',
-        event_details: eventData.event_details || '',
-        suggestions: eventData.suggestions || '',
         is_medication_error: eventData.is_medication_error || false,
-        medication_name: eventData.medication_name,
-        quality_note: eventData.quality_note || '',
-        manager_evaluation: eventData.manager_evaluation || '',
         ministry_integration: eventData.ministry_integration || false,
-        job_title: eventData.job_title,
-        damage_status: eventData.damage_status,
-        impact_duration: eventData.impact_duration,
-        legal_action: eventData.legal_action,
-        event_code: eventData.event_code,
         facility_id: eventData.facility_id || 1,
-        reporter_id: eventData.reporter_id || 'current-user-id',
-        assigned_to: eventData.assigned_to,
-        status: eventData.status || 'taslak',
-        created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString(),
-        facility: mockEvents[0].facility,
-        reporter: mockEvents[0].reporter
+        reporter_id: user.id,
+        status: eventData.status || 'taslak'
       };
 
-      setEvents(prev => [newEvent, ...prev]);
-      return newEvent;
+      // Add optional fields only if they have values
+      if (eventData.patient_type) newEvent.patient_type = eventData.patient_type;
+      if (eventData.event_date) newEvent.event_date = eventData.event_date;
+      if (eventData.event_time) newEvent.event_time = eventData.event_time;
+      if (eventData.event_class) newEvent.event_class = eventData.event_class;
+      if (eventData.main_category) newEvent.main_category = eventData.main_category;
+      if (eventData.sub_category) newEvent.sub_category = eventData.sub_category;
+      if (eventData.location) newEvent.location = eventData.location;
+      if (eventData.event_category) newEvent.event_category = eventData.event_category;
+      if (eventData.event_details) newEvent.event_details = eventData.event_details;
+      if (eventData.working_department) newEvent.working_department = eventData.working_department;
+      if (eventData.patient_number) newEvent.patient_number = eventData.patient_number;
+      if (eventData.gender) newEvent.gender = eventData.gender;
+      if (eventData.affected_person_name) newEvent.affected_person_name = eventData.affected_person_name;
+      if (eventData.birth_date) newEvent.birth_date = eventData.birth_date;
+      if (eventData.admission_date) newEvent.admission_date = eventData.admission_date;
+      if (eventData.reporter_name) newEvent.reporter_name = eventData.reporter_name;
+      if (eventData.responsible_profession) newEvent.responsible_profession = eventData.responsible_profession;
+      if (eventData.suggestions) newEvent.suggestions = eventData.suggestions;
+      if (eventData.medication_name) newEvent.medication_name = eventData.medication_name;
+      if (eventData.quality_note) newEvent.quality_note = eventData.quality_note;
+      if (eventData.manager_evaluation) newEvent.manager_evaluation = eventData.manager_evaluation;
+      if (eventData.hss_code) newEvent.hss_code = eventData.hss_code;
+
+      // Employee safety specific fields
+      if (eventData.job_title) newEvent.job_title = eventData.job_title;
+      if (eventData.damage_status) newEvent.damage_status = eventData.damage_status;
+      if (eventData.impact_duration) newEvent.impact_duration = eventData.impact_duration;
+      if (eventData.legal_action_status) newEvent.legal_action_status = eventData.legal_action_status;
+      if (eventData.facility_location) newEvent.facility_location = eventData.facility_location;
+      if (eventData.facility_sub_location) newEvent.facility_sub_location = eventData.facility_sub_location;
+      if (eventData.event_class_detail) newEvent.event_class_detail = eventData.event_class_detail;
+      if (eventData.primary_cause_detail) newEvent.primary_cause_detail = eventData.primary_cause_detail;
+      if (eventData.unwanted_event_reported !== undefined) newEvent.unwanted_event_reported = eventData.unwanted_event_reported;
+      if (eventData.work_accident_reported !== undefined) newEvent.work_accident_reported = eventData.work_accident_reported;
+      if (eventData.white_code_initiated !== undefined) newEvent.white_code_initiated = eventData.white_code_initiated;
+
+      const { data, error: insertError } = await supabase
+        .from('events')
+        .insert(newEvent)
+        .select()
+        .single();
+
+      if (insertError) throw insertError;
+
+      // Refresh events list
+      await fetchEvents();
+
+      return data as Event;
     } catch (err) {
-      throw new Error(err instanceof Error ? err.message : 'Olay oluşturulamadı');
+      const errorMessage = err instanceof Error ? err.message : 'Olay oluşturulamadı';
+      console.error('Error creating event:', err);
+      throw new Error(errorMessage);
     }
   };
 
   const updateEvent = async (id: string, updates: Partial<Event>) => {
     try {
-      await new Promise(resolve => window.setTimeout(resolve, 500));
-      
-      setEvents(prev => prev.map(event => 
-        event.id === id 
-          ? { ...event, ...updates, updated_at: new Date().toISOString() }
-          : event
-      ));
-      
-      const updatedEvent = events.find(event => event.id === id);
-      return updatedEvent;
+      const { data, error: updateError } = await supabase
+        .from('events')
+        .update({
+          ...updates,
+          updated_at: new Date().toISOString()
+        })
+        .eq('id', id)
+        .select()
+        .single();
+
+      if (updateError) throw updateError;
+
+      // Refresh events list
+      await fetchEvents();
+
+      return data as Event;
     } catch (err) {
-      throw new Error(err instanceof Error ? err.message : 'Olay güncellenemedi');
+      const errorMessage = err instanceof Error ? err.message : 'Olay güncellenemedi';
+      console.error('Error updating event:', err);
+      throw new Error(errorMessage);
     }
   };
 
   const deleteEvent = async (id: string) => {
     try {
-      await new Promise(resolve => window.setTimeout(resolve, 500));
-      setEvents(prev => prev.filter(event => event.id !== id));
+      const { error: deleteError } = await supabase
+        .from('events')
+        .delete()
+        .eq('id', id);
+
+      if (deleteError) throw deleteError;
+
+      // Refresh events list
+      await fetchEvents();
     } catch (err) {
-      throw new Error(err instanceof Error ? err.message : 'Olay silinemedi');
+      const errorMessage = err instanceof Error ? err.message : 'Olay silinemedi';
+      console.error('Error deleting event:', err);
+      throw new Error(errorMessage);
     }
   };
 
   const generateEventCode = (eventType: string): string => {
-    const prefix = eventType === 'acil_durum' ? 'ACL' : 
+    const prefix = eventType === 'acil_durum' ? 'ACL' :
                    eventType === 'hasta_guvenlik' ? 'HG' : 'CG';
     const year = new Date().getFullYear();
     const randomNum = Math.floor(Math.random() * 1000).toString().padStart(3, '0');

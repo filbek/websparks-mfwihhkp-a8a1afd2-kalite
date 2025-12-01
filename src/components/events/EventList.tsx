@@ -19,6 +19,7 @@ interface EventListProps {
   onViewAttachments: (event: Event) => void;
   onDelete: (event: Event) => void;
   onViewDetails: (event: Event) => void;
+  onEdit: (event: Event) => void;
   onExport: (format: 'csv' | 'xlsx') => void;
 }
 
@@ -31,6 +32,7 @@ export const EventList: React.FC<EventListProps> = ({
   onViewAttachments,
   onDelete,
   onViewDetails,
+  onEdit,
   onExport
 }) => {
   const [filters, setFilters] = useState({
@@ -173,10 +175,10 @@ export const EventList: React.FC<EventListProps> = ({
           size="sm"
           variant="ghost"
           onClick={() => onAssign(event)}
-          className="text-primary-600 hover:text-primary-700"
+          className="text-primary-600 hover:text-primary-700 hover:bg-primary-50"
           title="Müdüre Ata ve Bildir"
         >
-          <i className="bi bi-person-plus"></i>
+          <i className="bi bi-person-plus text-lg"></i>
         </Button>
       );
     }
@@ -189,10 +191,10 @@ export const EventList: React.FC<EventListProps> = ({
           size="sm"
           variant="ghost"
           onClick={() => onReject(event)}
-          className="text-danger-600 hover:text-danger-700"
+          className="text-danger-600 hover:text-danger-700 hover:bg-danger-50"
           title="Reddet"
         >
-          <i className="bi bi-x-circle"></i>
+          <i className="bi bi-x-circle text-lg"></i>
         </Button>
       );
     }
@@ -204,10 +206,10 @@ export const EventList: React.FC<EventListProps> = ({
         size="sm"
         variant="ghost"
         onClick={() => onPrintReport(event)}
-        className="text-secondary-600 hover:text-secondary-700"
+        className="text-secondary-600 hover:text-secondary-700 hover:bg-secondary-50"
         title="Tutanak Yazdır"
       >
-        <i className="bi bi-printer"></i>
+        <i className="bi bi-printer text-lg"></i>
       </Button>
     );
 
@@ -218,12 +220,28 @@ export const EventList: React.FC<EventListProps> = ({
         size="sm"
         variant="ghost"
         onClick={() => onViewAttachments(event)}
-        className="text-secondary-600 hover:text-secondary-700"
+        className="text-secondary-600 hover:text-secondary-700 hover:bg-secondary-50"
         title="Ekleri Göster"
       >
-        <i className="bi bi-paperclip"></i>
+        <i className="bi bi-paperclip text-lg"></i>
       </Button>
     );
+
+    // Düzenle
+    if (['taslak', 'reddedildi'].includes(event.status)) {
+      buttons.push(
+        <Button
+          key="edit"
+          size="sm"
+          variant="ghost"
+          onClick={() => onEdit(event)}
+          className="text-warning-600 hover:text-warning-700 hover:bg-warning-50"
+          title="Düzenle"
+        >
+          <i className="bi bi-pencil-square text-lg"></i>
+        </Button>
+      );
+    }
 
     // Sil/Pasif Et
     if (event.status !== 'iptal') {
@@ -233,10 +251,10 @@ export const EventList: React.FC<EventListProps> = ({
           size="sm"
           variant="ghost"
           onClick={() => onDelete(event)}
-          className="text-danger-600 hover:text-danger-700"
+          className="text-danger-600 hover:text-danger-700 hover:bg-danger-50"
           title="Sil/Pasif Et"
         >
-          <i className="bi bi-trash"></i>
+          <i className="bi bi-trash text-lg"></i>
         </Button>
       );
     }
@@ -248,10 +266,10 @@ export const EventList: React.FC<EventListProps> = ({
         size="sm"
         variant="ghost"
         onClick={() => onViewDetails(event)}
-        className="text-info-600 hover:text-info-700"
+        className="text-info-600 hover:text-info-700 hover:bg-info-50"
         title="Detayları Görüntüle"
       >
-        <i className="bi bi-info-circle"></i>
+        <i className="bi bi-info-circle text-lg"></i>
       </Button>
     );
 

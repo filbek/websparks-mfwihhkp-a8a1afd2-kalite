@@ -4,6 +4,7 @@ import { Input } from '../ui/Input';
 import { Textarea } from '../ui/Textarea';
 import { Select } from '../ui/Select';
 import { DOF } from '../../types';
+import { useDofLocations } from '../../hooks/useDofLocations';
 
 interface DOFWizardProps {
   onSubmit: (data: Partial<DOF>) => Promise<void>;
@@ -695,6 +696,7 @@ export const DOFWizard: React.FC<DOFWizardProps> = ({
   onCancel,
   loading = false
 }) => {
+  const { locations, loading: locationsLoading } = useDofLocations();
   const [currentStep, setCurrentStep] = useState(1);
   const [formData, setFormData] = useState({
     tespit_tarihi: new Date().toISOString().split('T')[0],
@@ -758,6 +760,12 @@ export const DOFWizard: React.FC<DOFWizardProps> = ({
         description: formData.tanim,
         priority: formData.dof_turu as DOF['priority'],
         facility_id: formData.facility_id,
+        tespit_edilen_yer: formData.tespit_edilen_bolum,
+        tespit_tarihi: formData.tespit_tarihi,
+        dof_kaynagi: formData.dof_kaynagi,
+        dof_kategorisi: formData.dof_kategorisi,
+        kisa_aciklama: formData.kisa_aciklama,
+        sorumlu_bolum: formData.sorumlu_bolum,
         reporter_id: 'current-user-id',
         status: 'yeni'
       });
@@ -780,14 +788,7 @@ export const DOFWizard: React.FC<DOFWizardProps> = ({
 
   const tespitEdilenBolumOptions = [
     { value: '', label: 'Bölüm Seçiniz' },
-    { value: 'acil_servis', label: 'Acil Servis' },
-    { value: 'yogun_bakim', label: 'Yoğun Bakım' },
-    { value: 'ameliyathane', label: 'Ameliyathane' },
-    { value: 'laboratuvar', label: 'Laboratuvar' },
-    { value: 'radyoloji', label: 'Radyoloji' },
-    { value: 'dahiliye', label: 'Dahiliye' },
-    { value: 'cerrahi', label: 'Cerrahi' },
-    { value: 'pediatri', label: 'Pediatri' }
+    ...locations.map(loc => ({ value: loc.value, label: loc.label }))
   ];
 
   const dofKategorisiOptions = [

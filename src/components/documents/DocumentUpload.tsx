@@ -10,18 +10,21 @@ interface DocumentUploadProps {
   onSubmit: (data: any) => Promise<void>;
   onCancel: () => void;
   loading?: boolean;
+  currentFolderId?: string;
 }
 
 export const DocumentUpload: React.FC<DocumentUploadProps> = ({
   categories,
   onSubmit,
   onCancel,
-  loading = false
+  loading = false,
+  currentFolderId
 }) => {
   const [formData, setFormData] = useState({
     title: '',
     description: '',
-    category_id: ''
+    category_id: '',
+    folder_id: currentFolderId || ''
   });
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [dragActive, setDragActive] = useState(false);
@@ -83,6 +86,7 @@ export const DocumentUpload: React.FC<DocumentUploadProps> = ({
     try {
       await onSubmit({
         ...formData,
+        folder_id: formData.folder_id || undefined,
         file: selectedFile
       });
     } catch (error) {

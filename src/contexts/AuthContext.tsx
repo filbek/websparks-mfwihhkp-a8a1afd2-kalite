@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { User, UserRole } from '../types';
+import { User, UserRole, DOF } from '../types';
+import { supabase, setSupabaseContext } from '../lib/supabase';
 
 interface AuthContextType {
   user: User | null;
@@ -9,6 +10,7 @@ interface AuthContextType {
   hasPermission: (permission: string) => boolean;
   hasRole: (role: string) => boolean;
   canAccessFacility: (facilityId: number) => boolean;
+  canEditDOF: (dof: DOF) => boolean;
   setUser: (user: User | null) => void;
 }
 
@@ -29,6 +31,7 @@ const PERMISSIONS = {
   'dof:create': ['personel', 'sube_kalite', 'merkez_kalite', 'admin'],
   'dof:assign': ['sube_kalite', 'merkez_kalite', 'admin'],
   'dof:manage_all': ['merkez_kalite', 'admin'],
+  'dof:edit_opened': ['sube_kalite', 'merkez_kalite', 'admin'],
   
   // Event permissions
   'event:create': ['personel', 'sube_kalite', 'merkez_kalite', 'admin'],
@@ -50,32 +53,29 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
-  // Simulate authentication check
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        // Gerçek uygulamada burada Supabase auth kullanılacak
-        // Şimdilik simüle edilmiş kullanıcı (Admin)
-        const mockUser: User = {
-          id: 'bekir-filizdag-id',
-          email: 'bekir.filizdag@anadoluhastaneleri.com',
-          display_name: 'Bekir Filizdağ',
-          role: ['admin'],
-          facility_id: 1,
-          department_id: 1,
-          is_active: true,
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString(),
-        };
-        
-        // Local storage'dan kullanıcı bilgisini al
-        const storedUser = localStorage.getItem('auth_user');
-        if (storedUser) {
-          setUser(JSON.parse(storedUser));
+        const { data: { session } } = await supabase.auth.getSession();
+
+        if (session?.user) {
+          const { data: userData, error } = await supabase
+            .from('users')
+            .select('*')
+            .eq('id', session.user.id)
+            .maybeSingle();
+
+          if (error) throw error;
+
+          if (userData) {
+            const user = userData as User;
+            setUser(user);
+            await setSupabaseContext(user.id, user.role, user.facility_id);
+          } else {
+            setUser(null);
+          }
         } else {
-          // Varsayılan kullanıcıyı set et
-          setUser(mockUser);
-          localStorage.setItem('auth_user', JSON.stringify(mockUser));
+          setUser(null);
         }
       } catch (error) {
         console.error('Auth check error:', error);
@@ -86,82 +86,58 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     };
 
     checkAuth();
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      (async () => {
+        if (session?.user) {
+          const { data: userData } = await supabase
+            .from('users')
+            .select('*')
+            .eq('id', session.user.id)
+            .maybeSingle();
+
+          if (userData) {
+            const user = userData as User;
+            setUser(user);
+            await setSupabaseContext(user.id, user.role, user.facility_id);
+          }
+        } else {
+          setUser(null);
+        }
+      })();
+    });
+
+    return () => {
+      subscription.unsubscribe();
+    };
   }, []);
 
   const login = async (email: string, password: string) => {
     setLoading(true);
     try {
-      // Gerçek uygulamada burada Supabase auth.login kullanılacak
-      // Şimdilik simüle edilmiş login
-      let mockUser: User | null = null;
-      
-      if (email === 'bekir.filizdag@anadoluhastaneleri.com') {
-        mockUser = {
-          id: 'bekir-filizdag-id',
-          email: 'bekir.filizdag@anadoluhastaneleri.com',
-          display_name: 'Bekir Filizdağ',
-          role: ['admin'],
-          facility_id: 1,
-          department_id: 1,
-          is_active: true,
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString(),
-        };
-      } else if (email === 'mehmet.yilmaz@anadoluhastaneleri.com') {
-        mockUser = {
-          id: 'dr-mehmet-yilmaz-id',
-          email: 'mehmet.yilmaz@anadoluhastaneleri.com',
-          display_name: 'Dr. Mehmet Yılmaz',
-          role: ['merkez_kalite'],
-          facility_id: 1,
-          department_id: null,
-          is_active: true,
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString(),
-        };
-      } else if (email === 'bilgehan.batur@anadoluhastaneleri.com') {
-        mockUser = {
-          id: 'bilgehan-batur-id',
-          email: 'bilgehan.batur@anadoluhastaneleri.com',
-          display_name: 'Bilgehan BATUR',
-          role: ['sube_kalite'],
-          facility_id: 2,
-          department_id: 1,
-          is_active: true,
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString(),
-        };
-      } else if (email === 'fatma.yilmaz@anadoluhastaneleri.com') {
-        mockUser = {
-          id: 'fatma-yilmaz-id',
-          email: 'fatma.yilmaz@anadoluhastaneleri.com',
-          display_name: 'Fatma Yılmaz',
-          role: ['sube_kalite'],
-          facility_id: 3,
-          department_id: 1,
-          is_active: true,
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString(),
-        };
-      } else if (email === 'zuhal.aktas@anadoluhastaneleri.com') {
-        mockUser = {
-          id: 'zuhal-aktas-id',
-          email: 'zuhal.aktas@anadoluhastaneleri.com',
-          display_name: 'Zuhal Aktaş',
-          role: ['sube_kalite'],
-          facility_id: 4,
-          department_id: 1,
-          is_active: true,
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString(),
-        };
-      }
-      
-      if (mockUser) {
-        setUser(mockUser);
-        localStorage.setItem('auth_user', JSON.stringify(mockUser));
-      } else {
-        throw new Error('Kullanıcı bulunamadı');
+      const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+
+      if (authError) throw authError;
+
+      if (authData.user) {
+        const { data: userData, error: userError } = await supabase
+          .from('users')
+          .select('*')
+          .eq('id', authData.user.id)
+          .maybeSingle();
+
+        if (userError) throw userError;
+
+        if (userData) {
+          const user = userData as User;
+          setUser(user);
+          await setSupabaseContext(user.id, user.role, user.facility_id);
+        } else {
+          throw new Error('Kullanıcı profili bulunamadı');
+        }
       }
     } catch (error) {
       console.error('Login error:', error);
@@ -171,9 +147,13 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     }
   };
 
-  const logout = () => {
-    setUser(null);
-    localStorage.removeItem('auth_user');
+  const logout = async () => {
+    try {
+      await supabase.auth.signOut();
+      setUser(null);
+    } catch (error) {
+      console.error('Logout error:', error);
+    }
   };
 
   const hasPermission = (permission: string): boolean => {
@@ -190,14 +170,45 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   const canAccessFacility = (facilityId: number): boolean => {
     if (!user) return false;
-    
+
     // Admin ve merkez kalite tüm şubelere erişebilir
     if (user.role.includes('admin') || user.role.includes('merkez_kalite')) {
       return true;
     }
-    
+
     // Şube kalite ve personel sadece kendi şubesine erişebilir
     return user.facility_id === facilityId;
+  };
+
+  const canEditDOF = (dof: DOF): boolean => {
+    if (!user) return false;
+
+    // Kapatılmış veya iptal edilmiş DÖF'ler düzenlenemez
+    if (dof.status === 'kapatıldı' || dof.status === 'iptal') {
+      return false;
+    }
+
+    // Admin: Tüm DÖF'leri düzenleyebilir
+    if (user.role.includes('admin')) {
+      return true;
+    }
+
+    // Merkez Kalite: Tüm DÖF'leri düzenleyebilir
+    if (user.role.includes('merkez_kalite')) {
+      return true;
+    }
+
+    // Şube Kalite: Kendi şubesindeki tüm DÖF'leri düzenleyebilir
+    if (user.role.includes('sube_kalite') && dof.facility_id === user.facility_id) {
+      return true;
+    }
+
+    // Personel: Sadece taslak ve reddedilmiş DÖF'leri düzenleyebilir
+    if (dof.status === 'taslak' || dof.status === 'reddedildi') {
+      return dof.reporter_id === user.id || dof.assigned_to === user.id;
+    }
+
+    return false;
   };
 
   const value: AuthContextType = {
@@ -208,6 +219,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     hasPermission,
     hasRole,
     canAccessFacility,
+    canEditDOF,
     setUser,
   };
 

@@ -27,10 +27,18 @@ export const Select: React.FC<SelectProps> = ({
           error && 'border-danger-500 focus:ring-danger-500',
           className
         )}
+        size={props.size || undefined}
+        style={{
+          ...(props.size && props.size > 1 ? {
+            height: 'auto',
+            maxHeight: '300px',
+            overflowY: 'auto'
+          } : {})
+        }}
         {...props}
       >
         {options.map((option) => (
-          <option key={option.value} value={option.value} className="text-secondary-700">
+          <option key={option.value} value={option.value} className="text-secondary-700 py-2">
             {option.label}
           </option>
         ))}

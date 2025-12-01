@@ -2,8 +2,10 @@ import { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
 import { Document, DocumentFormData, DocumentFilters } from '../types/documents';
 import { User, Facility } from '../types';
+import { useAuth } from '../contexts/AuthContext';
 
 export const useDocuments = (filters?: DocumentFilters) => {
+  const { user } = useAuth();
   const [documents, setDocuments] = useState<Document[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -25,6 +27,9 @@ export const useDocuments = (filters?: DocumentFilters) => {
         .order('created_at', { ascending: false });
 
       // Filtreleri uygula
+      if (filters?.folder_id) {
+        query = query.eq('folder_id', filters.folder_id);
+      }
       if (filters?.category_id) {
         query = query.eq('category_id', filters.category_id);
       }
@@ -54,7 +59,47 @@ export const useDocuments = (filters?: DocumentFilters) => {
 
   const uploadDocument = async (formData: DocumentFormData): Promise<Document> => {
     try {
-      // Önce dosyayı Supabase Storage'a yükle
+      let folderId = formData.folder_id;
+
+      if (!folderId && formData.category_id) {
+        const { data: existingFolder } = await supabase
+          .from('document_folders')
+          .select('id')
+          .eq('category_id', formData.category_id)
+          .eq('facility_id', user?.facility_id || 1)
+          .is('parent_id', null)
+          .eq('is_active', true)
+          .maybeSingle();
+
+        if (!existingFolder) {
+          const { data: category } = await supabase
+            .from('document_categories')
+            .select('name')
+            .eq('id', formData.category_id)
+            .single();
+
+          if (category && user) {
+            const { data: newFolder } = await supabase
+              .from('document_folders')
+              .insert({
+                name: category.name,
+                category_id: formData.category_id,
+                facility_id: user.facility_id,
+                created_by: user.id,
+                is_active: true
+              })
+              .select('id')
+              .single();
+
+            if (newFolder) {
+              folderId = newFolder.id;
+            }
+          }
+        } else {
+          folderId = existingFolder.id;
+        }
+      }
+
       const fileExt = formData.file.name.split('.').pop();
       const fileName = `${Date.now()}_${Math.random().toString(36).substring(7)}.${fileExt}`;
       const filePath = `documents/${fileName}`;
@@ -65,26 +110,25 @@ export const useDocuments = (filters?: DocumentFilters) => {
 
       if (uploadError) throw uploadError;
 
-      // Veritabanına doküman kaydını ekle
       const { data, error } = await supabase
         .from('documents')
         .insert({
           title: formData.title,
           description: formData.description,
           category_id: formData.category_id,
+          folder_id: folderId || null,
           file_name: formData.file.name,
           file_type: formData.file.type,
           file_size: formData.file.size,
           file_path: filePath,
-          facility_id: 1, // Bu değer kullanıcı context'ten alınmalı
-          uploaded_by: 'current-user-id', // Bu değer auth context'ten alınmalı
+          facility_id: user?.facility_id || 1,
+          uploaded_by: user?.id || null,
         })
         .select()
         .single();
 
       if (error) throw error;
 
-      // Doküman listesini güncelle
       await fetchDocuments();
       return data;
     } catch (err) {
@@ -135,7 +179,6 @@ export const useDocuments = (filters?: DocumentFilters) => {
 
       if (error) throw error;
 
-      // Dosyayı indirme
       const url = URL.createObjectURL(data);
       const a = window.document.createElement('a');
       a.href = url;
@@ -146,6 +189,20 @@ export const useDocuments = (filters?: DocumentFilters) => {
       URL.revokeObjectURL(url);
     } catch (err) {
       throw new Error(err instanceof Error ? err.message : 'Doküman indirilirken hata oluştu');
+    }
+  };
+
+  const getDocumentUrl = async (document: Document): Promise<string> => {
+    try {
+      const { data, error } = await supabase.storage
+        .from('documents')
+        .download(document.file_path);
+
+      if (error) throw error;
+
+      return URL.createObjectURL(data);
+    } catch (err) {
+      throw new Error(err instanceof Error ? err.message : 'Doküman URL\'si alınırken hata oluştu');
     }
   };
 
@@ -160,6 +217,7 @@ export const useDocuments = (filters?: DocumentFilters) => {
     uploadDocument,
     deleteDocument,
     downloadDocument,
+    getDocumentUrl,
     refetch: fetchDocuments,
   };
 };

@@ -1,7 +1,25 @@
-import { createClient } from '@supabase/supabase-js';
+import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import { supabaseConfig } from '../config/supabase';
 
-export const supabase = createClient(supabaseConfig.url, supabaseConfig.anonKey);
+export const supabase = createClient(supabaseConfig.url, supabaseConfig.anonKey, {
+  global: {
+    headers: {},
+  },
+});
+
+export const setSupabaseContext = async (userId: string, userRole: string[], facilityId: number) => {
+  const primaryRole = userRole[0];
+
+  try {
+    await supabase.rpc('set_user_context', {
+      user_id_value: userId,
+      user_role_value: primaryRole,
+      facility_id_value: facilityId.toString(),
+    });
+  } catch (error) {
+    console.error('Error setting Supabase context:', error);
+  }
+};
 
 export type Database = {
   public: {

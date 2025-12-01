@@ -101,21 +101,6 @@ export const FeedbackForm: React.FC<FeedbackFormProps> = ({
     label: category.name
   }));
 
-  // Kategori seçimini kontrol et
-  const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
-    
-    // Kategori seçildiğinde form hatalarını temizle
-    if (name === 'category_id' && value) {
-      setFormErrors(prev => {
-        const newErrors = { ...prev };
-        delete newErrors.category_id;
-        return newErrors;
-      });
-    }
-  };
-
   const priorityOptions = [
     { value: 'düşük', label: 'Düşük' },
     { value: 'orta', label: 'Orta' },
@@ -197,15 +182,16 @@ export const FeedbackForm: React.FC<FeedbackFormProps> = ({
             {formData.tags.map((tag, index) => (
               <span
                 key={index}
-                className="inline-flex items-center px-2 py-1 rounded-md text-sm bg-secondary-100 text-secondary-800"
+                className="inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-sm bg-primary-100 text-primary-800 border border-primary-200"
               >
                 #{tag}
                 <button
                   type="button"
                   onClick={() => handleRemoveTag(tag)}
-                  className="ml-1 text-secondary-600 hover:text-secondary-800"
+                  className="ml-1 flex items-center justify-center w-4 h-4 rounded-full hover:bg-primary-200 text-primary-600 hover:text-primary-800 transition-colors"
+                  title="Etiketi kaldır"
                 >
-                  <i className="bi bi-times"></i>
+                  <i className="bi bi-x text-base font-bold"></i>
                 </button>
               </span>
             ))}

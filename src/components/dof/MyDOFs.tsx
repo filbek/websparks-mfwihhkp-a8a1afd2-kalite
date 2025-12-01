@@ -5,7 +5,8 @@ import { Badge } from '../ui/Badge';
 import { SearchInput } from '../ui/SearchInput';
 import { FilterDropdown } from '../ui/FilterDropdown';
 import { DOF } from '../../types';
-import { formatDate, getStatusColor } from '../../lib/utils';
+import { formatDate, getStatusColor, getStatusLabel } from '../../lib/utils';
+import { useAuth } from '../../contexts/AuthContext';
 
 interface MyDOFsProps {
   dofs: DOF[];
@@ -24,20 +25,21 @@ export const MyDOFs: React.FC<MyDOFsProps> = ({
   onClose,
   onExportExcel
 }) => {
+  const { canEditDOF } = useAuth();
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
   const [priorityFilter, setPriorityFilter] = useState('all');
 
   const statusOptions = [
     { value: 'all', label: 'Tüm Durumlar' },
-    { value: 'yeni', label: 'Yeni' },
-    { value: 'atanmayi_bekleyen', label: 'Atanmayı Bekleyen' },
+    { value: 'taslak', label: 'Taslak' },
+    { value: 'atanmayı_bekleyen', label: 'Atanmayı Bekleyen' },
     { value: 'atanan', label: 'Atanan' },
-    { value: 'cozum_bekliyor', label: 'Çözüm Bekliyor' },
-    { value: 'kapatma_onayinda', label: 'Kapatma Onayında' },
-    { value: 'kapatildi', label: 'Kapatıldı' },
+    { value: 'çözüm_bekleyen', label: 'Çözüm Bekleyen' },
+    { value: 'kapatma_onayında', label: 'Kapatma Onayında' },
+    { value: 'kapatıldı', label: 'Kapatıldı' },
     { value: 'iptal', label: 'İptal' },
-    { value: 'reddedilen', label: 'Reddedilen' }
+    { value: 'reddedildi', label: 'Reddedildi' }
   ];
 
   const priorityOptions = [
@@ -59,24 +61,20 @@ export const MyDOFs: React.FC<MyDOFsProps> = ({
 
   const getStatusIcon = (status: string) => {
     switch (status) {
-      case 'yeni': return 'bi-plus-circle';
-      case 'atanmayi_bekleyen': return 'bi-clock';
+      case 'taslak': return 'bi-file-earmark';
+      case 'atanmayı_bekleyen': return 'bi-clock';
       case 'atanan': return 'bi-person-check';
-      case 'cozum_bekliyor': return 'bi-hourglass-split';
-      case 'kapatma_onayinda': return 'bi-check-circle';
-      case 'kapatildi': return 'bi-check-circle-fill';
+      case 'çözüm_bekleyen': return 'bi-hourglass-split';
+      case 'kapatma_onayında': return 'bi-check-circle';
+      case 'kapatıldı': return 'bi-check-circle-fill';
       case 'iptal': return 'bi-x-circle';
-      case 'reddedilen': return 'bi-x-circle-fill';
+      case 'reddedildi': return 'bi-x-circle-fill';
       default: return 'bi-circle';
     }
   };
 
-  const canEdit = (dof: DOF) => {
-    return ['yeni', 'reddedilen'].includes(dof.status);
-  };
-
   const canClose = (dof: DOF) => {
-    return ['cozum_bekliyor', 'kapatma_onayinda'].includes(dof.status);
+    return ['çözüm_bekleyen', 'kapatma_onayında'].includes(dof.status);
   };
 
   if (loading) {
@@ -126,31 +124,40 @@ export const MyDOFs: React.FC<MyDOFsProps> = ({
 
       {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <Card className="bg-gradient-to-r from-success-500 to-success-600 text-white">
+        <Card
+          className={`bg-gradient-to-r from-success-500 to-success-600 text-white cursor-pointer transition-all hover:shadow-lg hover:scale-105 ${statusFilter === 'kapatıldı' ? 'ring-4 ring-success-300' : ''}`}
+          onClick={() => setStatusFilter(statusFilter === 'kapatıldı' ? 'all' : 'kapatıldı')}
+        >
           <CardContent className="p-4">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-success-100 text-sm">Kapatılan</p>
-                <p className="text-2xl font-bold">{dofs.filter(d => d.status === 'kapatildi').length}</p>
+                <p className="text-2xl font-bold">{dofs.filter(d => d.status === 'kapatıldı').length}</p>
               </div>
               <i className="bi bi-check-circle-fill text-2xl text-success-200"></i>
             </div>
           </CardContent>
         </Card>
 
-        <Card className="bg-gradient-to-r from-warning-500 to-warning-600 text-white">
+        <Card
+          className={`bg-gradient-to-r from-warning-500 to-warning-600 text-white cursor-pointer transition-all hover:shadow-lg hover:scale-105 ${statusFilter === 'çözüm_bekleyen' ? 'ring-4 ring-warning-300' : ''}`}
+          onClick={() => setStatusFilter(statusFilter === 'çözüm_bekleyen' ? 'all' : 'çözüm_bekleyen')}
+        >
           <CardContent className="p-4">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-warning-100 text-sm">Çözüm Bekleyen</p>
-                <p className="text-2xl font-bold">{dofs.filter(d => d.status === 'cozum_bekliyor').length}</p>
+                <p className="text-2xl font-bold">{dofs.filter(d => d.status === 'çözüm_bekleyen').length}</p>
               </div>
               <i className="bi bi-hourglass-split text-2xl text-warning-200"></i>
             </div>
           </CardContent>
         </Card>
 
-        <Card className="bg-gradient-to-r from-primary-500 to-primary-600 text-white">
+        <Card
+          className={`bg-gradient-to-r from-primary-500 to-primary-600 text-white cursor-pointer transition-all hover:shadow-lg hover:scale-105 ${statusFilter === 'atanan' ? 'ring-4 ring-primary-300' : ''}`}
+          onClick={() => setStatusFilter(statusFilter === 'atanan' ? 'all' : 'atanan')}
+        >
           <CardContent className="p-4">
             <div className="flex items-center justify-between">
               <div>
@@ -162,12 +169,21 @@ export const MyDOFs: React.FC<MyDOFsProps> = ({
           </CardContent>
         </Card>
 
-        <Card className="bg-gradient-to-r from-danger-500 to-danger-600 text-white">
+        <Card
+          className={`bg-gradient-to-r from-danger-500 to-danger-600 text-white cursor-pointer transition-all hover:shadow-lg hover:scale-105 ${['taslak', 'atanmayı_bekleyen'].includes(statusFilter) ? 'ring-4 ring-danger-300' : ''}`}
+          onClick={() => {
+            if (statusFilter === 'taslak' || statusFilter === 'atanmayı_bekleyen') {
+              setStatusFilter('all');
+            } else {
+              setStatusFilter('atanmayı_bekleyen');
+            }
+          }}
+        >
           <CardContent className="p-4">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-danger-100 text-sm">Yeni/Bekleyen</p>
-                <p className="text-2xl font-bold">{dofs.filter(d => ['yeni', 'atanmayi_bekleyen'].includes(d.status)).length}</p>
+                <p className="text-2xl font-bold">{dofs.filter(d => ['taslak', 'atanmayı_bekleyen'].includes(d.status)).length}</p>
               </div>
               <i className="bi bi-clock text-2xl text-danger-200"></i>
             </div>
@@ -265,9 +281,27 @@ export const MyDOFs: React.FC<MyDOFsProps> = ({
                           {dof.assignee.display_name}
                         </span>
                       )}
+                      {(dof.comment_count && dof.comment_count > 0) && (
+                        <span className="flex items-center">
+                          <i className="bi bi-chat-left-text mr-1"></i>
+                          {dof.comment_count} Yorum
+                        </span>
+                      )}
                     </div>
+
+                    {dof.last_comment && (
+                      <div className="mt-3 p-2 bg-secondary-50 rounded border-l-2 border-primary-500">
+                        <div className="flex items-center text-xs text-secondary-500 mb-1">
+                          <i className="bi bi-chat mr-1"></i>
+                          <span className="font-medium">{dof.last_comment.user?.display_name}</span>
+                          <span className="mx-1">•</span>
+                          <span>{formatDate(dof.last_comment.created_at)}</span>
+                        </div>
+                        <p className="text-sm text-secondary-700 line-clamp-2">{dof.last_comment.comment}</p>
+                      </div>
+                    )}
                   </div>
-                  
+
                   <div className="flex items-center space-x-2 ml-4">
                     <Button
                       size="sm"
@@ -277,8 +311,8 @@ export const MyDOFs: React.FC<MyDOFsProps> = ({
                       <i className="bi bi-eye mr-1"></i>
                       Görüntüle
                     </Button>
-                    
-                    {canEdit(dof) && (
+
+                    {canEditDOF(dof) && (
                       <Button
                         size="sm"
                         variant="ghost"
@@ -288,7 +322,7 @@ export const MyDOFs: React.FC<MyDOFsProps> = ({
                         Düzenle
                       </Button>
                     )}
-                    
+
                     {canClose(dof) && (
                       <Button
                         size="sm"

@@ -72,21 +72,33 @@ export const useFeedback = (filters?: FeedbackFilters) => {
 
   const createFeedback = async (formData: FeedbackFormData): Promise<FeedbackSuggestion> => {
     try {
+      if (!user) {
+        throw new Error('Görüş oluşturmak için giriş yapmalısınız');
+      }
+
+      const insertData: any = {
+        title: formData.title,
+        content: formData.content,
+        category_id: formData.category_id,
+        priority: formData.priority,
+        is_anonymous: formData.is_anonymous,
+        tags: formData.tags,
+        facility_id: user.facility_id,
+      };
+
+      // Anonim değilse reporter_id ekle
+      if (!formData.is_anonymous) {
+        insertData.reporter_id = user.id;
+      } else {
+        // Anonim ise iletişim bilgilerini ekle
+        insertData.reporter_name = formData.reporter_name;
+        insertData.reporter_email = formData.reporter_email;
+        insertData.reporter_phone = formData.reporter_phone;
+      }
+
       const { data, error } = await supabase
         .from('feedback_suggestions')
-        .insert({
-          title: formData.title,
-          content: formData.content,
-          category_id: formData.category_id,
-          priority: formData.priority,
-          is_anonymous: formData.is_anonymous,
-          reporter_name: formData.is_anonymous ? formData.reporter_name : null,
-          reporter_email: formData.is_anonymous ? formData.reporter_email : null,
-          reporter_phone: formData.is_anonymous ? formData.reporter_phone : null,
-          tags: formData.tags,
-          facility_id: 1, // Bu değer kullanıcı context'ten alınmalı
-          reporter_id: formData.is_anonymous ? null : 'current-user-id', // Bu değer auth context'ten alınmalı
-        })
+        .insert(insertData)
         .select()
         .single();
 

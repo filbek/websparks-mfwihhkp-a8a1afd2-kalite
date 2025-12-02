@@ -77,15 +77,15 @@ export const FeedbackForm: React.FC<FeedbackFormProps> = ({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     // Validasyon
     const validation = validateFeedbackForm(formData);
-    
+
     if (!validation.isValid) {
       setFormErrors(validation.errors);
       return;
     }
-    
+
     // Form hatalarını temizle
     setFormErrors({});
 
@@ -210,7 +210,7 @@ export const FeedbackForm: React.FC<FeedbackFormProps> = ({
             className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-secondary-300 rounded"
           />
           <label htmlFor="is_anonymous" className="ml-2 block text-sm text-secondary-900">
-            Anonim olarak gönder
+            Kimliği gizle.
           </label>
         </div>
         <p className="mt-1 text-sm text-secondary-500">
@@ -249,7 +249,7 @@ export const FeedbackForm: React.FC<FeedbackFormProps> = ({
               onChange={handleInputChange}
               placeholder="Telefon numaranız"
             />
-            
+
             <p className="text-xs text-secondary-500">
               E-posta veya telefon numaranızdan en az birini girmeniz gerekmektedir.
             </p>

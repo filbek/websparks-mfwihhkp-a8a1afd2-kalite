@@ -1,20 +1,3 @@
-# .gitignore Dosyası Güncelleme Talimatları
-
-## Mevcut Durum
-
-Mevcut .gitignore dosyası çok basit ve sadece 2 satır içeriyor:
-```
-node_modules
-*.env
-```
-
-Bu dosya GitHub'a repo edilmemesi gereken çok önemli dosyaları engellememektedir.
-
-## Güncellenmiş .gitignore Dosyası İçeriği
-
-Aşağıdaki içeriği mevcut .gitignore dosyasına kopyalayın:
-
-```gitignore
 # =================================
 # DEPENDENCIES (BAĞIMLILIKLAR)
 # =================================
@@ -239,7 +222,8 @@ temp/
 *.db-journal
 *.sqlite-shm
 *.sqlite-wal
-
+*.sql
+*.sql.backup
 
 # =================================
 # SUPABASE SPECIFIC (SUPABASE ÖZEL DOSYALAR)
@@ -366,7 +350,6 @@ public/uploads/
 # Database backups
 database/backups/
 database/dumps/
-*.sql.backup
 
 # Temporary uploads
 temp/uploads/
@@ -448,10 +431,5 @@ known_hosts
 *.md
 .kilocode/
 .roo/
-# =================================
-# END OF FILE (DOSYA SONU)
-# =================================
 
-# Supabase Config
-src/config/supabase.ts
-```
+

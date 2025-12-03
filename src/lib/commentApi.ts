@@ -36,12 +36,21 @@ export const createComment = async (cardId: string, content: string): Promise<Co
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) throw new Error('User not authenticated');
 
+    const { data: userData } = await supabase
+        .from('users')
+        .select('organization_id')
+        .eq('id', user.id)
+        .single();
+
+    if (!userData?.organization_id) throw new Error('Organizasyon bulunamadı');
+
     const { data, error } = await supabase
         .from('card_comments')
         .insert({
             card_id: cardId,
             user_id: user.id,
             content,
+            organization_id: userData.organization_id
         })
         .select(`
       *,

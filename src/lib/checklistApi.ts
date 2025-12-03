@@ -44,6 +44,17 @@ export const fetchChecklists = async (cardId: string): Promise<Checklist[]> => {
 
 // Create a new checklist
 export const createChecklist = async (cardId: string, title: string): Promise<Checklist> => {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) throw new Error('Kullanıcı oturumu bulunamadı');
+
+    const { data: userData } = await supabase
+        .from('users')
+        .select('organization_id')
+        .eq('id', user.id)
+        .single();
+
+    if (!userData?.organization_id) throw new Error('Organizasyon bulunamadı');
+
     const { data: checklists } = await supabase
         .from('card_checklists')
         .select('position')
@@ -55,7 +66,12 @@ export const createChecklist = async (cardId: string, title: string): Promise<Ch
 
     const { data, error } = await supabase
         .from('card_checklists')
-        .insert({ card_id: cardId, title, position })
+        .insert({
+            card_id: cardId,
+            title,
+            position,
+            organization_id: userData.organization_id
+        })
         .select()
         .single();
 
@@ -88,6 +104,17 @@ export const deleteChecklist = async (id: string): Promise<void> => {
 
 // Create checklist item
 export const createChecklistItem = async (checklistId: string, title: string): Promise<ChecklistItem> => {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) throw new Error('Kullanıcı oturumu bulunamadı');
+
+    const { data: userData } = await supabase
+        .from('users')
+        .select('organization_id')
+        .eq('id', user.id)
+        .single();
+
+    if (!userData?.organization_id) throw new Error('Organizasyon bulunamadı');
+
     const { data: items } = await supabase
         .from('checklist_items')
         .select('position')
@@ -99,7 +126,12 @@ export const createChecklistItem = async (checklistId: string, title: string): P
 
     const { data, error } = await supabase
         .from('checklist_items')
-        .insert({ checklist_id: checklistId, title, position })
+        .insert({
+            checklist_id: checklistId,
+            title,
+            position,
+            organization_id: userData.organization_id
+        })
         .select()
         .single();
 

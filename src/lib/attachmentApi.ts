@@ -34,6 +34,15 @@ export const uploadFile = async (file: File, cardId: string): Promise<Attachment
         .from(BUCKET_NAME)
         .getPublicUrl(fileName);
 
+    // Get organization_id
+    const { data: userData } = await supabase
+        .from('users')
+        .select('organization_id')
+        .eq('id', user.id)
+        .single();
+
+    if (!userData?.organization_id) throw new Error('Organizasyon bulunamadı');
+
     // Save attachment record
     const { data, error } = await supabase
         .from('card_attachments')
@@ -44,6 +53,7 @@ export const uploadFile = async (file: File, cardId: string): Promise<Attachment
             file_size: file.size,
             file_type: file.type,
             uploaded_by: user.id,
+            organization_id: userData.organization_id
         })
         .select()
         .single();

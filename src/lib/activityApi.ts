@@ -41,6 +41,14 @@ export const logActivity = async (
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) return;
 
+    const { data: userData } = await supabase
+        .from('users')
+        .select('organization_id')
+        .eq('id', user.id)
+        .single();
+
+    if (!userData?.organization_id) return;
+
     const { error } = await supabase
         .from('card_activity')
         .insert({
@@ -48,6 +56,7 @@ export const logActivity = async (
             user_id: user.id,
             action_type: actionType,
             action_data: actionData || {},
+            organization_id: userData.organization_id
         });
 
     if (error) console.error('Activity log error:', error);

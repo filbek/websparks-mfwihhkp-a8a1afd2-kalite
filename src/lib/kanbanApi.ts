@@ -89,9 +89,22 @@ export const createBoard = async (title: string): Promise<Board> => {
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) throw new Error('Kullanıcı oturumu bulunamadı');
 
+    // Get organization_id
+    const { data: userData } = await supabase
+        .from('users')
+        .select('organization_id')
+        .eq('id', user.id)
+        .single();
+
+    if (!userData?.organization_id) throw new Error('Organizasyon bulunamadı');
+
     const { data, error } = await supabase
         .from('boards')
-        .insert({ title, user_id: user.id })
+        .insert({
+            title,
+            user_id: user.id,
+            organization_id: userData.organization_id
+        })
         .select()
         .single();
 
@@ -122,9 +135,26 @@ export const deleteBoard = async (id: string): Promise<void> => {
 
 // List operations
 export const createList = async (boardId: string, title: string, position: number): Promise<List> => {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) throw new Error('Kullanıcı oturumu bulunamadı');
+
+    // Get organization_id
+    const { data: userData } = await supabase
+        .from('users')
+        .select('organization_id')
+        .eq('id', user.id)
+        .single();
+
+    if (!userData?.organization_id) throw new Error('Organizasyon bulunamadı');
+
     const { data, error } = await supabase
         .from('lists')
-        .insert({ board_id: boardId, title, position })
+        .insert({
+            board_id: boardId,
+            title,
+            position,
+            organization_id: userData.organization_id
+        })
         .select()
         .single();
 
@@ -164,9 +194,25 @@ export const updateListPosition = async (listId: string, position: number): Prom
 
 // Card operations
 export const createCard = async (listId: string, cardData: Partial<Card>): Promise<Card> => {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) throw new Error('Kullanıcı oturumu bulunamadı');
+
+    // Get organization_id
+    const { data: userData } = await supabase
+        .from('users')
+        .select('organization_id')
+        .eq('id', user.id)
+        .single();
+
+    if (!userData?.organization_id) throw new Error('Organizasyon bulunamadı');
+
     const { data, error } = await supabase
         .from('cards')
-        .insert({ list_id: listId, ...cardData })
+        .insert({
+            list_id: listId,
+            ...cardData,
+            organization_id: userData.organization_id
+        })
         .select()
         .single();
 

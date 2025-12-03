@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { User, UserRole, DOF } from '../types';
 import { supabase, setSupabaseContext } from '../lib/supabase';
-import { Organization, getCurrentOrganization } from '../lib/organizationApi';
+import { Organization, getCurrentOrganization, setOrganizationContext } from '../lib/organizationApi';
 
 interface AuthContextType {
   user: User | null;
@@ -79,6 +79,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
             try {
               const org = await getCurrentOrganization();
               setCurrentOrganization(org);
+              if (org) {
+                await setOrganizationContext(org.id);
+              }
             } catch (err) {
               console.error('Error loading organization:', err);
             }
@@ -113,6 +116,13 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
             const user = userData as User;
             setUser(user);
             await setSupabaseContext(user.id, user.role, user.facility_id);
+
+            // Load organization
+            const org = await getCurrentOrganization();
+            setCurrentOrganization(org);
+            if (org) {
+              await setOrganizationContext(org.id);
+            }
           }
         } else {
           setUser(null);
@@ -148,6 +158,13 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
           const user = userData as User;
           setUser(user);
           await setSupabaseContext(user.id, user.role, user.facility_id);
+
+          // Load organization
+          const org = await getCurrentOrganization();
+          setCurrentOrganization(org);
+          if (org) {
+            await setOrganizationContext(org.id);
+          }
         } else {
           throw new Error('Kullanıcı profili bulunamadı');
         }

@@ -1,0 +1,16 @@
+-- DISABLE RLS TEMPORARILY (FIXED)
+-- Bu scripti çalıştırarak RLS'i geçici olarak devre dışı bırakabilirsiniz.
+
+DO $$
+BEGIN
+  ALTER TABLE boards DISABLE ROW LEVEL SECURITY;
+  ALTER TABLE lists DISABLE ROW LEVEL SECURITY;
+  ALTER TABLE cards DISABLE ROW LEVEL SECURITY;
+  ALTER TABLE card_checklists DISABLE ROW LEVEL SECURITY;
+  ALTER TABLE checklist_items DISABLE ROW LEVEL SECURITY;
+  ALTER TABLE card_attachments DISABLE ROW LEVEL SECURITY;
+  ALTER TABLE card_comments DISABLE ROW LEVEL SECURITY;
+  ALTER TABLE card_activity DISABLE ROW LEVEL SECURITY;
+
+  RAISE NOTICE 'RLS has been disabled for Kanban tables.';
+END $$;

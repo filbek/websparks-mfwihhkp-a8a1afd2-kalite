@@ -50,6 +50,20 @@ export const useUsers = () => {
 
   const createUser = async (userData: CreateUserData): Promise<User> => {
     try {
+      // Get current admin session and organization_id BEFORE signUp
+      const { data: { session: adminSession } } = await supabase.auth.getSession();
+      if (!adminSession) throw new Error('Oturum bulunamadı');
+
+      const { data: currentUserData, error: currentUserError } = await supabase
+        .from('users')
+        .select('organization_id')
+        .eq('id', adminSession.user.id)
+        .single();
+
+      if (currentUserError) throw currentUserError;
+      if (!currentUserData?.organization_id) throw new Error('Organizasyon bilgisi bulunamadı');
+
+      // Create new auth user
       const { data: authData, error: authError } = await supabase.auth.signUp({
         email: userData.email,
         password: userData.password,
@@ -61,6 +75,17 @@ export const useUsers = () => {
       if (authError) throw authError;
       if (!authData.user) throw new Error('Kullanıcı oluşturulamadı');
 
+      // IMPORTANT: Restore admin session if signUp changed it
+      // This ensures the INSERT happens with admin permissions
+      const { data: { session: currentSession } } = await supabase.auth.getSession();
+      if (currentSession?.user.id !== adminSession.user.id) {
+        await supabase.auth.setSession({
+          access_token: adminSession.access_token,
+          refresh_token: adminSession.refresh_token,
+        });
+      }
+
+      // Now insert the user profile with admin session active
       const { data, error: insertError } = await supabase
         .from('users')
         .insert({
@@ -71,6 +96,7 @@ export const useUsers = () => {
           facility_id: userData.facility_id,
           department_id: userData.department_id,
           department_name: userData.department_name,
+          organization_id: currentUserData.organization_id,
           is_active: true,
         })
         .select()

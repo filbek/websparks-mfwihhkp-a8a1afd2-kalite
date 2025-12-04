@@ -222,8 +222,7 @@ temp/
 *.db-journal
 *.sqlite-shm
 *.sqlite-wal
-*.sql
-*.sql.backup
+
 
 # =================================
 # SUPABASE SPECIFIC (SUPABASE ÖZEL DOSYALAR)

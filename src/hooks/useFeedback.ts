@@ -55,7 +55,7 @@ export const useFeedback = (filters?: FeedbackFilters) => {
       const { data, error } = await query;
 
       if (error) throw error;
-      
+
       // Vote count hesapla
       const feedbacksWithVoteCount = data?.map(feedback => ({
         ...feedback,
@@ -71,8 +71,10 @@ export const useFeedback = (filters?: FeedbackFilters) => {
   };
 
   const createFeedback = async (formData: FeedbackFormData): Promise<FeedbackSuggestion> => {
+    console.log('createFeedback BAŞLADI', formData);
     try {
       if (!user) {
+        console.error('Kullanıcı yok!');
         throw new Error('Görüş oluşturmak için giriş yapmalısınız');
       }
 
@@ -85,6 +87,17 @@ export const useFeedback = (filters?: FeedbackFilters) => {
         tags: formData.tags,
         facility_id: user.facility_id,
       };
+
+      // Kullanıcının organizasyonunu al
+      const { data: userData, error: userError } = await supabase
+        .from('users')
+        .select('organization_id')
+        .eq('id', user.id)
+        .single();
+
+      if (userError) throw userError;
+
+      insertData.organization_id = userData.organization_id;
 
       // Anonim değilse reporter_id ekle
       if (!formData.is_anonymous) {
@@ -108,6 +121,7 @@ export const useFeedback = (filters?: FeedbackFilters) => {
       await fetchFeedbacks();
       return data;
     } catch (err) {
+      console.error('createFeedback CATCH BLOĞU:', err);
       throw new Error(err instanceof Error ? err.message : 'Görüş oluşturulurken hata oluştu');
     }
   };
@@ -155,7 +169,7 @@ export const useFeedback = (filters?: FeedbackFilters) => {
       if (!user) {
         throw new Error('Oy vermek için giriş yapmalısınız');
       }
-      
+
       const userId = user.id;
 
       // Önce kullanıcının daha önce oy verip vermediğini kontrol et
@@ -218,7 +232,7 @@ export const useFeedback = (filters?: FeedbackFilters) => {
       if (!user) {
         throw new Error('Yanıt eklemek için giriş yapmalısınız');
       }
-      
+
       const userId = user.id;
 
       const { error } = await supabase

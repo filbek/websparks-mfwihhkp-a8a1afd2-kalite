@@ -77,12 +77,15 @@ export const FeedbackForm: React.FC<FeedbackFormProps> = ({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    console.log('FeedbackForm handleSubmit ÇAĞRILDI');
 
     // Validasyon
     const validation = validateFeedbackForm(formData);
+    console.log('Validasyon Sonucu:', validation);
 
     if (!validation.isValid) {
       setFormErrors(validation.errors);
+      console.warn('Validasyon hatası:', validation.errors);
       return;
     }
 
@@ -90,16 +93,21 @@ export const FeedbackForm: React.FC<FeedbackFormProps> = ({
     setFormErrors({});
 
     try {
+      console.log('onSubmit prop çağrılıyor...');
       await onSubmit(formData);
+      console.log('onSubmit prop tamamlandı');
     } catch (error) {
-      console.error('Form gönderim hatası:', error);
+      console.error('Form gönderim hatası (FeedbackForm):', error);
     }
   };
 
-  const categoryOptions = categories.map(category => ({
-    value: category.id,
-    label: category.name
-  }));
+  const categoryOptions = [
+    { value: '', label: 'Kategori Seçiniz' },
+    ...categories.map(category => ({
+      value: category.id,
+      label: category.name
+    }))
+  ];
 
   const priorityOptions = [
     { value: 'düşük', label: 'Düşük' },
@@ -269,6 +277,7 @@ export const FeedbackForm: React.FC<FeedbackFormProps> = ({
         <Button
           type="submit"
           disabled={loading}
+          onClick={() => console.log('GÖNDER BUTONUNA TIKLANDI')}
           className="bg-primary-600 hover:bg-primary-700"
         >
           {loading ? (

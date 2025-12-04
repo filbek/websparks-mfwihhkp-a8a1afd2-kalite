@@ -13,7 +13,7 @@ export const FeedbackManagement: React.FC = () => {
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [filters, setFilters] = useState<FeedbackFilters>({});
   const [createLoading, setCreateLoading] = useState(false);
-  
+
   const { feedbacks, loading, error, createFeedback, voteFeedback, addResponse } = useFeedback(filters);
   const { categories } = useFeedbackCategories();
   const { user, hasPermission } = useAuth();
@@ -27,12 +27,14 @@ export const FeedbackManagement: React.FC = () => {
   };
 
   const handleCreateFeedback = async (formData: any) => {
+    console.log('handleCreateFeedback ÇAĞRILDI', formData);
     try {
       setCreateLoading(true);
       await createFeedback(formData);
+      console.log('createFeedback BAŞARILI DÖNDÜ');
       setIsCreateModalOpen(false);
     } catch (error) {
-      console.error('Görüş oluşturma hatası:', error);
+      console.error('Görüş oluşturma hatası (handleCreateFeedback):', error);
       alert('Görüş oluşturulurken bir hata oluştu. Lütfen tekrar deneyin.');
     } finally {
       setCreateLoading(false);
@@ -74,7 +76,7 @@ export const FeedbackManagement: React.FC = () => {
               </p>
             )}
           </div>
-          
+
           {canCreate && (
             <Button
               onClick={() => setIsCreateModalOpen(true)}

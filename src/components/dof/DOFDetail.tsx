@@ -195,6 +195,15 @@ export const DOFDetail: React.FC<DOFDetailProps> = ({
                 </div>
               )}
 
+              {dof.tespit_tarihi && (
+                <div>
+                  <label className="text-sm font-medium text-secondary-600">Tespit Tarihi</label>
+                  <p className="text-secondary-900 font-medium">
+                    {formatDate(dof.tespit_tarihi)}
+                  </p>
+                </div>
+              )}
+
               <div>
                 <label className="text-sm font-medium text-secondary-600">Oluşturulma Tarihi</label>
                 <p className="text-secondary-900 font-medium">

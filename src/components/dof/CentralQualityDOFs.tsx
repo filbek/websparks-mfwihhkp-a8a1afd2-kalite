@@ -106,7 +106,7 @@ export const CentralQualityDOFs: React.FC<CentralQualityDOFsProps> = ({
 
   const filteredDOFs = dofs.filter(dof => {
     const matchesSearch = dof.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         dof.description.toLowerCase().includes(searchTerm.toLowerCase());
+      dof.description.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesStatus = statusFilter === 'all' || dof.status === statusFilter;
     const matchesPriority = priorityFilter === 'all' || dof.priority === priorityFilter;
     const matchesFacility = facilityFilter === 'all' || dof.facility_id.toString() === facilityFilter;
@@ -118,8 +118,8 @@ export const CentralQualityDOFs: React.FC<CentralQualityDOFsProps> = ({
     const matchesKisaAciklama = kisaAciklamaFilter === 'all' || dof.kisa_aciklama === kisaAciklamaFilter;
 
     return matchesSearch && matchesStatus && matchesPriority && matchesFacility &&
-           matchesTespitTarihi && matchesDofTuru && matchesTespitEdilenYer &&
-           matchesDofKaynagi && matchesDofKategorisi && matchesKisaAciklama;
+      matchesTespitTarihi && matchesDofTuru && matchesTespitEdilenYer &&
+      matchesDofKaynagi && matchesDofKategorisi && matchesKisaAciklama;
   });
 
   // Group DOFs by facility for stats
@@ -348,26 +348,26 @@ export const CentralQualityDOFs: React.FC<CentralQualityDOFsProps> = ({
               {(searchTerm || statusFilter !== 'all' || priorityFilter !== 'all' || facilityFilter !== 'all' ||
                 tespitTarihi || dofTuruFilter !== 'all' || tespitEdilenYerFilter !== 'all' ||
                 dofKaynagiFilter !== 'all' || dofKategorisiFilter !== 'all' || kisaAciklamaFilter !== 'all') && (
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => {
-                    setSearchTerm('');
-                    setStatusFilter('all');
-                    setPriorityFilter('all');
-                    setFacilityFilter('all');
-                    setTespitTarihi('');
-                    setDofTuruFilter('all');
-                    setTespitEdilenYerFilter('all');
-                    setDofKaynagiFilter('all');
-                    setDofKategorisiFilter('all');
-                    setKisaAciklamaFilter('all');
-                  }}
-                >
-                  <i className="bi bi-x-circle mr-1"></i>
-                  Tüm Filtreleri Temizle
-                </Button>
-              )}
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => {
+                      setSearchTerm('');
+                      setStatusFilter('all');
+                      setPriorityFilter('all');
+                      setFacilityFilter('all');
+                      setTespitTarihi('');
+                      setDofTuruFilter('all');
+                      setTespitEdilenYerFilter('all');
+                      setDofKaynagiFilter('all');
+                      setDofKategorisiFilter('all');
+                      setKisaAciklamaFilter('all');
+                    }}
+                  >
+                    <i className="bi bi-x-circle mr-1"></i>
+                    Tüm Filtreleri Temizle
+                  </Button>
+                )}
             </div>
           </div>
         </CardContent>
@@ -421,8 +421,8 @@ export const CentralQualityDOFs: React.FC<CentralQualityDOFsProps> = ({
                     <td className="py-3 px-4">
                       <Badge variant={
                         dof.priority === 'kritik' ? 'danger' :
-                        dof.priority === 'yüksek' ? 'warning' :
-                        dof.priority === 'orta' ? 'info' : 'default'
+                          dof.priority === 'yüksek' ? 'warning' :
+                            dof.priority === 'orta' ? 'info' : 'default'
                       }>
                         {dof.priority.charAt(0).toUpperCase() + dof.priority.slice(1)}
                       </Badge>
@@ -431,7 +431,7 @@ export const CentralQualityDOFs: React.FC<CentralQualityDOFsProps> = ({
                       {dof.reporter?.display_name || 'Bilinmeyen'}
                     </td>
                     <td className="py-3 px-4 text-sm text-secondary-600">
-                      {formatDate(dof.created_at)}
+                      {dof.tespit_tarihi ? formatDate(dof.tespit_tarihi) : formatDate(dof.created_at)}
                     </td>
                     <td className="py-3 px-4">
                       <div className="flex items-center space-x-2">

@@ -52,7 +52,7 @@ export const MyDOFs: React.FC<MyDOFsProps> = ({
 
   const filteredDOFs = dofs.filter(dof => {
     const matchesSearch = dof.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         dof.description.toLowerCase().includes(searchTerm.toLowerCase());
+      dof.description.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesStatus = statusFilter === 'all' || dof.status === statusFilter;
     const matchesPriority = priorityFilter === 'all' || dof.priority === priorityFilter;
 
@@ -202,7 +202,7 @@ export const MyDOFs: React.FC<MyDOFsProps> = ({
                 onSearch={setSearchTerm}
               />
             </div>
-            
+
             <div className="flex flex-wrap items-center gap-3">
               <FilterDropdown
                 label="Durum"
@@ -211,7 +211,7 @@ export const MyDOFs: React.FC<MyDOFsProps> = ({
                 onChange={setStatusFilter}
                 icon="bi-circle-fill"
               />
-              
+
               <FilterDropdown
                 label="Öncelik"
                 options={priorityOptions}
@@ -265,11 +265,11 @@ export const MyDOFs: React.FC<MyDOFsProps> = ({
                       </span>
                     </div>
                     <p className="text-secondary-600 mb-3 line-clamp-2">{dof.description}</p>
-                    
+
                     <div className="flex items-center space-x-4 text-sm text-secondary-500">
                       <span className="flex items-center">
                         <i className="bi bi-calendar mr-1"></i>
-                        {formatDate(dof.created_at)}
+                        {dof.tespit_tarihi ? formatDate(dof.tespit_tarihi) : formatDate(dof.created_at)}
                       </span>
                       <span className="flex items-center">
                         <i className="bi bi-building mr-1"></i>

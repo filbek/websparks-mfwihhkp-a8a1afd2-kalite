@@ -19,7 +19,6 @@ interface FacilityQualityDOFsProps {
   loading: boolean;
   facilityName: string;
   onView: (dof: DOF) => void;
-  onEdit: (dof: DOF) => void;
   onAssign: (dof: DOF) => void;
   onClose: (dof: DOF) => void;
   onExportExcel: () => void;
@@ -53,11 +52,67 @@ export const FacilityQualityDOFs: React.FC<FacilityQualityDOFsProps> = ({
     dofKategorisiFilter !== 'all' ? dofKategorisiFilter : null
   );
 
-  // ... (Options dizileri burada kalıyor, değişmiyor)
+  const statusOptions = [
+    { value: 'all', label: 'Tüm Durumlar' },
+    { value: 'taslak', label: 'Taslak' },
+    { value: 'atanmayı_bekleyen', label: 'Atanmayı Bekleyen' },
+    { value: 'atanan', label: 'Atanan' },
+    { value: 'çözüm_bekleyen', label: 'Çözüm Bekleyen' },
+    { value: 'kapatma_onayında', label: 'Kapatma Onayında' },
+    { value: 'kapatıldı', label: 'Kapatıldı' },
+    { value: 'reddedildi', label: 'Reddedildi' }
+  ];
 
-  const canAssign = (dof: DOF) => {
-    return ['taslak', 'atanmayı_bekleyen', 'reddedildi'].includes(dof.status);
-  };
+  const priorityOptions = [
+    { value: 'all', label: 'Tüm Öncelikler' },
+    { value: 'düşük', label: 'Düşük' },
+    { value: 'orta', label: 'Orta' },
+    { value: 'yüksek', label: 'Yüksek' },
+    { value: 'kritik', label: 'Kritik' }
+  ];
+
+  const dofTuruOptions = [
+    { value: 'all', label: 'Tüm Türler' },
+    { value: 'duzeltici', label: 'Düzeltici' },
+    { value: 'onleyici', label: 'Önleyici' }
+  ];
+
+  const tespitEdilenYerOptions = [
+    { value: 'all', label: 'Tüm Yerler' },
+    ...locations.map(loc => ({ value: loc.value, label: loc.label }))
+  ];
+
+  const dofKaynagiOptions = [
+    { value: 'all', label: 'Tüm Kaynaklar' },
+    ...kaynaklar.map(k => ({ value: k.value, label: k.label }))
+  ];
+
+  const dofKategorisiOptions = [
+    { value: 'all', label: 'Tüm Kategoriler' },
+    ...kategoriler.map(k => ({ value: k.value, label: k.label }))
+  ];
+
+  const kisaAciklamaOptions = [
+    { value: 'all', label: 'Tüm Açıklamalar' },
+    ...aciklamalar.map(a => ({ value: a.value, label: a.label }))
+  ];
+
+  const filteredDOFs = dofs.filter(dof => {
+    const matchesSearch = dof.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      dof.description.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesStatus = statusFilter === 'all' || dof.status === statusFilter;
+    const matchesPriority = priorityFilter === 'all' || dof.priority === priorityFilter;
+    const matchesTespitTarihi = !tespitTarihi || dof.tespit_tarihi === tespitTarihi;
+    const matchesDofTuru = dofTuruFilter === 'all' || dof.dof_turu === dofTuruFilter;
+    const matchesTespitEdilenYer = tespitEdilenYerFilter === 'all' || dof.tespit_edilen_yer === tespitEdilenYerFilter;
+    const matchesDofKaynagi = dofKaynagiFilter === 'all' || dof.dof_kaynagi === dofKaynagiFilter;
+    const matchesDofKategorisi = dofKategorisiFilter === 'all' || dof.dof_kategorisi === dofKategorisiFilter;
+    const matchesKisaAciklama = kisaAciklamaFilter === 'all' || dof.kisa_aciklama === kisaAciklamaFilter;
+
+    return matchesSearch && matchesStatus && matchesPriority && matchesTespitTarihi &&
+      matchesDofTuru && matchesTespitEdilenYer && matchesDofKaynagi &&
+      matchesDofKategorisi && matchesKisaAciklama;
+  });
 
   const canClose = (dof: DOF) => {
     // Sadece "kapatma_onayında" veya "çözüm_bekleyen" durumundaysa
@@ -70,9 +125,24 @@ export const FacilityQualityDOFs: React.FC<FacilityQualityDOFsProps> = ({
     if (dof.assigned_to === user.id) return false;
 
     // Bu ekrana erişebilen kişi zaten kalite yöneticisidir, kapatabilir.
-    // Ancak yine de açan kişi VE atanan kişi değilse kontrolü ekleyelim.
     return true;
   };
+
+  if (loading) {
+    return (
+      <div className="space-y-4">
+        {[...Array(5)].map((_, index) => (
+          <Card key={index} className="animate-pulse">
+            <CardContent className="p-6">
+              <div className="h-4 bg-secondary-200 rounded mb-3"></div>
+              <div className="h-3 bg-secondary-200 rounded mb-2"></div>
+              <div className="h-3 bg-secondary-200 rounded mb-4"></div>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
@@ -328,7 +398,7 @@ export const FacilityQualityDOFs: React.FC<FacilityQualityDOFsProps> = ({
                       </div>
                     </td>
                     <td className="py-3 px-4 text-sm text-secondary-700">
-                      {dof.tespit_edilen_bolum?.replace('_', ' ').charAt(0).toUpperCase() + dof.tespit_edilen_bolum?.replace('_', ' ').slice(1)}
+                      {dof.tespit_edilen_bolum ? dof.tespit_edilen_bolum.replace('_', ' ').charAt(0).toUpperCase() + dof.tespit_edilen_bolum.replace('_', ' ').slice(1) : '-'}
                     </td>
                     <td className="py-3 px-4">
                       <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusColor(dof.status)}`}>

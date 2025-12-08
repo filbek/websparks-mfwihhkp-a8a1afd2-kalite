@@ -4,6 +4,7 @@ import { Button } from '../ui/Button';
 import { Select } from '../ui/Select';
 import { Textarea } from '../ui/Textarea';
 import { Event } from '../../types/events';
+import { useUsers } from '../../hooks/useUsers';
 
 interface AssignmentModalProps {
   isOpen: boolean;
@@ -12,14 +13,6 @@ interface AssignmentModalProps {
   onAssign: (eventId: string, assigneeId: string, notes: string) => Promise<void>;
   loading?: boolean;
 }
-
-const managers = [
-  { id: 'manager-1', name: 'Dr. Ahmet Yılmaz', department: 'Tıbbi Hizmetler Müdürü' },
-  { id: 'manager-2', name: 'Hemşire Fatma Kaya', department: 'Hemşirelik Hizmetleri Müdürü' },
-  { id: 'manager-3', name: 'Mühendis Ali Demir', department: 'Teknik Hizmetler Müdürü' },
-  { id: 'manager-4', name: 'Dr. Ayşe Özkan', department: 'Kalite Müdürü' },
-  { id: 'manager-5', name: 'İdari Personel Mehmet Şen', department: 'İdari Hizmetler Müdürü' }
-];
 
 export const AssignmentModal: React.FC<AssignmentModalProps> = ({
   isOpen,
@@ -31,15 +24,21 @@ export const AssignmentModal: React.FC<AssignmentModalProps> = ({
   const [selectedManager, setSelectedManager] = useState('');
   const [notes, setNotes] = useState('');
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const { users } = useUsers();
+
+  const activeUsers = users.filter(u => u.is_active);
 
   const managerOptions = [
     { value: '', label: 'Müdür/Birim Seçiniz' },
-    ...managers.map(m => ({ value: m.id, label: `${m.name} - ${m.department}` }))
+    ...activeUsers.map(user => ({
+      value: user.id,
+      label: `${user.display_name} - ${user.department_name || user.role.join(', ')}`
+    }))
   ];
 
   const validateForm = () => {
     const newErrors: Record<string, string> = {};
-    
+
     if (!selectedManager) {
       newErrors.manager = 'Müdür/Birim seçimi zorunludur';
     }

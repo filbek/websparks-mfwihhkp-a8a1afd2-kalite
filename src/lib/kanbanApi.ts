@@ -27,6 +27,7 @@ export interface Card {
     completed_at?: string;
     completed_by?: string;
     created_at: string;
+    created_by?: string;
 }
 
 export interface BoardWithData {
@@ -211,7 +212,8 @@ export const createCard = async (listId: string, cardData: Partial<Card>): Promi
         .insert({
             list_id: listId,
             ...cardData,
-            organization_id: userData.organization_id
+            organization_id: userData.organization_id,
+            created_by: user.id
         })
         .select()
         .single();

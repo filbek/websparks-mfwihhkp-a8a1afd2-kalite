@@ -1,565 +1,450 @@
 import { useState, useEffect } from 'react';
-import { supabase } from '../lib/supabase';
 import { DOF } from '../types';
+import { supabase } from '../lib/supabase';
+
+export interface DOFComment {
+    id: string;
+    dof_id: string;
+    user_id: string;
+    comment: string;
+    is_internal: boolean;
+    created_at: string;
+    updated_at: string;
+    user?: {
+        id: string;
+        display_name: string;
+    };
+}
+
+export interface DOFAttachment {
+    id: string;
+    dof_id: string;
+    file_name: string;
+    file_path: string;
+    file_type: string;
+    file_size: number;
+    uploaded_by: string;
+    created_at: string;
+}
 
 export const useDOFs = () => {
-  const [dofs, setDofs] = useState<DOF[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+    const [dofs, setDofs] = useState<DOF[]>([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
 
-  const fetchDOFs = async () => {
-    try {
-      setLoading(true);
-      const { data, error: fetchError } = await supabase
-        .from('dofs')
-        .select(`
+    const fetchDOFs = async () => {
+        try {
+            setLoading(true);
+
+            const { data, error: fetchError } = await supabase
+                .from('dofs')
+                .select(`
           *,
-          facility:facilities(*),
-          reporter:users!dofs_reporter_id_fkey(*),
-          assignee:users!dofs_assigned_to_fkey(*),
-          dofu_acan_user:users!dofs_dofu_acan_fkey(*)
+          facility:facilities(id, name),
+          reporter:users!dofs_reporter_id_fkey(id, display_name, role, facility_id),
+          assignee:users!dofs_assigned_to_fkey(id, display_name, role, facility_id)
         `)
-        .order('created_at', { ascending: false });
+                .order('created_at', { ascending: false });
 
-      if (fetchError) throw fetchError;
+            if (fetchError) throw fetchError;
 
-      const dofsWithComments = await Promise.all(
-        (data || []).map(async (dof: any) => {
-          const { data: comments, count } = await supabase
-            .from('dof_comments')
-            .select(`
-              id,
-              comment,
-              created_at,
-              user:users(id, display_name)
-            `, { count: 'exact' })
-            .eq('dof_id', dof.id)
-            .order('created_at', { ascending: false })
-            .limit(1);
+            const dofsWithComments = await Promise.all((data || []).map(async (dof) => {
+                const { data: comments } = await supabase
+                    .from('dof_comments')
+                    .select(`
+            id,
+            comment,
+            created_at,
+            user:users(id, display_name)
+          `)
+                    .eq('dof_id', dof.id)
+                    .order('created_at', { ascending: false })
+                    .limit(1);
 
-          return {
-            id: dof.id,
-            title: dof.title,
-            description: dof.description,
-            facility_id: dof.facility_id,
-            reporter_id: dof.reporter_id,
-            assigned_to: dof.assigned_to,
-            status: dof.status,
-            priority: dof.priority,
-            due_date: dof.due_date,
-            created_at: dof.created_at,
-            updated_at: dof.updated_at,
-            tespit_tarihi: dof.tespit_tarihi,
-            dof_kaynagi: dof.dof_kaynagi,
-            dof_kategorisi: dof.dof_kategorisi,
-            kisa_aciklama: dof.kisa_aciklama,
-            sorumlu_bolum: dof.sorumlu_bolum,
-            dofu_acan: dof.dofu_acan,
-            facility: dof.facility,
-            reporter: dof.reporter,
-            assignee: dof.assignee,
-            comment_count: count || 0,
-            last_comment: comments && comments.length > 0 ? comments[0] : null
-          };
-        })
-      );
+                const { count } = await supabase
+                    .from('dof_comments')
+                    .select('*', { count: 'exact', head: true })
+                    .eq('dof_id', dof.id);
 
-      setDofs(dofsWithComments);
-      setError(null);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'DÖF\'ler yüklenemedi');
-      console.error('Error fetching DOFs:', err);
-    } finally {
-      setLoading(false);
-    }
-  };
+                return {
+                    ...dof,
+                    comment_count: count || 0,
+                    last_comment: comments && comments.length > 0 ? comments[0] : null
+                };
+            }));
 
-  const createDOF = async (dofData: Partial<DOF>) => {
-    try {
-      const { data: userData } = await supabase.auth.getUser();
-      if (!userData.user) throw new Error('Kullanıcı oturumu bulunamadı');
+            setDofs(dofsWithComments);
+            setError(null);
+        } catch (err) {
+            const errorMessage = err instanceof Error ? err.message : 'Bir hata olustu';
+            setError(errorMessage);
+            console.error('Error fetching DOFs:', err);
+        } finally {
+            setLoading(false);
+        }
+    };
 
-      const insertData = {
-        title: dofData.title || 'Yeni DÖF',
-        description: dofData.description || '',
-        facility_id: dofData.facility_id || 1,
-        reporter_id: dofData.reporter_id || userData.user.id,
-        assigned_to: dofData.assigned_to || null,
-        status: dofData.status || 'taslak',
-        priority: dofData.priority || 'orta',
-        due_date: dofData.due_date || null,
-        tespit_tarihi: dofData.tespit_tarihi || new Date().toISOString().split('T')[0],
-        dof_turu: dofData.dof_turu || null,
-        tespit_edilen_yer: dofData.tespit_edilen_yer || null,
-        dof_kaynagi: dofData.dof_kaynagi || null,
-        dof_kategorisi: dofData.dof_kategorisi || null,
-        kisa_aciklama: dofData.kisa_aciklama || null,
-        sorumlu_bolum: dofData.sorumlu_bolum || null,
-        dofu_acan: dofData.dofu_acan || userData.user.id
-      };
+    const createDOF = async (dofData: Partial<DOF>) => {
+        try {
+            const { data: userData } = await supabase.auth.getUser();
 
-      const { data, error: insertError } = await supabase
-        .from('dofs')
-        .insert([insertData])
-        .select(`
+            if (!userData.user) {
+                throw new Error('Kullanici oturumu bulunamadi');
+            }
+
+            const newDOF: Record<string, unknown> = {
+                title: dofData.title || '',
+                description: dofData.description || '',
+                facility_id: dofData.facility_id || 1,
+                reporter_id: userData.user.id,
+                dofu_acan: dofData.dofu_acan || userData.user.id,
+                status: dofData.status || 'atanmayi_bekleyen',
+                priority: dofData.priority || 'orta',
+                dof_turu: dofData.dof_turu,
+                tespit_tarihi: dofData.tespit_tarihi,
+                tespit_edilen_bolum: dofData.tespit_edilen_bolum,
+                tespit_edilen_yer: dofData.tespit_edilen_yer,
+                dof_kaynagi: dofData.dof_kaynagi,
+                dof_kategorisi: dofData.dof_kategorisi,
+                kisa_aciklama: dofData.kisa_aciklama,
+                sorumlu_bolum: dofData.sorumlu_bolum,
+                tanim: dofData.tanim,
+                due_date: dofData.due_date
+            };
+
+            const { data, error: insertError } = await supabase
+                .from('dofs')
+                .insert(newDOF)
+                .select(`
           *,
-          facility:facilities(*),
-          reporter:users!dofs_reporter_id_fkey(*),
-          assignee:users!dofs_assigned_to_fkey(*)
+          facility:facilities(id, name),
+          reporter:users!dofs_reporter_id_fkey(id, display_name, role, facility_id)
         `)
-        .single();
+                .single();
 
-      if (insertError) throw insertError;
+            if (insertError) throw insertError;
 
-      const newDOF: DOF = {
-        id: data.id,
-        title: data.title,
-        description: data.description,
-        facility_id: data.facility_id,
-        reporter_id: data.reporter_id,
-        assigned_to: data.assigned_to,
-        status: data.status,
-        priority: data.priority,
-        due_date: data.due_date,
-        created_at: data.created_at,
-        updated_at: data.updated_at,
-        tespit_tarihi: data.tespit_tarihi,
-        dof_turu: data.dof_turu,
-        tespit_edilen_yer: data.tespit_edilen_yer,
-        dof_kaynagi: data.dof_kaynagi,
-        dof_kategorisi: data.dof_kategorisi,
-        kisa_aciklama: data.kisa_aciklama,
-        sorumlu_bolum: data.sorumlu_bolum,
-        dofu_acan: data.dofu_acan,
-        facility: data.facility,
-        reporter: data.reporter,
-        assignee: data.assignee
-      };
+            await fetchDOFs();
 
-      await supabase.from('dof_history').insert([{
-        dof_id: newDOF.id,
-        user_id: userData.user.id,
-        action: 'created',
-        new_value: insertData,
-        comment: 'DÖF oluşturuldu'
-      }]);
+            return data as DOF;
+        } catch (err) {
+            const errorMessage = err instanceof Error ? err.message : 'DOF olusturulamadi';
+            console.error('Error creating DOF:', err);
+            throw new Error(errorMessage);
+        }
+    };
 
-      setDofs(prev => [newDOF, ...prev]);
-      return newDOF;
-    } catch (err) {
-      console.error('Error creating DOF:', err);
-      throw new Error(err instanceof Error ? err.message : 'DÖF oluşturulamadı');
-    }
-  };
-
-  const updateDOF = async (id: string, updates: Partial<DOF>) => {
-    try {
-      const { data: userData } = await supabase.auth.getUser();
-      if (!userData.user) throw new Error('Kullanıcı oturumu bulunamadı');
-
-      const oldDOF = dofs.find(dof => dof.id === id);
-
-      const { data, error: updateError } = await supabase
-        .from('dofs')
-        .update({
-          title: updates.title,
-          description: updates.description,
-          facility_id: updates.facility_id,
-          assigned_to: updates.assigned_to,
-          status: updates.status,
-          priority: updates.priority,
-          due_date: updates.due_date,
-          tespit_tarihi: updates.tespit_tarihi,
-          dof_kaynagi: updates.dof_kaynagi,
-          dof_kategorisi: updates.dof_kategorisi,
-          kisa_aciklama: updates.kisa_aciklama,
-          sorumlu_bolum: updates.sorumlu_bolum,
-          updated_at: new Date().toISOString()
-        })
-        .eq('id', id)
-        .select(`
+    const updateDOF = async (id: string, updates: Partial<DOF>) => {
+        try {
+            const { data, error: updateError } = await supabase
+                .from('dofs')
+                .update({
+                    ...updates,
+                    updated_at: new Date().toISOString()
+                })
+                .eq('id', id)
+                .select(`
           *,
-          facility:facilities(*),
-          reporter:users!dofs_reporter_id_fkey(*),
-          assignee:users!dofs_assigned_to_fkey(*)
+          facility:facilities(id, name),
+          reporter:users!dofs_reporter_id_fkey(id, display_name, role, facility_id),
+          assignee:users!dofs_assigned_to_fkey(id, display_name, role, facility_id)
         `)
-        .single();
+                .single();
 
-      if (updateError) throw updateError;
+            if (updateError) throw updateError;
 
-      const updatedDOF: DOF = {
-        id: data.id,
-        title: data.title,
-        description: data.description,
-        facility_id: data.facility_id,
-        reporter_id: data.reporter_id,
-        assigned_to: data.assigned_to,
-        status: data.status,
-        priority: data.priority,
-        due_date: data.due_date,
-        created_at: data.created_at,
-        updated_at: data.updated_at,
-        tespit_tarihi: data.tespit_tarihi,
-        dof_kaynagi: data.dof_kaynagi,
-        dof_kategorisi: data.dof_kategorisi,
-        kisa_aciklama: data.kisa_aciklama,
-        sorumlu_bolum: data.sorumlu_bolum,
-        dofu_acan: data.dofu_acan,
-        facility: data.facility,
-        reporter: data.reporter,
-        assignee: data.assignee
-      };
+            await fetchDOFs();
 
-      await supabase.from('dof_history').insert([{
-        dof_id: id,
-        user_id: userData.user.id,
-        action: 'updated',
-        old_value: oldDOF,
-        new_value: updates,
-        comment: 'DÖF güncellendi'
-      }]);
+            return data as DOF;
+        } catch (err) {
+            const errorMessage = err instanceof Error ? err.message : 'DOF guncellenemedi';
+            console.error('Error updating DOF:', err);
+            throw new Error(errorMessage);
+        }
+    };
 
-      setDofs(prev => prev.map(dof => dof.id === id ? updatedDOF : dof));
-      return updatedDOF;
-    } catch (err) {
-      console.error('Error updating DOF:', err);
-      throw new Error(err instanceof Error ? err.message : 'DÖF güncellenemedi');
-    }
-  };
+    const deleteDOF = async (id: string) => {
+        try {
+            const { error: deleteError } = await supabase
+                .from('dofs')
+                .delete()
+                .eq('id', id);
 
-  const deleteDOF = async (id: string) => {
-    try {
-      const { data: userData } = await supabase.auth.getUser();
-      if (!userData.user) throw new Error('Kullanıcı oturumu bulunamadı');
+            if (deleteError) throw deleteError;
 
-      const oldDOF = dofs.find(dof => dof.id === id);
+            setDofs(prev => prev.filter(d => d.id !== id));
+        } catch (err) {
+            const errorMessage = err instanceof Error ? err.message : 'DOF silinemedi';
+            console.error('Error deleting DOF:', err);
+            throw new Error(errorMessage);
+        }
+    };
 
-      const { error: deleteError } = await supabase
-        .from('dofs')
-        .delete()
-        .eq('id', id);
+    const assignDOF = async (dofId: string, userId: string, notes?: string, ccUserIds?: string[]) => {
+        try {
+            const { data: userData } = await supabase.auth.getUser();
 
-      if (deleteError) throw deleteError;
+            if (!userData.user) {
+                throw new Error('Kullanici oturumu bulunamadi');
+            }
 
-      await supabase.from('dof_history').insert([{
-        dof_id: id,
-        user_id: userData.user.id,
-        action: 'deleted',
-        old_value: oldDOF,
-        comment: 'DÖF silindi'
-      }]);
-
-      setDofs(prev => prev.filter(dof => dof.id !== id));
-    } catch (err) {
-      console.error('Error deleting DOF:', err);
-      throw new Error(err instanceof Error ? err.message : 'DÖF silinemedi');
-    }
-  };
-
-  const assignDOF = async (dofId: string, userId: string, notes: string, ccUserIds?: string[]) => {
-    try {
-      const { data: userData } = await supabase.auth.getUser();
-      if (!userData.user) throw new Error('Kullanıcı oturumu bulunamadı');
-
-      const { data, error: updateError } = await supabase
-        .from('dofs')
-        .update({
-          assigned_to: userId,
-          cc_users: ccUserIds || null,
-          status: 'atanan',
-          updated_at: new Date().toISOString()
-        })
-        .eq('id', dofId)
-        .select(`
+            const { data, error: updateError } = await supabase
+                .from('dofs')
+                .update({
+                    assigned_to: userId,
+                    cc_users: ccUserIds || [],
+                    status: 'cozum_bekleyen',
+                    updated_at: new Date().toISOString()
+                })
+                .eq('id', dofId)
+                .select(`
           *,
-          facility:facilities(*),
-          reporter:users!dofs_reporter_id_fkey(*),
-          assignee:users!dofs_assigned_to_fkey(*)
+          facility:facilities(id, name),
+          reporter:users!dofs_reporter_id_fkey(id, display_name, role, facility_id),
+          assignee:users!dofs_assigned_to_fkey(id, display_name, role, facility_id)
         `)
-        .single();
+                .single();
 
-      if (updateError) throw updateError;
+            if (updateError) throw updateError;
 
-      await supabase.from('dof_history').insert([{
-        dof_id: dofId,
-        user_id: userData.user.id,
-        action: 'assigned',
-        new_value: { assigned_to: userId, cc_users: ccUserIds },
-        comment: notes || 'DÖF atandı'
-      }]);
+            if (notes && notes.trim()) {
+                await supabase
+                    .from('dof_comments')
+                    .insert({
+                        dof_id: dofId,
+                        user_id: userData.user.id,
+                        comment: 'Atama Notu: ' + notes,
+                        is_internal: false
+                    });
+            }
 
-      const updatedDOF: DOF = {
-        id: data.id,
-        title: data.title,
-        description: data.description,
-        facility_id: data.facility_id,
-        reporter_id: data.reporter_id,
-        assigned_to: data.assigned_to,
-        cc_users: data.cc_users,
-        status: data.status,
-        priority: data.priority,
-        due_date: data.due_date,
-        created_at: data.created_at,
-        updated_at: data.updated_at,
-        tespit_tarihi: data.tespit_tarihi,
-        dof_kaynagi: data.dof_kaynagi,
-        dof_kategorisi: data.dof_kategorisi,
-        kisa_aciklama: data.kisa_aciklama,
-        sorumlu_bolum: data.sorumlu_bolum,
-        dofu_acan: data.dofu_acan,
-        tespit_edilen_yer: data.tespit_edilen_yer,
-        facility: data.facility,
-        reporter: data.reporter,
-        assignee: data.assignee
-      };
+            await supabase
+                .from('notifications')
+                .insert({
+                    user_id: userId,
+                    type: 'dof_assignment',
+                    related_type: 'dof',
+                    related_id: dofId
+                });
 
-      setDofs(prev => prev.map(dof => dof.id === dofId ? updatedDOF : dof));
-      return updatedDOF;
-    } catch (err) {
-      console.error('Error assigning DOF:', err);
-      throw new Error(err instanceof Error ? err.message : 'DÖF atanamadı');
-    }
-  };
+            if (ccUserIds && ccUserIds.length > 0) {
+                const ccNotifications = ccUserIds.map(ccUserId => ({
+                    user_id: ccUserId,
+                    type: 'dof_cc',
+                    related_type: 'dof',
+                    related_id: dofId
+                }));
 
-  const addComment = async (dofId: string, comment: string, isInternal: boolean) => {
-    try {
-      const { data: userData } = await supabase.auth.getUser();
-      if (!userData.user) throw new Error('Kullanıcı oturumu bulunamadı');
+                await supabase
+                    .from('notifications')
+                    .insert(ccNotifications);
+            }
 
-      // DÖF bilgisini al
-      const currentDOF = dofs.find(dof => dof.id === dofId);
+            await fetchDOFs();
 
-      const { error: insertError } = await supabase
-        .from('dof_comments')
-        .insert([{
-          dof_id: dofId,
-          user_id: userData.user.id,
-          comment,
-          is_internal: isInternal
-        }]);
+            return data as DOF;
+        } catch (err) {
+            const errorMessage = err instanceof Error ? err.message : 'DOF atanamadi';
+            console.error('Error assigning DOF:', err);
+            throw new Error(errorMessage);
+        }
+    };
 
-      if (insertError) throw insertError;
+    const changeStatus = async (dofId: string, newStatus: string, notes?: string) => {
+        try {
+            const { data: userData } = await supabase.auth.getUser();
 
-      // Eğer yorum ekleyen atanan kişi ise ve durum "atanan" ise, "kapatma_onay�nda" yap
-      if (currentDOF && currentDOF.assigned_to === userData.user.id && currentDOF.status === 'atanan') {
-        await supabase
-          .from('dofs')
-          .update({
-            status: 'kapatma_onay�nda',
-            updated_at: new Date().toISOString()
-          })
-          .eq('id', dofId);
+            if (!userData.user) {
+                throw new Error('Kullanici oturumu bulunamadi');
+            }
 
-        // DÖF listesini güncelle
-        setDofs(prev => prev.map(dof =>
-          dof.id === dofId ? { ...dof, status: 'kapatma_onay�nda' } : dof
-        ));
-      }
-
-      await supabase.from('dof_history').insert([{
-        dof_id: dofId,
-        user_id: userData.user.id,
-        action: 'comment_added',
-        new_value: { comment, is_internal: isInternal },
-        comment: 'Yorum eklendi'
-      }]);
-
-      // Yorumları yenile
-      await fetchDOFs();
-    } catch (err) {
-      console.error('Error adding comment:', err);
-      throw new Error(err instanceof Error ? err.message : 'Yorum eklenemedi');
-    }
-  };
-
-  const addAttachment = async (dofId: string, file: File) => {
-    try {
-      const { data: userData } = await supabase.auth.getUser();
-      if (!userData.user) throw new Error('Kullanıcı oturumu bulunamadı');
-
-      const fileExt = file.name.split('.').pop();
-      const fileName = `${dofId}/${Date.now()}.${fileExt}`;
-
-      const { data: uploadData, error: uploadError } = await supabase.storage
-        .from('dof-attachments')
-        .upload(fileName, file, {
-          cacheControl: '3600',
-          upsert: false
-        });
-
-      if (uploadError) {
-        console.error('Storage upload error:', uploadError);
-        throw uploadError;
-      }
-
-      const { error: insertError } = await supabase
-        .from('dof_attachments')
-        .insert([{
-          dof_id: dofId,
-          file_name: file.name,
-          file_size: file.size,
-          file_type: file.type,
-          storage_path: fileName,
-          uploaded_by: userData.user.id
-        }]);
-
-      if (insertError) {
-        console.error('Database insert error:', insertError);
-        await supabase.storage.from('dof-attachments').remove([fileName]);
-        throw insertError;
-      }
-
-      await supabase.from('dof_history').insert([{
-        dof_id: dofId,
-        user_id: userData.user.id,
-        action: 'attachment_added',
-        new_value: { file_name: file.name },
-        comment: 'Dosya eklendi'
-      }]);
-    } catch (err) {
-      console.error('Error adding attachment:', err);
-      throw new Error(err instanceof Error ? err.message : 'Dosya eklenemedi');
-    }
-  };
-
-  const changeStatus = async (dofId: string, newStatus: string, notes: string) => {
-    try {
-      const { data: userData } = await supabase.auth.getUser();
-      if (!userData.user) throw new Error('Kullanıcı oturumu bulunamadı');
-
-      const oldDOF = dofs.find(dof => dof.id === dofId);
-      const oldStatus = oldDOF?.status;
-
-      const { data, error: updateError } = await supabase
-        .from('dofs')
-        .update({
-          status: newStatus,
-          updated_at: new Date().toISOString()
-        })
-        .eq('id', dofId)
-        .select(`
+            const { data, error: updateError } = await supabase
+                .from('dofs')
+                .update({
+                    status: newStatus,
+                    updated_at: new Date().toISOString()
+                })
+                .eq('id', dofId)
+                .select(`
           *,
-          facility:facilities(*),
-          reporter:users!dofs_reporter_id_fkey(*),
-          assignee:users!dofs_assigned_to_fkey(*)
+          facility:facilities(id, name),
+          reporter:users!dofs_reporter_id_fkey(id, display_name, role, facility_id),
+          assignee:users!dofs_assigned_to_fkey(id, display_name, role, facility_id)
         `)
-        .single();
+                .single();
 
-      if (updateError) throw updateError;
+            if (updateError) throw updateError;
 
-      await supabase.from('dof_history').insert([{
-        dof_id: dofId,
-        user_id: userData.user.id,
-        action: 'status_changed',
-        old_value: { status: oldStatus },
-        new_value: { status: newStatus },
-        comment: notes || `Durum ${oldStatus}'dan ${newStatus}'e değiştirildi`
-      }]);
+            if (notes && notes.trim()) {
+                await supabase
+                    .from('dof_comments')
+                    .insert({
+                        dof_id: dofId,
+                        user_id: userData.user.id,
+                        comment: 'Durum Degisikligi (' + newStatus + '): ' + notes,
+                        is_internal: false
+                    });
+            }
 
-      const updatedDOF: DOF = {
-        id: data.id,
-        title: data.title,
-        description: data.description,
-        facility_id: data.facility_id,
-        reporter_id: data.reporter_id,
-        assigned_to: data.assigned_to,
-        status: data.status,
-        priority: data.priority,
-        due_date: data.due_date,
-        created_at: data.created_at,
-        updated_at: data.updated_at,
-        tespit_tarihi: data.tespit_tarihi,
-        dof_kaynagi: data.dof_kaynagi,
-        dof_kategorisi: data.dof_kategorisi,
-        kisa_aciklama: data.kisa_aciklama,
-        sorumlu_bolum: data.sorumlu_bolum,
-        dofu_acan: data.dofu_acan,
-        facility: data.facility,
-        reporter: data.reporter,
-        assignee: data.assignee
-      };
+            await fetchDOFs();
 
-      setDofs(prev => prev.map(dof => dof.id === dofId ? updatedDOF : dof));
-      return updatedDOF;
-    } catch (err) {
-      console.error('Error changing status:', err);
-      throw new Error(err instanceof Error ? err.message : 'Durum değiştirilemedi');
-    }
-  };
+            return data as DOF;
+        } catch (err) {
+            const errorMessage = err instanceof Error ? err.message : 'Durum degistirilemedi';
+            console.error('Error changing status:', err);
+            throw new Error(errorMessage);
+        }
+    };
 
-  const deleteAttachment = async (attachmentId: string) => {
-    try {
-      const { data: userData } = await supabase.auth.getUser();
-      if (!userData.user) throw new Error('Kullanıcı oturumu bulunamadı');
+    const addComment = async (dofId: string, comment: string, isInternal: boolean = false) => {
+        try {
+            const { data: userData } = await supabase.auth.getUser();
 
-      const { data: attachment, error: fetchError } = await supabase
-        .from('dof_attachments')
-        .select('*')
-        .eq('id', attachmentId)
-        .single();
+            if (!userData.user) {
+                throw new Error('Kullanici oturumu bulunamadi');
+            }
 
-      if (fetchError) throw fetchError;
-      if (!attachment) throw new Error('Dosya bulunamadı');
+            const { error: insertError } = await supabase
+                .from('dof_comments')
+                .insert({
+                    dof_id: dofId,
+                    user_id: userData.user.id,
+                    comment: comment,
+                    is_internal: isInternal
+                });
 
-      const { error: storageError } = await supabase.storage
-        .from('dof-attachments')
-        .remove([attachment.storage_path]);
+            if (insertError) throw insertError;
 
-      if (storageError) {
-        console.error('Storage delete error:', storageError);
-      }
+            const currentDOF = dofs.find(d => d.id === dofId);
 
-      const { error: deleteError } = await supabase
-        .from('dof_attachments')
-        .delete()
-        .eq('id', attachmentId);
+            if (currentDOF && currentDOF.assigned_to === userData.user.id) {
+                await supabase
+                    .from('dofs')
+                    .update({
+                        status: 'kapatma_onayinda',
+                        updated_at: new Date().toISOString()
+                    })
+                    .eq('id', dofId);
 
-      if (deleteError) throw deleteError;
+                if (currentDOF.dofu_acan || currentDOF.reporter_id) {
+                    const notifyUserId = currentDOF.dofu_acan || currentDOF.reporter_id;
+                    await supabase
+                        .from('notifications')
+                        .insert({
+                            user_id: notifyUserId,
+                            type: 'dof_approval_required',
+                            related_type: 'dof',
+                            related_id: dofId
+                        });
+                }
+            }
 
-      await supabase.from('dof_history').insert([{
-        dof_id: attachment.dof_id,
-        user_id: userData.user.id,
-        action: 'attachment_deleted',
-        old_value: { file_name: attachment.file_name },
-        comment: 'Dosya silindi'
-      }]);
-    } catch (err) {
-      console.error('Error deleting attachment:', err);
-      throw new Error(err instanceof Error ? err.message : 'Dosya silinemedi');
-    }
-  };
+            await fetchDOFs();
+        } catch (err) {
+            const errorMessage = err instanceof Error ? err.message : 'Yorum eklenemedi';
+            console.error('Error adding comment:', err);
+            throw new Error(errorMessage);
+        }
+    };
 
-  const getAttachmentUrl = async (storagePath: string, expiresIn: number = 3600) => {
-    try {
-      const { data, error } = await supabase.storage
-        .from('dof-attachments')
-        .createSignedUrl(storagePath, expiresIn);
+    const addAttachment = async (dofId: string, file: File): Promise<DOFAttachment> => {
+        try {
+            const { data: userData } = await supabase.auth.getUser();
 
-      if (error) throw error;
-      return data.signedUrl;
-    } catch (err) {
-      console.error('Error getting attachment URL:', err);
-      throw new Error(err instanceof Error ? err.message : 'Dosya URL\'si alınamadı');
-    }
-  };
+            if (!userData.user) {
+                throw new Error('Kullanici oturumu bulunamadi');
+            }
 
-  useEffect(() => {
-    fetchDOFs();
-  }, []);
+            const fileExt = file.name.split('.').pop();
+            const fileName = dofId + '/' + Date.now() + '_' + Math.random().toString(36).substring(7) + '.' + fileExt;
 
-  return {
-    dofs,
-    loading,
-    error,
-    fetchDOFs,
-    createDOF,
-    updateDOF,
-    deleteDOF,
-    assignDOF,
-    addComment,
-    addAttachment,
-    deleteAttachment,
-    getAttachmentUrl,
-    changeStatus
-  };
+            const { error: uploadError } = await supabase.storage
+                .from('dof-attachments')
+                .upload(fileName, file);
+
+            if (uploadError) throw uploadError;
+
+            const { data: urlData } = supabase.storage
+                .from('dof-attachments')
+                .getPublicUrl(fileName);
+
+            const { data, error: insertError } = await supabase
+                .from('dof_attachments')
+                .insert({
+                    dof_id: dofId,
+                    file_name: file.name,
+                    file_path: urlData.publicUrl,
+                    file_type: file.type,
+                    file_size: file.size,
+                    uploaded_by: userData.user.id
+                })
+                .select()
+                .single();
+
+            if (insertError) throw insertError;
+
+            return data as DOFAttachment;
+        } catch (err) {
+            const errorMessage = err instanceof Error ? err.message : 'Dosya yuklenemedi';
+            console.error('Error adding attachment:', err);
+            throw new Error(errorMessage);
+        }
+    };
+
+    const getComments = async (dofId: string): Promise<DOFComment[]> => {
+        try {
+            const { data, error } = await supabase
+                .from('dof_comments')
+                .select(`
+          *,
+          user:users(id, display_name)
+        `)
+                .eq('dof_id', dofId)
+                .order('created_at', { ascending: false });
+
+            if (error) throw error;
+
+            return data || [];
+        } catch (err) {
+            console.error('Error fetching comments:', err);
+            return [];
+        }
+    };
+
+    const getAttachments = async (dofId: string): Promise<DOFAttachment[]> => {
+        try {
+            const { data, error } = await supabase
+                .from('dof_attachments')
+                .select('*')
+                .eq('dof_id', dofId)
+                .order('created_at', { ascending: false });
+
+            if (error) throw error;
+
+            return data || [];
+        } catch (err) {
+            console.error('Error fetching attachments:', err);
+            return [];
+        }
+    };
+
+    useEffect(() => {
+        fetchDOFs();
+    }, []);
+
+    return {
+        dofs,
+        loading,
+        error,
+        fetchDOFs,
+        createDOF,
+        updateDOF,
+        deleteDOF,
+        assignDOF,
+        changeStatus,
+        addComment,
+        addAttachment,
+        getComments,
+        getAttachments
+    };
 };

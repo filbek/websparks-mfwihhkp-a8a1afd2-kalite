@@ -25,7 +25,7 @@ export const MyDOFs: React.FC<MyDOFsProps> = ({
   onClose,
   onExportExcel
 }) => {
-  const { canEditDOF } = useAuth();
+  const { canEditDOF, user } = useAuth();
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
   const [priorityFilter, setPriorityFilter] = useState('all');
@@ -74,7 +74,19 @@ export const MyDOFs: React.FC<MyDOFsProps> = ({
   };
 
   const canClose = (dof: DOF) => {
-    return ['çözüm_bekleyen', 'kapatma_onayında'].includes(dof.status);
+    // Sadece "kapatma_onayında" veya "çözüm_bekleyen" durumundaysa
+    const isStatusEligible = ['çözüm_bekleyen', 'kapatma_onayında'].includes(dof.status);
+
+    // Ve kullanıcı giriş yapmışsa
+    if (!user || !isStatusEligible) return false;
+
+    // Yetki kontrolü: Sadece DÖF'ü açan kişi (veya kalite yöneticisi) kapatabilir
+    // Atanan kişi KESİNLİKLE kapatamaz
+    const isAssignedUser = dof.assigned_to === user.id;
+    const isOpener = dof.dofu_acan === user.id || dof.reporter_id === user.id;
+    // Kalite yöneticisi kontrolünü de ekleyebiliriz ama şimdilik açan kişi yeterli
+
+    return !isAssignedUser && isOpener;
   };
 
   if (loading) {

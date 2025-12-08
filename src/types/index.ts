@@ -73,3 +73,16 @@ export interface TaskAssignmentData {
 }
 
 export type UserRole = 'personel' | 'sube_kalite' | 'merkez_kalite' | 'admin';
+
+export interface Notification {
+  id: string;
+  user_id: string;
+  type: 'dof_assignment' | 'dof_cc' | 'event_assignment' | 'kanban_assignment' | 'dof_approval_required' | 'status_change';
+  title: string;
+  message: string;
+  related_type: 'dof' | 'event' | 'kanban_card' | null;
+  related_id: string | null;
+  is_read: boolean;
+  created_at: string;
+  read_at: string | null;
+}

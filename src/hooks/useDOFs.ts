@@ -326,6 +326,9 @@ export const useDOFs = () => {
       const { data: userData } = await supabase.auth.getUser();
       if (!userData.user) throw new Error('Kullanıcı oturumu bulunamadı');
 
+      // DÖF bilgisini al
+      const currentDOF = dofs.find(dof => dof.id === dofId);
+
       const { error: insertError } = await supabase
         .from('dof_comments')
         .insert([{
@@ -337,6 +340,22 @@ export const useDOFs = () => {
 
       if (insertError) throw insertError;
 
+      // Eğer yorum ekleyen atanan kişi ise ve durum "atanan" ise, "kapatma_onay�nda" yap
+      if (currentDOF && currentDOF.assigned_to === userData.user.id && currentDOF.status === 'atanan') {
+        await supabase
+          .from('dofs')
+          .update({
+            status: 'kapatma_onay�nda',
+            updated_at: new Date().toISOString()
+          })
+          .eq('id', dofId);
+
+        // DÖF listesini güncelle
+        setDofs(prev => prev.map(dof =>
+          dof.id === dofId ? { ...dof, status: 'kapatma_onay�nda' } : dof
+        ));
+      }
+
       await supabase.from('dof_history').insert([{
         dof_id: dofId,
         user_id: userData.user.id,
@@ -344,6 +363,9 @@ export const useDOFs = () => {
         new_value: { comment, is_internal: isInternal },
         comment: 'Yorum eklendi'
       }]);
+
+      // Yorumları yenile
+      await fetchDOFs();
     } catch (err) {
       console.error('Error adding comment:', err);
       throw new Error(err instanceof Error ? err.message : 'Yorum eklenemedi');

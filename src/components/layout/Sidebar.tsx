@@ -1,6 +1,7 @@
 import React from 'react';
 import { cn } from '../../lib/utils';
 import { useAuth } from '../../contexts/AuthContext';
+import { useNotifications } from '../../hooks/useNotifications';
 
 type Page = 'dashboard' | 'dof-management' | 'event-reporting' | 'document-management' | 'feedback-management' | 'committees' | 'reports' | 'settings' | 'kanban';
 
@@ -12,6 +13,7 @@ interface SidebarProps {
 
 export const Sidebar: React.FC<SidebarProps> = ({ className, currentPage, onPageChange }) => {
   const { user, hasRole, logout } = useAuth();
+  const { unreadCount } = useNotifications();
 
   const handleLogout = async () => {
     if (confirm('Çıkış yapmak istediğinizden emin misiniz?')) {
@@ -87,6 +89,11 @@ export const Sidebar: React.FC<SidebarProps> = ({ className, currentPage, onPage
             >
               <i className={`bi ${item.icon} text-lg`}></i>
               <span className="font-medium">{item.label}</span>
+              {item.id === 'dashboard' && unreadCount > 0 && (
+                <span className="ml-auto px-2 py-0.5 text-xs font-semibold bg-primary-600 text-white rounded-full">
+                  {unreadCount}
+                </span>
+              )}
             </button>
           ))}
         </nav>

@@ -5,17 +5,17 @@ import { DOF } from '../../types';
 interface DOFListProps {
   dofs: DOF[];
   loading: boolean;
-  onEdit: (dof: DOF) => void;
-  onDelete: (id: string) => void;
   onView: (dof: DOF) => void;
+  onAssign?: (dof: DOF) => void;
+  onDelete: (id: string) => void;
 }
 
 export const DOFList: React.FC<DOFListProps> = ({
   dofs,
   loading,
-  onEdit,
-  onDelete,
-  onView
+  onView,
+  onAssign,
+  onDelete
 }) => {
   if (loading) {
     return (
@@ -57,9 +57,9 @@ export const DOFList: React.FC<DOFListProps> = ({
         <DOFCard
           key={dof.id}
           dof={dof}
-          onEdit={onEdit}
-          onDelete={onDelete}
           onView={onView}
+          onAssign={onAssign}
+          onDelete={onDelete}
         />
       ))}
     </div>

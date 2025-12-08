@@ -2,8 +2,20 @@ import React from 'react';
 import { StatsCard } from '../components/dashboard/StatsCard';
 import { RecentActivity } from '../components/dashboard/RecentActivity';
 import { FacilityOverview } from '../components/dashboard/FacilityOverview';
+import { NotificationList } from '../components/dashboard/NotificationList';
+import { useAuth } from '../contexts/AuthContext';
 
-export const Dashboard: React.FC = () => {
+type Page = 'dashboard' | 'dof-management' | 'event-reporting' | 'document-management' | 'feedback-management' | 'committees' | 'reports' | 'settings' | 'kanban';
+
+interface DashboardProps {
+  onPageChange?: (page: Page) => void;
+}
+
+export const Dashboard: React.FC<DashboardProps> = ({ onPageChange }) => {
+  const { user } = useAuth();
+
+  // Kalite yöneticisi kontrolü
+  const isQualityManager = user?.role.some(r => r === 'sube_kalite' || r === 'merkez_kalite') || false;
   return (
     <div className="space-y-6">
       {/* Page Header */}
@@ -15,11 +27,11 @@ export const Dashboard: React.FC = () => {
           </div>
           <div className="text-right">
             <p className="text-sm text-primary-100">Bugün</p>
-            <p className="text-lg font-semibold">{new Date().toLocaleDateString('tr-TR', { 
-              weekday: 'long', 
-              year: 'numeric', 
-              month: 'long', 
-              day: 'numeric' 
+            <p className="text-lg font-semibold">{new Date().toLocaleDateString('tr-TR', {
+              weekday: 'long',
+              year: 'numeric',
+              month: 'long',
+              day: 'numeric'
             })}</p>
           </div>
         </div>
@@ -57,17 +69,22 @@ export const Dashboard: React.FC = () => {
         />
       </div>
 
+      {/* Bildirimler */}
+      <NotificationList onPageChange={onPageChange} />
+
       {/* Main Content Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Recent Activity - Takes 2 columns */}
-        <div className="lg:col-span-2">
+      <div className={`grid grid-cols-1 ${isQualityManager ? 'lg:grid-cols-3' : 'lg:grid-cols-1'} gap-6`}>
+        {/* Recent Activity - Takes 2 columns if quality manager, full width otherwise */}
+        <div className={isQualityManager ? 'lg:col-span-2' : 'lg:col-span-1'}>
           <RecentActivity />
         </div>
-        
-        {/* Facility Overview - Takes 1 column */}
-        <div className="lg:col-span-1">
-          <FacilityOverview />
-        </div>
+
+        {/* Facility Overview - Only for quality managers */}
+        {isQualityManager && (
+          <div className="lg:col-span-1">
+            <FacilityOverview />
+          </div>
+        )}
       </div>
 
       {/* Quick Actions */}
@@ -83,7 +100,7 @@ export const Dashboard: React.FC = () => {
               <p className="text-sm text-secondary-600">DÖF kaydı oluştur</p>
             </div>
           </button>
-          
+
           <button className="flex items-center space-x-3 p-4 bg-warning-50 hover:bg-warning-100 rounded-lg transition-colors">
             <div className="w-10 h-10 bg-warning-600 rounded-lg flex items-center justify-center">
               <i className="bi bi-exclamation-triangle text-white"></i>
@@ -93,7 +110,7 @@ export const Dashboard: React.FC = () => {
               <p className="text-sm text-secondary-600">Yeni olay kaydı</p>
             </div>
           </button>
-          
+
           <button className="flex items-center space-x-3 p-4 bg-success-50 hover:bg-success-100 rounded-lg transition-colors">
             <div className="w-10 h-10 bg-success-600 rounded-lg flex items-center justify-center">
               <i className="bi bi-bar-chart text-white"></i>
@@ -103,7 +120,7 @@ export const Dashboard: React.FC = () => {
               <p className="text-sm text-secondary-600">Analiz ve raporlar</p>
             </div>
           </button>
-          
+
           <button className="flex items-center space-x-3 p-4 bg-secondary-50 hover:bg-secondary-100 rounded-lg transition-colors">
             <div className="w-10 h-10 bg-secondary-600 rounded-lg flex items-center justify-center">
               <i className="bi bi-people text-white"></i>

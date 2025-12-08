@@ -29,10 +29,33 @@ export const DOFDetail: React.FC<DOFDetailProps> = ({
   onAddAttachment,
   onChangeStatus
 }) => {
-  const { canEditDOF } = useAuth();
+  const { canEditDOF, user } = useAuth();
   const { comments, loading: commentsLoading } = useDOFComments(dof.id);
   const { attachments, loading: attachmentsLoading, refetch: refetchAttachments } = useDOFAttachments(dof.id);
   const { deleteAttachment, getAttachmentUrl } = useDOFs();
+
+  // Yetki kontrolleri
+  const canAssignDOF = user && (
+    dof.dofu_acan === user.id ||
+    dof.reporter_id === user.id ||
+    user.role.includes('sube_kalite') ||
+    user.role.includes('merkez_kalite')
+  );
+
+  const canChangeStatus = user && (
+    dof.assigned_to !== user.id || // Atanan kişi değilse
+    dof.dofu_acan === user.id ||
+    dof.reporter_id === user.id ||
+    user.role.includes('sube_kalite') ||
+    user.role.includes('merkez_kalite')
+  );
+
+  const canCloseDOF = user && (
+    dof.dofu_acan === user.id ||
+    dof.reporter_id === user.id ||
+    user.role.includes('sube_kalite') ||
+    user.role.includes('merkez_kalite')
+  );
 
   const [previewFile, setPreviewFile] = useState<{
     fileName: string;
@@ -235,10 +258,12 @@ export const DOFDetail: React.FC<DOFDetailProps> = ({
               <CardTitle>İşlemler</CardTitle>
             </CardHeader>
             <CardContent className="space-y-3">
-              <Button className="w-full" variant="outline" onClick={onAssign}>
-                <i className="bi bi-person-plus mr-2"></i>
-                Atama Yap
-              </Button>
+              {canAssignDOF && (
+                <Button className="w-full" variant="outline" onClick={onAssign}>
+                  <i className="bi bi-person-plus mr-2"></i>
+                  Atama Yap
+                </Button>
+              )}
               <Button className="w-full" variant="outline" onClick={onAddComment}>
                 <i className="bi bi-chat-dots mr-2"></i>
                 Yorum Ekle
@@ -247,10 +272,12 @@ export const DOFDetail: React.FC<DOFDetailProps> = ({
                 <i className="bi bi-paperclip mr-2"></i>
                 Dosya Ekle
               </Button>
-              <Button className="w-full" variant="outline" onClick={onChangeStatus}>
-                <i className="bi bi-arrow-repeat mr-2"></i>
-                Durum Değiştir
-              </Button>
+              {canChangeStatus && (
+                <Button className="w-full" variant="outline" onClick={onChangeStatus}>
+                  <i className="bi bi-arrow-repeat mr-2"></i>
+                  Durum Değiştir
+                </Button>
+              )}
             </CardContent>
           </Card>
         </div>

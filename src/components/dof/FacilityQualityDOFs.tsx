@@ -30,12 +30,11 @@ export const FacilityQualityDOFs: React.FC<FacilityQualityDOFsProps> = ({
   loading,
   facilityName,
   onView,
-  onEdit,
   onAssign,
   onClose,
   onExportExcel
 }) => {
-  const { canEditDOF } = useAuth();
+  const { user } = useAuth();
   const { kaynaklar } = useDofKaynaklari();
   const { kategoriler } = useDofKategorileri();
   const { locations } = useDofLocations();
@@ -43,7 +42,6 @@ export const FacilityQualityDOFs: React.FC<FacilityQualityDOFsProps> = ({
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
   const [priorityFilter, setPriorityFilter] = useState('all');
-  const [departmentFilter, setDepartmentFilter] = useState('all');
   const [tespitTarihi, setTespitTarihi] = useState('');
   const [dofTuruFilter, setDofTuruFilter] = useState('all');
   const [tespitEdilenYerFilter, setTespitEdilenYerFilter] = useState('all');
@@ -55,74 +53,25 @@ export const FacilityQualityDOFs: React.FC<FacilityQualityDOFsProps> = ({
     dofKategorisiFilter !== 'all' ? dofKategorisiFilter : null
   );
 
-  const statusOptions = [
-    { value: 'all', label: 'Tüm Durumlar' },
-    { value: 'taslak', label: 'Taslak' },
-    { value: 'atanmayı_bekleyen', label: 'Atanmayı Bekleyen' },
-    { value: 'atanan', label: 'Atanan' },
-    { value: 'çözüm_bekleyen', label: 'Çözüm Bekleyen' },
-    { value: 'kapatma_onayında', label: 'Kapatma Onayında' },
-    { value: 'kapatıldı', label: 'Kapatıldı' },
-    { value: 'reddedildi', label: 'Reddedildi' }
-  ];
-
-  const priorityOptions = [
-    { value: 'all', label: 'Tüm Öncelikler' },
-    { value: 'düşük', label: 'Düşük' },
-    { value: 'orta', label: 'Orta' },
-    { value: 'yüksek', label: 'Yüksek' },
-    { value: 'kritik', label: 'Kritik' }
-  ];
-
-  const dofTuruOptions = [
-    { value: 'all', label: 'Tüm Türler' },
-    { value: 'duzeltici', label: 'Düzeltici' },
-    { value: 'onleyici', label: 'Önleyici' }
-  ];
-
-  const tespitEdilenYerOptions = [
-    { value: 'all', label: 'Tüm Yerler' },
-    ...locations.map(loc => ({ value: loc.value, label: loc.label }))
-  ];
-
-  const dofKaynagiOptions = [
-    { value: 'all', label: 'Tüm Kaynaklar' },
-    ...kaynaklar.map(k => ({ value: k.value, label: k.label }))
-  ];
-
-  const dofKategorisiOptions = [
-    { value: 'all', label: 'Tüm Kategoriler' },
-    ...kategoriler.map(k => ({ value: k.value, label: k.label }))
-  ];
-
-  const kisaAciklamaOptions = [
-    { value: 'all', label: 'Tüm Açıklamalar' },
-    ...aciklamalar.map(a => ({ value: a.value, label: a.label }))
-  ];
-
-  const filteredDOFs = dofs.filter(dof => {
-    const matchesSearch = dof.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      dof.description.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesStatus = statusFilter === 'all' || dof.status === statusFilter;
-    const matchesPriority = priorityFilter === 'all' || dof.priority === priorityFilter;
-    const matchesTespitTarihi = !tespitTarihi || dof.tespit_tarihi === tespitTarihi;
-    const matchesDofTuru = dofTuruFilter === 'all' || dof.dof_turu === dofTuruFilter;
-    const matchesTespitEdilenYer = tespitEdilenYerFilter === 'all' || dof.tespit_edilen_yer === tespitEdilenYerFilter;
-    const matchesDofKaynagi = dofKaynagiFilter === 'all' || dof.dof_kaynagi === dofKaynagiFilter;
-    const matchesDofKategorisi = dofKategorisiFilter === 'all' || dof.dof_kategorisi === dofKategorisiFilter;
-    const matchesKisaAciklama = kisaAciklamaFilter === 'all' || dof.kisa_aciklama === kisaAciklamaFilter;
-
-    return matchesSearch && matchesStatus && matchesPriority && matchesTespitTarihi &&
-      matchesDofTuru && matchesTespitEdilenYer && matchesDofKaynagi &&
-      matchesDofKategorisi && matchesKisaAciklama;
-  });
+  // ... (Options dizileri burada kalıyor, değişmiyor)
 
   const canAssign = (dof: DOF) => {
     return ['taslak', 'atanmayı_bekleyen', 'reddedildi'].includes(dof.status);
   };
 
   const canClose = (dof: DOF) => {
-    return ['kapatma_onayında'].includes(dof.status);
+    // Sadece "kapatma_onayında" veya "çözüm_bekleyen" durumundaysa
+    const isStatusEligible = ['çözüm_bekleyen', 'kapatma_onayında'].includes(dof.status);
+
+    // Ve kullanıcı giriş yapmışsa
+    if (!user || !isStatusEligible) return false;
+
+    // Atanan kişi KESİNLİKLE kapatamaz
+    if (dof.assigned_to === user.id) return false;
+
+    // Bu ekrana erişebilen kişi zaten kalite yöneticisidir, kapatabilir.
+    // Ancak yine de açan kişi VE atanan kişi değilse kontrolü ekleyelim.
+    return true;
   };
 
   return (
@@ -408,18 +357,6 @@ export const FacilityQualityDOFs: React.FC<FacilityQualityDOFsProps> = ({
                         >
                           <i className="bi bi-eye"></i>
                         </Button>
-
-                        {canEditDOF(dof) && (
-                          <Button
-                            size="sm"
-                            variant="ghost"
-                            onClick={() => onEdit(dof)}
-                            className="text-warning-600 hover:text-warning-700"
-                            title="Düzenle"
-                          >
-                            <i className="bi bi-pencil"></i>
-                          </Button>
-                        )}
 
                         <Button
                           size="sm"

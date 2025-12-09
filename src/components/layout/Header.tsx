@@ -11,7 +11,7 @@ interface HeaderProps {
 
 export const Header: React.FC<HeaderProps> = ({ currentPage, onPageChange }) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const { user, logout } = useAuth();
+  const { user, logout, currentOrganization } = useAuth();
 
   const handleLogout = async () => {
     if (confirm('Çıkış yapmak istediğinizden emin misiniz?')) {
@@ -39,7 +39,9 @@ export const Header: React.FC<HeaderProps> = ({ currentPage, onPageChange }) => 
               <i className="bi bi-hospital text-white text-xl"></i>
             </div>
             <div>
-              <h1 className="text-xl font-bold text-secondary-900">Anadolu Hastaneleri</h1>
+              <h1 className="text-xl font-bold text-secondary-900">
+                {currentOrganization?.name || 'Yükleniyor...'}
+              </h1>
               <p className="text-xs text-secondary-600">İntranet Sistemi</p>
             </div>
           </div>
@@ -50,9 +52,8 @@ export const Header: React.FC<HeaderProps> = ({ currentPage, onPageChange }) => 
               <button
                 key={item.id}
                 onClick={() => onPageChange(item.id)}
-                className={`text-secondary-700 hover:text-primary-600 font-medium transition-colors ${
-                  currentPage === item.id ? 'text-primary-600 border-b-2 border-primary-600 pb-1' : ''
-                }`}
+                className={`text-secondary-700 hover:text-primary-600 font-medium transition-colors ${currentPage === item.id ? 'text-primary-600 border-b-2 border-primary-600 pb-1' : ''
+                  }`}
               >
                 {item.label}
               </button>
@@ -96,11 +97,10 @@ export const Header: React.FC<HeaderProps> = ({ currentPage, onPageChange }) => 
                     onPageChange(item.id);
                     setIsMobileMenuOpen(false);
                   }}
-                  className={`flex items-center space-x-3 w-full text-left px-3 py-2 rounded-lg transition-colors ${
-                    currentPage === item.id 
-                      ? 'bg-primary-50 text-primary-700' 
+                  className={`flex items-center space-x-3 w-full text-left px-3 py-2 rounded-lg transition-colors ${currentPage === item.id
+                      ? 'bg-primary-50 text-primary-700'
                       : 'text-secondary-700 hover:bg-secondary-50'
-                  }`}
+                    }`}
                 >
                   <i className={`bi ${item.icon}`}></i>
                   <span>{item.label}</span>

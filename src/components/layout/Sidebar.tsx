@@ -12,7 +12,7 @@ interface SidebarProps {
 }
 
 export const Sidebar: React.FC<SidebarProps> = ({ className, currentPage, onPageChange }) => {
-  const { user, hasRole, logout } = useAuth();
+  const { user, hasRole, logout, currentOrganization } = useAuth();
   const { unreadCount } = useNotifications();
 
   const handleLogout = async () => {
@@ -45,7 +45,9 @@ export const Sidebar: React.FC<SidebarProps> = ({ className, currentPage, onPage
           <i className="bi bi-hospital text-white text-xl"></i>
         </div>
         <div>
-          <h2 className="text-lg font-semibold text-secondary-900">Anadolu Hastaneleri</h2>
+          <h2 className="text-lg font-semibold text-secondary-900">
+            {currentOrganization?.name || 'Yükleniyor...'}
+          </h2>
           <p className="text-xs text-secondary-500">Kalite Yönetim Sistemi</p>
         </div>
       </div>

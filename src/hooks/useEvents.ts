@@ -13,7 +13,7 @@ export const useEvents = () => {
 
       const { data, error: fetchError } = await supabase
         .from('events')
-        .select('*')
+        .select('*, facilities(name)')
         .order('created_at', { ascending: false });
 
       if (fetchError) throw fetchError;
@@ -150,7 +150,7 @@ export const useEvents = () => {
 
   const generateEventCode = (eventType: string): string => {
     const prefix = eventType === 'acil_durum' ? 'ACL' :
-                   eventType === 'hasta_guvenlik' ? 'HG' : 'CG';
+      eventType === 'hasta_guvenlik' ? 'HG' : 'CG';
     const year = new Date().getFullYear();
     const randomNum = Math.floor(Math.random() * 1000).toString().padStart(3, '0');
     return `${prefix}-${year}-${randomNum}`;

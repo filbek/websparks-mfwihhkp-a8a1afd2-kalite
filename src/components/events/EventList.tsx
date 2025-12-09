@@ -103,8 +103,8 @@ export const EventList: React.FC<EventListProps> = ({
     const matchesType = filters.eventType === 'all' || event.event_category === filters.eventType;
     const matchesStatus = filters.status.length === 0 || filters.status.includes(event.status);
 
-    return matchesFacility && matchesDateFrom && matchesDateTo && matchesClass && 
-           matchesMainCategory && matchesSubCategory && matchesType && matchesStatus;
+    return matchesFacility && matchesDateFrom && matchesDateTo && matchesClass &&
+      matchesMainCategory && matchesSubCategory && matchesType && matchesStatus;
   });
 
   const sortedEvents = React.useMemo(() => {
@@ -158,8 +158,8 @@ export const EventList: React.FC<EventListProps> = ({
   };
 
   const generateEventCode = (event: Event) => {
-    const prefix = event.event_type === 'acil_durum' ? 'ACL' : 
-                   event.event_type === 'hasta_guvenlik' ? 'HG' : 'CG';
+    const prefix = event.event_type === 'acil_durum' ? 'ACL' :
+      event.event_type === 'hasta_guvenlik' ? 'HG' : 'CG';
     const year = new Date(event.created_at).getFullYear();
     return `${prefix}-${year}-${event.id.padStart(3, '0')}`;
   };
@@ -276,10 +276,10 @@ export const EventList: React.FC<EventListProps> = ({
     return buttons;
   };
 
-  const hasActiveFilters = filters.facility !== 'all' || filters.dateFrom || filters.dateTo || 
-                          filters.eventClass !== 'all' || filters.mainCategory !== 'all' || 
-                          filters.subCategory !== 'all' || filters.eventType !== 'all' || 
-                          filters.status.length > 0;
+  const hasActiveFilters = filters.facility !== 'all' || filters.dateFrom || filters.dateTo ||
+    filters.eventClass !== 'all' || filters.mainCategory !== 'all' ||
+    filters.subCategory !== 'all' || filters.eventType !== 'all' ||
+    filters.status.length > 0;
 
   return (
     <div className="space-y-6">
@@ -349,8 +349,8 @@ export const EventList: React.FC<EventListProps> = ({
             <Select
               label="Sınıf"
               value={filters.eventClass}
-              onChange={(e) => setFilters({ 
-                ...filters, 
+              onChange={(e) => setFilters({
+                ...filters,
                 eventClass: e.target.value,
                 mainCategory: 'all',
                 subCategory: 'all'
@@ -364,8 +364,8 @@ export const EventList: React.FC<EventListProps> = ({
             <Select
               label="Ana Başlık"
               value={filters.mainCategory}
-              onChange={(e) => setFilters({ 
-                ...filters, 
+              onChange={(e) => setFilters({
+                ...filters,
                 mainCategory: e.target.value,
                 subCategory: 'all'
               })}
@@ -399,11 +399,10 @@ export const EventList: React.FC<EventListProps> = ({
                 <button
                   key={status.value}
                   onClick={() => handleStatusToggle(status.value)}
-                  className={`px-3 py-1 rounded-full text-sm font-medium transition-colors ${
-                    filters.status.includes(status.value)
-                      ? 'bg-primary-600 text-white'
-                      : 'bg-secondary-100 text-secondary-700 hover:bg-secondary-200'
-                  }`}
+                  className={`px-3 py-1 rounded-full text-sm font-medium transition-colors ${filters.status.includes(status.value)
+                    ? 'bg-primary-600 text-white'
+                    : 'bg-secondary-100 text-secondary-700 hover:bg-secondary-200'
+                    }`}
                 >
                   {status.label}
                 </button>
@@ -470,7 +469,7 @@ export const EventList: React.FC<EventListProps> = ({
             <table className="w-full">
               <thead className="bg-secondary-50 border-b border-secondary-200">
                 <tr>
-                  <th 
+                  <th
                     className="text-left py-3 px-4 font-medium text-secondary-700 cursor-pointer hover:bg-secondary-100"
                     onClick={() => handleSort('code')}
                   >
@@ -481,7 +480,7 @@ export const EventList: React.FC<EventListProps> = ({
                       )}
                     </div>
                   </th>
-                  <th 
+                  <th
                     className="text-left py-3 px-4 font-medium text-secondary-700 cursor-pointer hover:bg-secondary-100"
                     onClick={() => handleSort('event_class')}
                   >
@@ -494,7 +493,7 @@ export const EventList: React.FC<EventListProps> = ({
                   </th>
                   <th className="text-left py-3 px-4 font-medium text-secondary-700">Ana/Alt Başlık</th>
                   <th className="text-left py-3 px-4 font-medium text-secondary-700">Yer</th>
-                  <th 
+                  <th
                     className="text-left py-3 px-4 font-medium text-secondary-700 cursor-pointer hover:bg-secondary-100"
                     onClick={() => handleSort('event_date')}
                   >
@@ -505,7 +504,7 @@ export const EventList: React.FC<EventListProps> = ({
                       )}
                     </div>
                   </th>
-                  <th 
+                  <th
                     className="text-left py-3 px-4 font-medium text-secondary-700 cursor-pointer hover:bg-secondary-100"
                     onClick={() => handleSort('score')}
                   >
@@ -524,13 +523,12 @@ export const EventList: React.FC<EventListProps> = ({
               </thead>
               <tbody>
                 {sortedEvents.map((event, index) => (
-                  <tr 
-                    key={event.id} 
-                    className={`border-b border-secondary-100 hover:bg-secondary-50 ${
-                      event.status === 'kapatildi' ? 'bg-success-50' :
+                  <tr
+                    key={event.id}
+                    className={`border-b border-secondary-100 hover:bg-secondary-50 ${event.status === 'kapatildi' ? 'bg-success-50' :
                       event.status === 'reddedildi' ? 'bg-danger-50' :
-                      event.status === 'iptal' ? 'bg-secondary-100' : ''
-                    }`}
+                        event.status === 'iptal' ? 'bg-secondary-100' : ''
+                      }`}
                   >
                     <td className="py-3 px-4 text-sm font-mono text-secondary-600">
                       {generateEventCode(event)}
@@ -538,7 +536,7 @@ export const EventList: React.FC<EventListProps> = ({
                     <td className="py-3 px-4">
                       <Badge variant={
                         event.event_class === 'hasta_guvenlik' ? 'danger' :
-                        event.event_class === 'calisan_guvenlik' ? 'warning' : 'info'
+                          event.event_class === 'calisan_guvenlik' ? 'warning' : 'info'
                       }>
                         {eventClassifications.find(c => c.id === event.event_class)?.class_name}
                       </Badge>
@@ -568,12 +566,11 @@ export const EventList: React.FC<EventListProps> = ({
                       <div className="flex items-center">
                         <span className="text-sm font-medium text-secondary-900 mr-2">{event.score}</span>
                         <div className="w-16 h-2 bg-secondary-200 rounded-full">
-                          <div 
-                            className={`h-full rounded-full ${
-                              event.score >= 6 ? 'bg-danger-500' :
+                          <div
+                            className={`h-full rounded-full ${event.score >= 6 ? 'bg-danger-500' :
                               event.score >= 4 ? 'bg-warning-500' :
-                              event.score >= 2 ? 'bg-primary-500' : 'bg-success-500'
-                            }`}
+                                event.score >= 2 ? 'bg-primary-500' : 'bg-success-500'
+                              }`}
                             style={{ width: `${(event.score / 7) * 100}%` }}
                           ></div>
                         </div>
@@ -589,7 +586,17 @@ export const EventList: React.FC<EventListProps> = ({
                     </td>
                     <td className="py-3 px-4">
                       <Badge variant="info">
-                        {facilityOptions.find(f => f.value === event.facility_id.toString())?.label?.split(' ')[0]}
+                        {(() => {
+                          const f = event.facilities as any;
+                          const name = Array.isArray(f) ? f[0]?.name : f?.name;
+                          const displayName = name || facilityOptions.find(opt => opt.value === event.facility_id.toString())?.label;
+                          if (!displayName) return '-';
+                          return displayName
+                            .replace('Anadolu Hastanesi', '')
+                            .replace('Anadolu Hastaneleri', '')
+                            .replace(/\(.*\)/, '') // Remove parentheses like (SIL)
+                            .trim();
+                        })()}
                       </Badge>
                     </td>
                     <td className="py-3 px-4">
@@ -611,7 +618,7 @@ export const EventList: React.FC<EventListProps> = ({
               </div>
               <h3 className="text-lg font-medium text-secondary-900 mb-2">Olay bulunamadı</h3>
               <p className="text-secondary-600 mb-4">
-                {hasActiveFilters 
+                {hasActiveFilters
                   ? 'Arama kriterlerinize uygun olay bulunamadı. Filtreleri genişletmeyi deneyin.'
                   : 'Henüz hiç olay kaydı bulunmamaktadır.'
                 }

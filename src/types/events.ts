@@ -73,6 +73,9 @@ export interface Event {
   close_duration?: number;
   created_at: string;
   updated_at: string;
+  facilities?: {
+    name: string;
+  };
 }
 
 export interface DepartmentAssignment {

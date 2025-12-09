@@ -18,7 +18,7 @@ interface CentralQualityDOFsProps {
   dofs: DOF[];
   loading: boolean;
   onView: (dof: DOF) => void;
-  onEdit: (dof: DOF) => void;
+
   onAssign: (dof: DOF) => void;
   onClose: (dof: DOF) => void;
   onExportExcel: (facilityId?: number) => void;
@@ -28,7 +28,7 @@ export const CentralQualityDOFs: React.FC<CentralQualityDOFsProps> = ({
   dofs,
   loading,
   onView,
-  onEdit,
+
   onAssign,
   onClose,
   onExportExcel
@@ -445,15 +445,7 @@ export const CentralQualityDOFs: React.FC<CentralQualityDOFsProps> = ({
                         </Button>
 
                         {canEditDOF(dof) && (
-                          <Button
-                            size="sm"
-                            variant="ghost"
-                            onClick={() => onEdit(dof)}
-                            className="text-warning-600 hover:text-warning-700"
-                            title="Düzenle"
-                          >
-                            <i className="bi bi-pencil"></i>
-                          </Button>
+                          <div />
                         )}
 
                         <Button

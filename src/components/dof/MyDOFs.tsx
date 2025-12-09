@@ -12,7 +12,6 @@ interface MyDOFsProps {
   dofs: DOF[];
   loading: boolean;
   onView: (dof: DOF) => void;
-  onEdit: (dof: DOF) => void;
   onClose: (dof: DOF) => void;
   onExportExcel: () => void;
 }
@@ -21,11 +20,10 @@ export const MyDOFs: React.FC<MyDOFsProps> = ({
   dofs,
   loading,
   onView,
-  onEdit,
   onClose,
   onExportExcel
 }) => {
-  const { canEditDOF, user } = useAuth();
+  const { user } = useAuth();
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
   const [priorityFilter, setPriorityFilter] = useState('all');
@@ -324,16 +322,7 @@ export const MyDOFs: React.FC<MyDOFsProps> = ({
                       Görüntüle
                     </Button>
 
-                    {canEditDOF(dof) && (
-                      <Button
-                        size="sm"
-                        variant="ghost"
-                        onClick={() => onEdit(dof)}
-                      >
-                        <i className="bi bi-pencil mr-1"></i>
-                        Düzenle
-                      </Button>
-                    )}
+
 
                     {canClose(dof) && (
                       <Button

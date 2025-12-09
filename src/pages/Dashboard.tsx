@@ -14,7 +14,7 @@ interface DashboardProps {
 
 export const Dashboard: React.FC<DashboardProps> = ({ onPageChange }) => {
   const { user } = useAuth();
-  const { stats, facilityStats, canSeeAllFacilities } = useDashboardStats();
+  const { stats, facilityStats, recentActivities } = useDashboardStats();
 
   // Kalite yöneticisi kontrolü
   const isQualityManager = user?.role.some(r => r === 'sube_kalite' || r === 'merkez_kalite') || false;
@@ -78,7 +78,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ onPageChange }) => {
       <div className={`grid grid-cols-1 ${isQualityManager ? 'lg:grid-cols-3' : 'lg:grid-cols-1'} gap-6`}>
         {/* Recent Activity - Takes 2 columns if quality manager, full width otherwise */}
         <div className={isQualityManager ? 'lg:col-span-2' : 'lg:col-span-1'}>
-          <RecentActivity />
+          <RecentActivity activities={recentActivities} />
         </div>
 
         {/* Facility Overview - Only for quality managers */}

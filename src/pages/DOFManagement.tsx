@@ -276,7 +276,6 @@ export const DOFManagement: React.FC = () => {
             dofs={dofs.filter(dof => dof.reporter_id === userId || dof.assigned_to === userId)}
             loading={loading}
             onView={handleViewDOF}
-            onEdit={handleEditDOF}
             onClose={handleCloseDOF}
             onExportExcel={() => handleExportExcel()}
           />
@@ -289,7 +288,6 @@ export const DOFManagement: React.FC = () => {
             loading={loading}
             facilityName={facilityName}
             onView={handleViewDOF}
-            onEdit={handleEditDOF}
             onAssign={handleAssignDOF}
             onClose={handleCloseDOF}
             onExportExcel={() => handleExportExcel(user?.facility_id)}
@@ -302,7 +300,6 @@ export const DOFManagement: React.FC = () => {
             dofs={dofs}
             loading={loading}
             onView={handleViewDOF}
-            onEdit={handleEditDOF}
             onAssign={handleAssignDOF}
             onClose={handleCloseDOF}
             onExportExcel={handleExportExcel}
@@ -348,7 +345,7 @@ export const DOFManagement: React.FC = () => {
             <h1 className="text-2xl font-bold text-secondary-900 mb-2">DÖF Yönetimi</h1>
             <p className="text-secondary-600">Düzeltici ve Önleyici Faaliyet Yönetim Sistemi</p>
           </div>
-          
+
           <div className="flex flex-wrap items-center gap-3">
             {renderViewButtons()}
             <Button

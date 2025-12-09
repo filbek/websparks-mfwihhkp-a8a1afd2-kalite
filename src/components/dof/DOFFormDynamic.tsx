@@ -3,6 +3,7 @@ import { Button } from '../ui/Button';
 import { Input } from '../ui/Input';
 import { Textarea } from '../ui/Textarea';
 import { Select } from '../ui/Select';
+import { SearchableSelect } from '../ui/SearchableSelect';
 import { DOF } from '../../types';
 import { useDofKaynaklari } from '../../hooks/useDofKaynaklari';
 import { useDofKategorileri } from '../../hooks/useDofKategorileri';
@@ -169,8 +170,9 @@ export const DOFFormDynamic: React.FC<DOFFormProps> = ({
   ];
 
   const tespitEdilenBolumOptions = [
-    { value: '', label: 'Seçim yapınız' },
-    ...locations.map(loc => ({ value: loc.value, label: loc.label }))
+    ...locations
+      .map(loc => ({ value: loc.value, label: loc.label }))
+      .sort((a, b) => a.label.localeCompare(b.label, 'tr'))
   ];
 
   const sorumluBolumOptions = [
@@ -234,11 +236,12 @@ export const DOFFormDynamic: React.FC<DOFFormProps> = ({
             <label className="block text-sm font-medium text-secondary-700 mb-2">
               DÖF Tespit Edilen Bölüm/Yer
             </label>
-            <Select
+            <SearchableSelect
               value={formData.tespit_edilen_bolum}
-              onChange={(e) => setFormData({ ...formData, tespit_edilen_bolum: e.target.value })}
+              onChange={(value) => setFormData({ ...formData, tespit_edilen_bolum: value })}
               options={tespitEdilenBolumOptions}
               error={errors.tespit_edilen_bolum}
+              placeholder="Bölüm/Yer Seçiniz"
             />
           </div>
         </div>

@@ -20,6 +20,16 @@ export interface FacilityStats {
     status: 'normal' | 'warning' | 'critical';
 }
 
+export interface Activity {
+    id: string;
+    type: 'dof' | 'event';
+    title: string;
+    facility: string;
+    status: string;
+    created_at: string;
+    priority?: string;
+}
+
 export const useDashboardStats = () => {
     const { user } = useAuth();
     const [stats, setStats] = useState<DashboardStats>({
@@ -31,6 +41,7 @@ export const useDashboardStats = () => {
         error: null
     });
     const [facilityStats, setFacilityStats] = useState<FacilityStats[]>([]);
+    const [recentActivities, setRecentActivities] = useState<Activity[]>([]);
 
     const isAdmin = user?.role.includes('admin') || false;
     const isCentralQuality = user?.role.includes('merkez_kalite') || false;
@@ -120,6 +131,79 @@ export const useDashboardStats = () => {
                     error: null
                 });
 
+                // Fetch Recent Activities
+                // Fetch latest 5 DOFs
+                const { data: latestDofs, error: latestDofsError } = await supabase
+                    .from('dofs')
+                    .select(`
+                        id,
+                        title,
+                        status,
+                        created_at,
+                        priority,
+                        facility_id,
+                        facilities (name)
+                    `)
+                    .match(facilityFilter)
+                    .order('created_at', { ascending: false })
+                    .limit(5);
+
+                if (latestDofsError) throw latestDofsError;
+
+                // Fetch latest 5 Events
+                const { data: latestEvents, error: latestEventsError } = await supabase
+                    .from('events')
+                    .select(`
+                        id,
+                        event_type,
+                        status,
+                        created_at,
+                        facility_id,
+                        facilities (name)
+                    `)
+                    .match(facilityFilter)
+                    .order('created_at', { ascending: false })
+                    .limit(5);
+
+                if (latestEventsError) throw latestEventsError;
+
+                const formattedDofs: Activity[] = (latestDofs || []).map(d => {
+                    const facilities = d.facilities as any;
+                    const facilityName = Array.isArray(facilities) && facilities.length > 0 ? facilities[0].name : (facilities?.name || 'Bilinmeyen Şube');
+
+                    return {
+                        id: `dof-${d.id}`,
+                        type: 'dof',
+                        title: d.title,
+                        facility: facilityName,
+                        status: d.status,
+                        created_at: d.created_at,
+                        priority: d.priority
+                    };
+                });
+
+                const formattedEvents: Activity[] = (latestEvents || []).map(e => {
+                    const facilities = e.facilities as any;
+                    const facilityName = Array.isArray(facilities) && facilities.length > 0 ? facilities[0].name : (facilities?.name || 'Bilinmeyen Şube');
+
+                    return {
+                        id: `event-${e.id}`,
+                        type: 'event',
+                        title: e.event_type,
+                        facility: facilityName,
+                        status: e.status,
+                        created_at: e.created_at,
+                        priority: 'orta'
+                    };
+                });
+
+                const allActivities = [...formattedDofs, ...formattedEvents]
+                    .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
+                    .slice(0, 5);
+
+                setRecentActivities(allActivities);
+
+
                 // Fetch facility-specific stats if user can see all facilities
                 if (canSeeAllFacilities) {
                     await fetchFacilityStats();
@@ -208,6 +292,7 @@ export const useDashboardStats = () => {
     return {
         stats,
         facilityStats,
+        recentActivities,
         canSeeAllFacilities
     };
 };

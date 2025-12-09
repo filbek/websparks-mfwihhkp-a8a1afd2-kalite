@@ -291,7 +291,7 @@ export const MyDOFs: React.FC<MyDOFsProps> = ({
                           {dof.assignee.display_name}
                         </span>
                       )}
-                      {(dof.comment_count && dof.comment_count > 0) && (
+                      {(dof.comment_count || 0) > 0 && (
                         <span className="flex items-center">
                           <i className="bi bi-chat-left-text mr-1"></i>
                           {dof.comment_count} Yorum

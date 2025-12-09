@@ -88,21 +88,7 @@ export const Login: React.FC = () => {
             </Button>
           </form>
 
-          <div className="mt-8 pt-6 border-t border-secondary-200">
-            <p className="text-xs text-center text-secondary-500">
-              Test Kullanıcıları:
-            </p>
-            <div className="mt-3 space-y-2 text-xs text-secondary-600">
-              <div className="bg-secondary-50 rounded p-2">
-                <p><strong>Admin:</strong> bekir.filizdag@anadoluhastaneleri.com</p>
-                <p className="text-secondary-500">Şifre: 232123Sbb..</p>
-              </div>
-              <div className="bg-secondary-50 rounded p-2">
-                <p><strong>Silivri Şube:</strong> bilge.batur@anadoluhastaneleri.com</p>
-                <p className="text-secondary-500">Şifre: 232123Bbb..</p>
-              </div>
-            </div>
-          </div>
+
         </div>
 
         <div className="text-center mt-6">

@@ -103,9 +103,19 @@ export const Login: React.FC = () => {
       <div className="w-full max-w-md">
         <div className="bg-white rounded-2xl shadow-xl p-8">
           <div className="text-center mb-8">
-            <div className="w-16 h-16 bg-primary-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
-              <i className="bi bi-hospital text-white text-3xl"></i>
-            </div>
+            {org.logo_url ? (
+              <div className="flex justify-center mb-6">
+                <img
+                  src={org.logo_url}
+                  alt={org.name}
+                  className="max-h-24 w-auto object-contain"
+                />
+              </div>
+            ) : (
+              <div className="w-16 h-16 bg-primary-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                <i className="bi bi-hospital text-white text-3xl"></i>
+              </div>
+            )}
             <h1 className="text-2xl font-bold text-secondary-900 mb-2">
               {org.name}
             </h1>

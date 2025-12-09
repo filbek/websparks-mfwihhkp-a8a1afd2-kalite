@@ -38,42 +38,36 @@ export const Sidebar: React.FC<SidebarProps> = ({ className, currentPage, onPage
   );
 
   return (
-    <aside className={cn('w-64 bg-white border-r border-secondary-200 h-full flex flex-col', className)}>
+    <aside className={cn('w-64 bg-white dark:bg-secondary-900 border-r border-secondary-200 dark:border-secondary-800 h-full flex flex-col transition-colors duration-200', className)}>
       {/* Header */}
-      <div className="flex items-center space-x-3 px-6 py-4 border-b border-secondary-200">
-        <div className="w-10 h-10 bg-primary-600 rounded-lg flex items-center justify-center overflow-hidden">
-          {currentOrganization?.logo_url ? (
-            <img
-              src={currentOrganization.logo_url}
-              alt={currentOrganization.name}
-              className="w-full h-full object-cover"
-            />
-          ) : (
-            <i className="bi bi-hospital text-white text-xl"></i>
-          )}
-        </div>
-        <div>
-          <h2 className="text-lg font-semibold text-secondary-900">
-            {currentOrganization?.name || 'Yükleniyor...'}
-          </h2>
-          <p className="text-xs text-secondary-500">Kalite Yönetim Sistemi</p>
-        </div>
+      <div className="flex items-center justify-center p-4 border-b border-secondary-200 dark:border-secondary-800">
+        {currentOrganization?.logo_url ? (
+          <img
+            src={currentOrganization.logo_url}
+            alt={currentOrganization.name}
+            className="max-h-28 max-w-[85%] w-auto object-contain"
+          />
+        ) : (
+          <div className="w-12 h-12 bg-primary-600 rounded-lg flex items-center justify-center">
+            <i className="bi bi-hospital text-white text-2xl"></i>
+          </div>
+        )}
       </div>
 
       {/* User Info */}
       {user && (
-        <div className="px-6 py-3 bg-secondary-50 border-b border-secondary-200">
+        <div className="px-6 py-3 bg-secondary-50 dark:bg-secondary-800 border-b border-secondary-200 dark:border-secondary-800">
           <div className="flex items-center space-x-3">
-            <div className="w-8 h-8 bg-secondary-300 rounded-full flex items-center justify-center">
-              <i className="bi bi-person-fill text-secondary-600 text-sm"></i>
+            <div className="w-8 h-8 bg-secondary-300 dark:bg-secondary-700 rounded-full flex items-center justify-center">
+              <i className="bi bi-person-fill text-secondary-600 dark:text-secondary-400 text-sm"></i>
             </div>
             <div className="flex-1 min-w-0">
-              <p className="text-sm font-medium text-secondary-900 truncate">{user.display_name}</p>
-              <p className="text-xs text-secondary-500 truncate">{user.role.join(', ')}</p>
+              <p className="text-sm font-medium text-secondary-900 dark:text-white truncate">{user.display_name}</p>
+              <p className="text-xs text-secondary-500 dark:text-secondary-400 truncate">{user.role.join(', ')}</p>
             </div>
             <button
               onClick={handleLogout}
-              className="p-2 text-secondary-500 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+              className="p-2 text-secondary-500 dark:text-secondary-400 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors"
               title="Çıkış Yap"
             >
               <i className="bi bi-box-arrow-right text-lg"></i>
@@ -84,7 +78,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ className, currentPage, onPage
 
       {/* Navigation */}
       <div className="flex-1 p-6">
-        <h3 className="text-sm font-semibold text-secondary-900 mb-4">Menü</h3>
+        <h3 className="text-sm font-semibold text-secondary-900 dark:text-secondary-400 mb-4">Menü</h3>
         <nav className="space-y-2">
           {filteredMenuItems.map((item) => (
             <button
@@ -93,8 +87,8 @@ export const Sidebar: React.FC<SidebarProps> = ({ className, currentPage, onPage
               className={cn(
                 'flex items-center space-x-3 px-3 py-2 rounded-lg transition-colors w-full text-left',
                 currentPage === item.id
-                  ? 'bg-primary-50 text-primary-700 border-r-2 border-primary-600'
-                  : 'text-secondary-700 hover:bg-secondary-50'
+                  ? 'bg-primary-50 dark:bg-primary-900/20 text-primary-700 dark:text-primary-400 border-r-2 border-primary-600'
+                  : 'text-secondary-700 dark:text-secondary-400 hover:bg-secondary-50 dark:hover:bg-secondary-800'
               )}
             >
               <i className={`bi ${item.icon} text-lg`}></i>
@@ -110,12 +104,12 @@ export const Sidebar: React.FC<SidebarProps> = ({ className, currentPage, onPage
       </div>
 
       {/* Footer */}
-      <div className="p-4 border-t border-secondary-200">
-        <div className="flex items-center justify-center space-x-2 text-xs text-secondary-500">
+      <div className="p-4 border-t border-secondary-200 dark:border-secondary-800">
+        <div className="flex items-center justify-center space-x-2 text-xs text-secondary-500 dark:text-secondary-400">
           <span>© 2025 - 2026</span>
           <span>•</span>
           <span>Powered by</span>
-          <span className="font-semibold text-primary-600">Bekir Filizdağ</span>
+          <span className="font-semibold text-primary-600 dark:text-primary-500">Bekir Filizdağ</span>
         </div>
       </div>
     </aside>

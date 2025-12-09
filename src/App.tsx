@@ -60,14 +60,14 @@ const AppContent: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-secondary-50">
+    <div className="min-h-screen bg-secondary-50 dark:bg-secondary-950 transition-colors duration-200">
       {/* Mobile Menu Button */}
       <div className="lg:hidden fixed top-4 left-4 z-50">
         <button
           onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-          className="p-2 bg-white rounded-lg shadow-lg border border-secondary-200 hover:bg-secondary-50 transition-colors"
+          className="p-2 bg-white dark:bg-secondary-800 rounded-lg shadow-lg border border-secondary-200 dark:border-secondary-700 hover:bg-secondary-50 dark:hover:bg-secondary-700 transition-colors"
         >
-          <i className={`bi ${isMobileMenuOpen ? 'bi-x-lg' : 'bi-list'} text-xl text-secondary-700`}></i>
+          <i className={`bi ${isMobileMenuOpen ? 'bi-x-lg' : 'bi-list'} text-xl text-secondary-700 dark:text-secondary-200`}></i>
         </button>
       </div>
 
@@ -107,15 +107,15 @@ const AppContent: React.FC = () => {
       </div>
 
       {/* Footer */}
-      <footer className="bg-white border-t border-secondary-200 py-4 mt-12">
+      <footer className="bg-white dark:bg-secondary-900 border-t border-secondary-200 dark:border-secondary-800 py-4 mt-12 transition-colors duration-200">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           <div className="flex flex-col sm:flex-row justify-between items-center">
-            <div className="flex items-center space-x-2 text-sm text-secondary-600">
+            <div className="flex items-center space-x-2 text-sm text-secondary-600 dark:text-secondary-400">
               <span>© 2025 Anadolu Hastaneleri. Tüm hakları saklıdır.</span>
             </div>
-            <div className="flex items-center space-x-2 text-sm text-secondary-600 mt-2 sm:mt-0">
+            <div className="flex items-center space-x-2 text-sm text-secondary-600 dark:text-secondary-400 mt-2 sm:mt-0">
               <span>Powered by</span>
-              <span className="font-semibold text-primary-600">Bekir Filizdağ</span>
+              <span className="font-semibold text-primary-600 dark:text-primary-500">Bekir Filizdağ</span>
             </div>
           </div>
         </div>

@@ -9,9 +9,12 @@ interface HeaderProps {
   onPageChange: (page: Page) => void;
 }
 
+import { useTheme } from '../../contexts/ThemeContext';
+
 export const Header: React.FC<HeaderProps> = ({ currentPage, onPageChange }) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { user, logout, currentOrganization } = useAuth();
+  const { theme, toggleTheme } = useTheme();
 
   const handleLogout = async () => {
     if (confirm('Çıkış yapmak istediğinizden emin misiniz?')) {
@@ -68,8 +71,20 @@ export const Header: React.FC<HeaderProps> = ({ currentPage, onPageChange }) => 
             ))}
           </nav>
 
-          {/* User Menu */}
+          {/* Theme Toggle & User Menu */}
           <div className="hidden md:flex items-center space-x-4">
+            <button
+              onClick={toggleTheme}
+              className="p-2 text-secondary-500 hover:text-primary-600 dark:text-secondary-400 dark:hover:text-primary-400 transition-colors"
+              title={theme === 'light' ? 'Gece Moduna Geç' : 'Gündüz Moduna Geç'}
+            >
+              {theme === 'light' ? (
+                <i className="bi bi-moon-stars text-lg"></i>
+              ) : (
+                <i className="bi bi-sun text-lg"></i>
+              )}
+            </button>
+
             <div className="flex items-center space-x-2">
               <div className="w-8 h-8 bg-primary-100 rounded-full flex items-center justify-center">
                 <i className="bi bi-person text-primary-600"></i>

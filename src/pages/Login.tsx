@@ -108,18 +108,20 @@ export const Login: React.FC = () => {
                 <img
                   src={org.logo_url}
                   alt={org.name}
-                  className="max-h-24 w-auto object-contain"
+                  className="max-h-40 w-auto object-contain transition-all duration-300"
                 />
               </div>
             ) : (
-              <div className="w-16 h-16 bg-primary-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                <i className="bi bi-hospital text-white text-3xl"></i>
+              <div className="text-center">
+                <div className="w-20 h-20 bg-primary-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                  <i className="bi bi-hospital text-white text-4xl"></i>
+                </div>
+                <h1 className="text-2xl font-bold text-secondary-900 mb-2">
+                  {org.name}
+                </h1>
+                <p className="text-secondary-600">Kalite Yönetim Sistemi</p>
               </div>
             )}
-            <h1 className="text-2xl font-bold text-secondary-900 mb-2">
-              {org.name}
-            </h1>
-            <p className="text-secondary-600">Kalite Yönetim Sistemi</p>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-6">

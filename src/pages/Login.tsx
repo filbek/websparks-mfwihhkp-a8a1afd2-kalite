@@ -1,28 +1,102 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button } from '../components/ui/Button';
 import { Input } from '../components/ui/Input';
 import { useAuth } from '../contexts/AuthContext';
+import { getOrganizationBySlug, Organization } from '../lib/organizationApi';
+import { supabase } from '../lib/supabase';
 
 export const Login: React.FC = () => {
-  const { login } = useAuth();
+  const { login, logout } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [org, setOrg] = useState<Organization | null>(null);
+  const [checkingOrg, setCheckingOrg] = useState(true);
+
+  useEffect(() => {
+    const checkOrg = async () => {
+      try {
+        const hostname = window.location.hostname;
+        let slug = 'anadolu'; // Varsayılan (localhost için)
+
+        // Subdomain kontrolü
+        if (hostname.includes('intrasoft.io')) {
+          const parts = hostname.split('.');
+          if (parts.length > 2) {
+            slug = parts[0];
+          }
+        }
+
+        console.log('Detected slug:', slug);
+        const organization = await getOrganizationBySlug(slug);
+
+        if (organization) {
+          setOrg(organization);
+        } else {
+          setError('Organizasyon bulunamadı. Lütfen doğru adresten girdiğinize emin olun.');
+        }
+      } catch (err) {
+        console.error('Error fetching org:', err);
+        setError('Sistem hatası oluştu.');
+      } finally {
+        setCheckingOrg(false);
+      }
+    };
+
+    checkOrg();
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!org) return;
+
     setError('');
     setLoading(true);
 
     try {
       await login(email, password);
+
+      // Login başarılı, şimdi organizasyon kontrolü yapalım
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        const { data: profile } = await supabase
+          .from('users')
+          .select('organization_id')
+          .eq('id', user.id)
+          .single();
+
+        if (profile?.organization_id !== org.id) {
+          await logout();
+          throw new Error(`Bu hesaba sadece ${org.name} sistemi üzerinden erişilebilir.`);
+        }
+      }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Giriş yapılırken bir hata oluştu');
     } finally {
       setLoading(false);
     }
   };
+
+  if (checkingOrg) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600"></div>
+      </div>
+    );
+  }
+
+  if (!org) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50 p-4">
+        <div className="text-center">
+          <i className="bi bi-exclamation-circle text-4xl text-danger-500 mb-4 block"></i>
+          <h1 className="text-xl font-bold text-gray-900 mb-2">Organizasyon Bulunamadı</h1>
+          <p className="text-gray-600">"{window.location.hostname}" adresi için kayıtlı bir organizasyon bulunamadı.</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-primary-50 to-secondary-100 flex items-center justify-center p-4">
@@ -33,7 +107,7 @@ export const Login: React.FC = () => {
               <i className="bi bi-hospital text-white text-3xl"></i>
             </div>
             <h1 className="text-2xl font-bold text-secondary-900 mb-2">
-              Anadolu Hastaneleri
+              {org.name}
             </h1>
             <p className="text-secondary-600">Kalite Yönetim Sistemi</p>
           </div>
@@ -54,7 +128,7 @@ export const Login: React.FC = () => {
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="kullanici@anadoluhastaneleri.com"
+                placeholder="ornek@hastane.com"
                 required
                 autoComplete="email"
               />
@@ -87,13 +161,11 @@ export const Login: React.FC = () => {
               )}
             </Button>
           </form>
-
-
         </div>
 
         <div className="text-center mt-6">
           <p className="text-sm text-secondary-600">
-            © 2025 Anadolu Hastaneleri. Tüm hakları saklıdır.
+            © {new Date().getFullYear()} {org.name}. Tüm hakları saklıdır.
           </p>
         </div>
       </div>

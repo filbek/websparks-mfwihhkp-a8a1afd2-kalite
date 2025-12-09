@@ -47,6 +47,21 @@ export const getAllOrganizations = async (): Promise<Organization[]> => {
     return data || [];
 };
 
+// Get organization by slug (subdomain)
+export const getOrganizationBySlug = async (slug: string): Promise<Organization | null> => {
+    const { data, error } = await supabase
+        .from('organizations')
+        .select('*')
+        .eq('slug', slug)
+        .single();
+
+    if (error) {
+        if (error.code === 'PGRST116') return null; // Not found
+        throw error;
+    }
+    return data;
+};
+
 // Create new organization
 export const createOrganization = async (
     name: string,

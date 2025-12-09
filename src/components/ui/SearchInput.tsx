@@ -23,7 +23,7 @@ export const SearchInput: React.FC<SearchInputProps> = ({
       <input
         type="text"
         className={cn(
-          'w-full pl-10 pr-4 py-2 border border-secondary-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-colors',
+          'w-full pl-10 pr-4 py-2 bg-white dark:bg-secondary-800 border border-secondary-300 dark:border-secondary-700 rounded-lg text-secondary-900 dark:text-white placeholder:text-secondary-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-colors',
           className
         )}
         placeholder="Ara..."

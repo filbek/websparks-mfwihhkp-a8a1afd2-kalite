@@ -112,10 +112,10 @@ export const FilePreviewModal: React.FC<FilePreviewModalProps> = ({
   const renderPreview = () => {
     if (!fileUrl || loading || (isPDF && !blobUrl)) {
       return (
-        <div className="flex items-center justify-center h-96 bg-secondary-50 rounded-lg">
+        <div className="flex items-center justify-center h-96 bg-secondary-50 dark:bg-secondary-800 rounded-lg transition-colors">
           <div className="text-center">
             <i className="bi bi-hourglass-split text-4xl text-secondary-400 mb-2 animate-spin"></i>
-            <p className="text-secondary-600">Dosya yükleniyor...</p>
+            <p className="text-secondary-600 dark:text-secondary-400">Dosya yükleniyor...</p>
           </div>
         </div>
       );
@@ -138,7 +138,7 @@ export const FilePreviewModal: React.FC<FilePreviewModalProps> = ({
 
     if (isPDF && blobUrl) {
       return (
-        <div className={`bg-secondary-50 rounded-lg ${isFullscreen ? 'fixed inset-0 z-50' : 'h-96'}`}>
+        <div className={`bg-secondary-50 dark:bg-secondary-800 rounded-lg ${isFullscreen ? 'fixed inset-0 z-50' : 'h-96'} transition-colors`}>
           <iframe
             src={`${blobUrl}#view=FitH`}
             className="w-full h-full rounded-lg"
@@ -149,11 +149,11 @@ export const FilePreviewModal: React.FC<FilePreviewModalProps> = ({
     }
 
     return (
-      <div className="flex items-center justify-center h-96 bg-secondary-50 rounded-lg">
+      <div className="flex items-center justify-center h-96 bg-secondary-50 dark:bg-secondary-800 rounded-lg transition-colors">
         <div className="text-center">
           <i className="bi bi-file-earmark text-6xl text-secondary-400 mb-4"></i>
-          <p className="text-secondary-900 font-medium mb-2">Önizleme Desteklenmiyor</p>
-          <p className="text-secondary-600 text-sm mb-4">Bu dosya türü için önizleme yapılamıyor</p>
+          <p className="text-secondary-900 dark:text-white font-medium mb-2">Önizleme Desteklenmiyor</p>
+          <p className="text-secondary-600 dark:text-secondary-400 text-sm mb-4">Bu dosya türü için önizleme yapılamıyor</p>
           {onDownload && (
             <Button onClick={onDownload} size="sm">
               <i className="bi bi-download mr-2"></i>
@@ -173,15 +173,15 @@ export const FilePreviewModal: React.FC<FilePreviewModalProps> = ({
       size="large"
     >
       <div className="space-y-4">
-        <div className="bg-secondary-50 rounded-lg p-4">
+        <div className="bg-secondary-50 dark:bg-secondary-800 rounded-lg p-4 transition-colors">
           <div className="flex items-start justify-between">
             <div className="flex items-center space-x-3 flex-1 min-w-0">
-              <div className="w-12 h-12 bg-primary-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                <i className={`bi ${isImage ? 'bi-file-earmark-image' : isPDF ? 'bi-file-earmark-pdf' : 'bi-file-earmark'} text-2xl text-primary-600`}></i>
+              <div className="w-12 h-12 bg-primary-100 dark:bg-primary-900/30 rounded-lg flex items-center justify-center flex-shrink-0">
+                <i className={`bi ${isImage ? 'bi-file-earmark-image' : isPDF ? 'bi-file-earmark-pdf' : 'bi-file-earmark'} text-2xl text-primary-600 dark:text-primary-400`}></i>
               </div>
               <div className="flex-1 min-w-0">
-                <h3 className="font-medium text-secondary-900 truncate">{fileName}</h3>
-                <div className="flex items-center space-x-2 text-sm text-secondary-600">
+                <h3 className="font-medium text-secondary-900 dark:text-white truncate">{fileName}</h3>
+                <div className="flex items-center space-x-2 text-sm text-secondary-600 dark:text-secondary-400">
                   <span>{formatFileSize(fileSize)}</span>
                   {uploadedBy && (
                     <>
@@ -202,7 +202,7 @@ export const FilePreviewModal: React.FC<FilePreviewModalProps> = ({
         </div>
 
         {canPreview && isImage && (
-          <div className="flex items-center justify-between bg-secondary-50 rounded-lg p-3">
+          <div className="flex items-center justify-between bg-secondary-50 dark:bg-secondary-800 rounded-lg p-3 transition-colors">
             <div className="flex items-center space-x-2">
               <Button
                 size="sm"
@@ -212,7 +212,7 @@ export const FilePreviewModal: React.FC<FilePreviewModalProps> = ({
               >
                 <i className="bi bi-zoom-out"></i>
               </Button>
-              <span className="text-sm font-medium text-secondary-700 min-w-[60px] text-center">
+              <span className="text-sm font-medium text-secondary-700 dark:text-secondary-300 min-w-[60px] text-center">
                 {zoom}%
               </span>
               <Button
@@ -260,9 +260,9 @@ export const FilePreviewModal: React.FC<FilePreviewModalProps> = ({
       {isFullscreen && (
         <button
           onClick={toggleFullscreen}
-          className="fixed top-4 right-4 z-[60] w-10 h-10 bg-white rounded-full shadow-lg flex items-center justify-center hover:bg-secondary-50 transition-colors"
+          className="fixed top-4 right-4 z-[60] w-10 h-10 bg-white dark:bg-secondary-800 rounded-full shadow-lg flex items-center justify-center hover:bg-secondary-50 dark:hover:bg-secondary-700 transition-colors"
         >
-          <i className="bi bi-x-lg text-secondary-900"></i>
+          <i className="bi bi-x-lg text-secondary-900 dark:text-white"></i>
         </button>
       )}
     </Modal>

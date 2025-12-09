@@ -21,11 +21,11 @@ export const ResponsibleDepartmentManagement: React.FC<ResponsibleDepartmentMana
 
   const filteredBolumler = sorumluBolumler.filter(bolum => {
     const matchesSearch = bolum.label.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         bolum.value.toLowerCase().includes(searchTerm.toLowerCase());
+      bolum.value.toLowerCase().includes(searchTerm.toLowerCase());
 
     const matchesFilter = filterActive === 'all' ||
-                         (filterActive === 'active' && bolum.is_active) ||
-                         (filterActive === 'inactive' && !bolum.is_active);
+      (filterActive === 'active' && bolum.is_active) ||
+      (filterActive === 'inactive' && !bolum.is_active);
 
     return matchesSearch && matchesFilter;
   });
@@ -115,41 +115,41 @@ export const ResponsibleDepartmentManagement: React.FC<ResponsibleDepartmentMana
           <p className="text-secondary-600">Müdürlük bulunamadı</p>
         </div>
       ) : (
-        <div className="bg-white rounded-lg border border-secondary-200 overflow-hidden">
+        <div className="bg-white dark:bg-secondary-800 rounded-lg border border-secondary-200 dark:border-secondary-700 overflow-hidden transition-colors">
           <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-secondary-200">
-              <thead className="bg-secondary-50">
+            <table className="min-w-full divide-y divide-secondary-200 dark:divide-secondary-700">
+              <thead className="bg-secondary-50 dark:bg-secondary-800">
                 <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-secondary-500 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-secondary-500 dark:text-secondary-400 uppercase tracking-wider">
                     Sıra
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-secondary-500 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-secondary-500 dark:text-secondary-400 uppercase tracking-wider">
                     Müdürlük Adı
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-secondary-500 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-secondary-500 dark:text-secondary-400 uppercase tracking-wider">
                     Sistem Kodu
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-secondary-500 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-secondary-500 dark:text-secondary-400 uppercase tracking-wider">
                     Durum
                   </th>
-                  <th className="px-6 py-3 text-right text-xs font-medium text-secondary-500 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-right text-xs font-medium text-secondary-500 dark:text-secondary-400 uppercase tracking-wider">
                     İşlemler
                   </th>
                 </tr>
               </thead>
-              <tbody className="bg-white divide-y divide-secondary-200">
+              <tbody className="bg-white dark:bg-secondary-900 divide-y divide-secondary-200 dark:divide-secondary-800">
                 {filteredBolumler.map((bolum, index) => (
-                  <tr key={bolum.id} className="hover:bg-secondary-50">
+                  <tr key={bolum.id} className="hover:bg-secondary-50 dark:hover:bg-secondary-800 transition-colors">
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="flex items-center gap-2">
-                        <span className="text-sm font-medium text-secondary-900">
+                        <span className="text-sm font-medium text-secondary-900 dark:text-white">
                           {bolum.display_order}
                         </span>
                         <div className="flex flex-col gap-1">
                           <button
                             onClick={() => moveUp(index)}
                             disabled={index === 0}
-                            className="text-secondary-400 hover:text-secondary-600 disabled:opacity-30 disabled:cursor-not-allowed"
+                            className="text-secondary-400 hover:text-secondary-600 dark:hover:text-secondary-300 disabled:opacity-30 disabled:cursor-not-allowed"
                             title="Yukarı taşı"
                           >
                             <i className="bi bi-chevron-up text-xs"></i>
@@ -157,7 +157,7 @@ export const ResponsibleDepartmentManagement: React.FC<ResponsibleDepartmentMana
                           <button
                             onClick={() => moveDown(index)}
                             disabled={index === filteredBolumler.length - 1}
-                            className="text-secondary-400 hover:text-secondary-600 disabled:opacity-30 disabled:cursor-not-allowed"
+                            className="text-secondary-400 hover:text-secondary-600 dark:hover:text-secondary-300 disabled:opacity-30 disabled:cursor-not-allowed"
                             title="Aşağı taşı"
                           >
                             <i className="bi bi-chevron-down text-xs"></i>
@@ -166,12 +166,12 @@ export const ResponsibleDepartmentManagement: React.FC<ResponsibleDepartmentMana
                       </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm font-medium text-secondary-900">
+                      <div className="text-sm font-medium text-secondary-900 dark:text-white">
                         {bolum.label}
                       </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <code className="text-xs bg-secondary-100 px-2 py-1 rounded text-secondary-700">
+                      <code className="text-xs bg-secondary-100 dark:bg-secondary-800 px-2 py-1 rounded text-secondary-700 dark:text-secondary-300">
                         {bolum.value}
                       </code>
                     </td>
@@ -184,11 +184,10 @@ export const ResponsibleDepartmentManagement: React.FC<ResponsibleDepartmentMana
                       <div className="flex items-center justify-end gap-2">
                         <button
                           onClick={() => onToggleActive(bolum.id, !bolum.is_active)}
-                          className={`px-3 py-1 rounded text-xs font-medium transition-colors ${
-                            bolum.is_active
+                          className={`px-3 py-1 rounded text-xs font-medium transition-colors ${bolum.is_active
                               ? 'bg-warning-100 text-warning-700 hover:bg-warning-200'
                               : 'bg-success-100 text-success-700 hover:bg-success-200'
-                          }`}
+                            }`}
                           title={bolum.is_active ? 'Pasif yap' : 'Aktif yap'}
                         >
                           <i className={`bi ${bolum.is_active ? 'bi-eye-slash' : 'bi-eye'} mr-1`}></i>
@@ -197,7 +196,7 @@ export const ResponsibleDepartmentManagement: React.FC<ResponsibleDepartmentMana
 
                         <button
                           onClick={() => onEdit(bolum)}
-                          className="text-primary-600 hover:text-primary-900 px-3 py-1 rounded hover:bg-primary-50 transition-colors"
+                          className="text-primary-600 hover:text-primary-900 dark:text-primary-400 dark:hover:text-primary-300 px-3 py-1 rounded hover:bg-primary-50 dark:hover:bg-primary-900/20 transition-colors"
                           title="Düzenle"
                         >
                           <i className="bi bi-pencil"></i>
@@ -205,7 +204,7 @@ export const ResponsibleDepartmentManagement: React.FC<ResponsibleDepartmentMana
 
                         <button
                           onClick={() => handleDelete(bolum)}
-                          className="text-danger-600 hover:text-danger-900 px-3 py-1 rounded hover:bg-danger-50 transition-colors"
+                          className="text-danger-600 hover:text-danger-900 dark:text-danger-400 dark:hover:text-danger-300 px-3 py-1 rounded hover:bg-danger-50 dark:hover:bg-danger-900/20 transition-colors"
                           title="Sil"
                         >
                           <i className="bi bi-trash"></i>
@@ -220,10 +219,10 @@ export const ResponsibleDepartmentManagement: React.FC<ResponsibleDepartmentMana
         </div>
       )}
 
-      <div className="bg-primary-50 border border-primary-200 rounded-lg p-4">
+      <div className="bg-primary-50 dark:bg-primary-900/20 border border-primary-200 dark:border-primary-800 rounded-lg p-4 transition-colors">
         <div className="flex">
-          <i className="bi bi-info-circle text-primary-600 mr-3 mt-0.5"></i>
-          <div className="text-sm text-primary-800">
+          <i className="bi bi-info-circle text-primary-600 dark:text-primary-400 mr-3 mt-0.5"></i>
+          <div className="text-sm text-primary-800 dark:text-primary-200">
             <p className="font-medium mb-1">Önemli Notlar:</p>
             <ul className="list-disc list-inside space-y-1">
               <li>Sadece aktif müdürlükler DÖF formlarında "Sorumlu Bölüm" alanında görünür</li>

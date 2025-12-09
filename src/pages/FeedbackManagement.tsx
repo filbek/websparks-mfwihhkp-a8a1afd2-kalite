@@ -65,13 +65,13 @@ export const FeedbackManagement: React.FC = () => {
   return (
     <div className="space-y-6">
       {/* Page Header */}
-      <div className="bg-white rounded-xl border border-secondary-200 p-6">
+      <div className="bg-white dark:bg-secondary-800 rounded-xl border border-secondary-200 dark:border-secondary-700 p-6 transition-colors">
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between space-y-4 lg:space-y-0">
           <div>
-            <h1 className="text-2xl font-bold text-secondary-900 mb-2">Görüş ve Öneriler</h1>
-            <p className="text-secondary-600">Hastane çalışanlarının görüşlerini yönetin ve değerlendirin</p>
+            <h1 className="text-2xl font-bold text-secondary-900 dark:text-white mb-2">Görüş ve Öneriler</h1>
+            <p className="text-secondary-600 dark:text-secondary-400">Hastane çalışanlarının görüşlerini yönetin ve değerlendirin</p>
             {user && (
-              <p className="text-sm text-secondary-500 mt-1">
+              <p className="text-sm text-secondary-500 dark:text-secondary-400 mt-1">
                 Hoş geldiniz, {user.display_name} ({user.role.join(', ')})
               </p>
             )}

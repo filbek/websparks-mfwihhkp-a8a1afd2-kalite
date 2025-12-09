@@ -181,35 +181,35 @@ export const CentralQualityDOFs: React.FC<CentralQualityDOFsProps> = ({
               </CardHeader>
               <CardContent>
                 <div className="grid grid-cols-2 gap-4 text-sm">
-                  <div className="text-center p-3 bg-warning-50 rounded-lg">
-                    <p className="text-2xl font-bold text-warning-600">
+                  <div className="text-center p-3 bg-warning-50 dark:bg-warning-900/20 rounded-lg">
+                    <p className="text-2xl font-bold text-warning-600 dark:text-warning-400">
                       {facilityDOFs.filter(d => d.status === 'atanmayı_bekleyen').length}
                     </p>
-                    <p className="text-warning-700">Atanmayı Bekleyen</p>
+                    <p className="text-warning-700 dark:text-warning-300">Atanmayı Bekleyen</p>
                   </div>
-                  <div className="text-center p-3 bg-primary-50 rounded-lg">
-                    <p className="text-2xl font-bold text-primary-600">
+                  <div className="text-center p-3 bg-primary-50 dark:bg-primary-900/20 rounded-lg">
+                    <p className="text-2xl font-bold text-primary-600 dark:text-primary-400">
                       {facilityDOFs.filter(d => d.status === 'atanan').length}
                     </p>
-                    <p className="text-primary-700">Atanan</p>
+                    <p className="text-primary-700 dark:text-primary-300">Atanan</p>
                   </div>
-                  <div className="text-center p-3 bg-accent-50 rounded-lg">
-                    <p className="text-2xl font-bold text-accent-600">
+                  <div className="text-center p-3 bg-accent-50 dark:bg-accent-900/20 rounded-lg">
+                    <p className="text-2xl font-bold text-accent-600 dark:text-accent-400">
                       {facilityDOFs.filter(d => d.status === 'kapatma_onayında').length}
                     </p>
-                    <p className="text-accent-700">Kapatma Onayında</p>
+                    <p className="text-accent-700 dark:text-accent-300">Kapatma Onayında</p>
                   </div>
-                  <div className="text-center p-3 bg-success-50 rounded-lg">
-                    <p className="text-2xl font-bold text-success-600">
+                  <div className="text-center p-3 bg-success-50 dark:bg-success-900/20 rounded-lg">
+                    <p className="text-2xl font-bold text-success-600 dark:text-success-400">
                       {facilityDOFs.filter(d => d.status === 'kapatıldı').length}
                     </p>
-                    <p className="text-success-700">Kapatıldı</p>
+                    <p className="text-success-700 dark:text-success-300">Kapatıldı</p>
                   </div>
                 </div>
                 <div className="mt-4 pt-3 border-t border-secondary-200">
                   <div className="flex justify-between items-center">
-                    <span className="text-sm text-secondary-600">Toplam DÖF</span>
-                    <span className="text-lg font-bold text-secondary-900">{facilityDOFs.length}</span>
+                    <span className="text-sm text-secondary-600 dark:text-secondary-400">Toplam DÖF</span>
+                    <span className="text-lg font-bold text-secondary-900 dark:text-white">{facilityDOFs.length}</span>
                   </div>
                 </div>
               </CardContent>
@@ -385,21 +385,21 @@ export const CentralQualityDOFs: React.FC<CentralQualityDOFsProps> = ({
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead>
-                <tr className="border-b border-secondary-200">
-                  <th className="text-left py-3 px-4 font-medium text-secondary-700">DÖF No</th>
-                  <th className="text-left py-3 px-4 font-medium text-secondary-700">Şube</th>
-                  <th className="text-left py-3 px-4 font-medium text-secondary-700">Başlık</th>
-                  <th className="text-left py-3 px-4 font-medium text-secondary-700">Durum</th>
-                  <th className="text-left py-3 px-4 font-medium text-secondary-700">Öncelik</th>
-                  <th className="text-left py-3 px-4 font-medium text-secondary-700">Rapor Eden</th>
-                  <th className="text-left py-3 px-4 font-medium text-secondary-700">Tarih</th>
-                  <th className="text-left py-3 px-4 font-medium text-secondary-700">İşlemler</th>
+                <tr className="border-b border-secondary-200 dark:border-secondary-700">
+                  <th className="text-left py-3 px-4 font-medium text-secondary-700 dark:text-secondary-300">DÖF No</th>
+                  <th className="text-left py-3 px-4 font-medium text-secondary-700 dark:text-secondary-300">Şube</th>
+                  <th className="text-left py-3 px-4 font-medium text-secondary-700 dark:text-secondary-300">Başlık</th>
+                  <th className="text-left py-3 px-4 font-medium text-secondary-700 dark:text-secondary-300">Durum</th>
+                  <th className="text-left py-3 px-4 font-medium text-secondary-700 dark:text-secondary-300">Öncelik</th>
+                  <th className="text-left py-3 px-4 font-medium text-secondary-700 dark:text-secondary-300">Rapor Eden</th>
+                  <th className="text-left py-3 px-4 font-medium text-secondary-700 dark:text-secondary-300">Tarih</th>
+                  <th className="text-left py-3 px-4 font-medium text-secondary-700 dark:text-secondary-300">İşlemler</th>
                 </tr>
               </thead>
               <tbody>
                 {filteredDOFs.map((dof, index) => (
-                  <tr key={dof.id} className="border-b border-secondary-100 hover:bg-secondary-50">
-                    <td className="py-3 px-4 text-sm font-mono text-secondary-600">
+                  <tr key={dof.id} className="border-b border-secondary-100 dark:border-secondary-800 hover:bg-secondary-50 dark:hover:bg-secondary-800 transition-colors">
+                    <td className="py-3 px-4 text-sm font-mono text-secondary-600 dark:text-secondary-400">
                       DOF-{String(index + 1).padStart(4, '0')}
                     </td>
                     <td className="py-3 px-4">
@@ -409,8 +409,8 @@ export const CentralQualityDOFs: React.FC<CentralQualityDOFsProps> = ({
                     </td>
                     <td className="py-3 px-4">
                       <div>
-                        <p className="font-medium text-secondary-900 line-clamp-1">{dof.title}</p>
-                        <p className="text-sm text-secondary-600 line-clamp-1">{dof.description}</p>
+                        <p className="font-medium text-secondary-900 dark:text-white line-clamp-1">{dof.title}</p>
+                        <p className="text-sm text-secondary-600 dark:text-secondary-400 line-clamp-1">{dof.description}</p>
                       </div>
                     </td>
                     <td className="py-3 px-4">
@@ -427,10 +427,10 @@ export const CentralQualityDOFs: React.FC<CentralQualityDOFsProps> = ({
                         {dof.priority.charAt(0).toUpperCase() + dof.priority.slice(1)}
                       </Badge>
                     </td>
-                    <td className="py-3 px-4 text-sm text-secondary-700">
+                    <td className="py-3 px-4 text-sm text-secondary-700 dark:text-secondary-300">
                       {dof.reporter?.display_name || 'Bilinmeyen'}
                     </td>
-                    <td className="py-3 px-4 text-sm text-secondary-600">
+                    <td className="py-3 px-4 text-sm text-secondary-600 dark:text-secondary-400">
                       {dof.tespit_tarihi ? formatDate(dof.tespit_tarihi) : formatDate(dof.created_at)}
                     </td>
                     <td className="py-3 px-4">
@@ -479,11 +479,11 @@ export const CentralQualityDOFs: React.FC<CentralQualityDOFsProps> = ({
 
           {filteredDOFs.length === 0 && (
             <div className="text-center py-12">
-              <div className="w-24 h-24 bg-secondary-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <i className="bi bi-clipboard-x text-4xl text-secondary-400"></i>
+              <div className="w-24 h-24 bg-secondary-100 dark:bg-secondary-800 rounded-full flex items-center justify-center mx-auto mb-4 transition-colors">
+                <i className="bi bi-clipboard-x text-4xl text-secondary-400 dark:text-secondary-500"></i>
               </div>
-              <h3 className="text-lg font-medium text-secondary-900 mb-2">DÖF bulunamadı</h3>
-              <p className="text-secondary-600">Arama kriterlerinize uygun DÖF kaydı bulunamadı.</p>
+              <h3 className="text-lg font-medium text-secondary-900 dark:text-white mb-2">DÖF bulunamadı</h3>
+              <p className="text-secondary-600 dark:text-secondary-400">Arama kriterlerinize uygun DÖF kaydı bulunamadı.</p>
             </div>
           )}
         </CardContent>

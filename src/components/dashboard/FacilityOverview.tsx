@@ -58,7 +58,7 @@ export const FacilityOverview: React.FC<FacilityOverviewProps> = ({ facilityStat
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="text-center py-12 text-secondary-600">
+          <div className="text-center py-12 text-secondary-600 dark:text-secondary-400">
             Henüz şube verisi bulunmamaktadır.
           </div>
         </CardContent>
@@ -77,9 +77,9 @@ export const FacilityOverview: React.FC<FacilityOverviewProps> = ({ facilityStat
       <CardContent>
         <div className="space-y-4">
           {facilityStats.map((facility) => (
-            <div key={facility.facilityId} className="p-4 border border-secondary-200 rounded-lg hover:bg-secondary-50 transition-colors">
+            <div key={facility.facilityId} className="p-4 border border-secondary-200 dark:border-secondary-700 rounded-lg hover:bg-secondary-50 dark:hover:bg-secondary-800/50 transition-colors">
               <div className="flex items-center justify-between mb-3">
-                <h4 className="text-lg font-semibold text-secondary-900">
+                <h4 className="text-lg font-semibold text-secondary-900 dark:text-white">
                   {facility.facilityName} Şubesi
                 </h4>
                 {getStatusBadge(facility.status)}
@@ -87,15 +87,15 @@ export const FacilityOverview: React.FC<FacilityOverviewProps> = ({ facilityStat
               <div className="grid grid-cols-3 gap-4 text-sm">
                 <div className="text-center">
                   <p className="text-2xl font-bold text-primary-600">{facility.activeDofs}</p>
-                  <p className="text-secondary-600">Aktif DÖF</p>
+                  <p className="text-secondary-600 dark:text-secondary-400">Aktif DÖF</p>
                 </div>
                 <div className="text-center">
                   <p className="text-2xl font-bold text-warning-600">{facility.activeEvents}</p>
-                  <p className="text-secondary-600">Aktif Olay</p>
+                  <p className="text-secondary-600 dark:text-secondary-400">Aktif Olay</p>
                 </div>
                 <div className="text-center">
                   <p className="text-2xl font-bold text-success-600">{facility.completedThisMonth}</p>
-                  <p className="text-secondary-600">Bu Ay Tamamlanan</p>
+                  <p className="text-secondary-600 dark:text-secondary-400">Bu Ay Tamamlanan</p>
                 </div>
               </div>
             </div>

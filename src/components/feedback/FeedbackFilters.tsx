@@ -55,14 +55,14 @@ export const FeedbackFiltersComponent: React.FC<FeedbackFiltersProps> = ({
     { value: 'düşük', label: 'Düşük' }
   ];
 
-  const hasActiveFilters = Object.values(filters).some(value => 
+  const hasActiveFilters = Object.values(filters).some(value =>
     value !== '' && value !== undefined && value !== null
   );
 
   return (
-    <div className="bg-white rounded-xl border border-secondary-200 p-6">
+    <div className="bg-white dark:bg-secondary-800 rounded-xl border border-secondary-200 dark:border-secondary-700 p-6 transition-colors">
       <div className="flex items-center justify-between mb-4">
-        <h3 className="text-lg font-semibold text-secondary-900">Filtreler</h3>
+        <h3 className="text-lg font-semibold text-secondary-900 dark:text-white">Filtreler</h3>
         {hasActiveFilters && (
           <button
             onClick={onReset}
@@ -72,7 +72,7 @@ export const FeedbackFiltersComponent: React.FC<FeedbackFiltersProps> = ({
           </button>
         )}
       </div>
-      
+
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         <div>
           <Input
@@ -111,7 +111,7 @@ export const FeedbackFiltersComponent: React.FC<FeedbackFiltersProps> = ({
         </div>
 
         <div>
-          <label htmlFor="date_from" className="block text-sm font-medium text-secondary-700 mb-2">
+          <label htmlFor="date_from" className="block text-sm font-medium text-secondary-700 dark:text-secondary-300 mb-2">
             Başlangıç Tarihi
           </label>
           <input
@@ -119,12 +119,12 @@ export const FeedbackFiltersComponent: React.FC<FeedbackFiltersProps> = ({
             id="date_from"
             value={filters.date_from || ''}
             onChange={(e) => handleDateChange('date_from', e.target.value)}
-            className="w-full px-3 py-2 border border-secondary-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+            className="w-full px-3 py-2 bg-white dark:bg-secondary-800 border border-secondary-300 dark:border-secondary-600 rounded-lg text-secondary-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-colors"
           />
         </div>
 
         <div>
-          <label htmlFor="date_to" className="block text-sm font-medium text-secondary-700 mb-2">
+          <label htmlFor="date_to" className="block text-sm font-medium text-secondary-700 dark:text-secondary-300 mb-2">
             Bitiş Tarihi
           </label>
           <input
@@ -132,15 +132,15 @@ export const FeedbackFiltersComponent: React.FC<FeedbackFiltersProps> = ({
             id="date_to"
             value={filters.date_to || ''}
             onChange={(e) => handleDateChange('date_to', e.target.value)}
-            className="w-full px-3 py-2 border border-secondary-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+            className="w-full px-3 py-2 bg-white dark:bg-secondary-800 border border-secondary-300 dark:border-secondary-600 rounded-lg text-secondary-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-colors"
           />
         </div>
       </div>
 
       {hasActiveFilters && (
-        <div className="mt-4 pt-4 border-t border-secondary-200">
+        <div className="mt-4 pt-4 border-t border-secondary-200 dark:border-secondary-700">
           <div className="flex flex-wrap gap-2">
-            <span className="text-sm text-secondary-500">Aktif filtreler:</span>
+            <span className="text-sm text-secondary-500 dark:text-secondary-400">Aktif filtreler:</span>
             {filters.search && (
               <span className="inline-flex items-center px-2 py-1 rounded-md text-xs bg-secondary-100 text-secondary-800">
                 Arama: {filters.search}

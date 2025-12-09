@@ -33,7 +33,7 @@ export const Header: React.FC<HeaderProps> = ({ currentPage, onPageChange }) => 
   ];
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-white border-b border-secondary-200 shadow-sm">
+    <header className="fixed top-0 left-0 right-0 z-50 glass border-b shadow-sm transition-all duration-300">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
@@ -50,10 +50,10 @@ export const Header: React.FC<HeaderProps> = ({ currentPage, onPageChange }) => 
               )}
             </div>
             <div>
-              <h1 className="text-xl font-bold text-secondary-900">
+              <h1 className="text-xl font-bold text-secondary-900 dark:text-white">
                 {currentOrganization?.name || 'Yükleniyor...'}
               </h1>
-              <p className="text-xs text-secondary-600">İntranet Sistemi</p>
+              <p className="text-xs text-secondary-600 dark:text-secondary-400">İntranet Sistemi</p>
             </div>
           </div>
 
@@ -63,7 +63,7 @@ export const Header: React.FC<HeaderProps> = ({ currentPage, onPageChange }) => 
               <button
                 key={item.id}
                 onClick={() => onPageChange(item.id)}
-                className={`text-secondary-700 hover:text-primary-600 font-medium transition-colors ${currentPage === item.id ? 'text-primary-600 border-b-2 border-primary-600 pb-1' : ''
+                className={`text-secondary-700 dark:text-secondary-300 hover:text-primary-600 dark:hover:text-primary-400 font-medium transition-colors ${currentPage === item.id ? 'text-primary-600 dark:text-primary-400 border-b-2 border-primary-600 dark:border-primary-400 pb-1' : ''
                   }`}
               >
                 {item.label}
@@ -86,12 +86,12 @@ export const Header: React.FC<HeaderProps> = ({ currentPage, onPageChange }) => 
             </button>
 
             <div className="flex items-center space-x-2">
-              <div className="w-8 h-8 bg-primary-100 rounded-full flex items-center justify-center">
-                <i className="bi bi-person text-primary-600"></i>
+              <div className="w-8 h-8 bg-primary-100 dark:bg-primary-900/30 rounded-full flex items-center justify-center">
+                <i className="bi bi-person text-primary-600 dark:text-primary-400"></i>
               </div>
               <div className="text-sm">
-                <p className="font-medium text-secondary-900">{user?.display_name || 'Kullanıcı'}</p>
-                <p className="text-secondary-600">{user?.department_name || 'Şube'}</p>
+                <p className="font-medium text-secondary-900 dark:text-white">{user?.display_name || 'Kullanıcı'}</p>
+                <p className="text-secondary-600 dark:text-secondary-400">{user?.department_name || 'Şube'}</p>
               </div>
             </div>
             <Button variant="outline" size="sm" onClick={handleLogout}>
@@ -111,7 +111,7 @@ export const Header: React.FC<HeaderProps> = ({ currentPage, onPageChange }) => 
 
         {/* Mobile Menu */}
         {isMobileMenuOpen && (
-          <div className="md:hidden py-4 border-t border-secondary-200 animate-slide-down">
+          <div className="md:hidden py-4 border-t border-secondary-200 dark:border-secondary-800 bg-white dark:bg-secondary-900 animate-slide-down transition-colors">
             <nav className="space-y-3">
               {menuItems.map((item) => (
                 <button
@@ -131,12 +131,12 @@ export const Header: React.FC<HeaderProps> = ({ currentPage, onPageChange }) => 
               ))}
               <div className="pt-3 border-t border-secondary-200">
                 <div className="flex items-center space-x-3 px-3 py-2">
-                  <div className="w-8 h-8 bg-primary-100 rounded-full flex items-center justify-center">
-                    <i className="bi bi-person text-primary-600"></i>
+                  <div className="w-8 h-8 bg-primary-100 dark:bg-primary-900/30 rounded-full flex items-center justify-center">
+                    <i className="bi bi-person text-primary-600 dark:text-primary-400"></i>
                   </div>
                   <div className="text-sm">
-                    <p className="font-medium text-secondary-900">{user?.display_name || 'Kullanıcı'}</p>
-                    <p className="text-secondary-600">{user?.department_name || 'Şube'}</p>
+                    <p className="font-medium text-secondary-900 dark:text-white">{user?.display_name || 'Kullanıcı'}</p>
+                    <p className="text-secondary-600 dark:text-secondary-400">{user?.department_name || 'Şube'}</p>
                   </div>
                 </div>
                 <Button variant="outline" size="sm" className="mx-3 mt-2" onClick={handleLogout}>

@@ -45,19 +45,19 @@ export const DocumentCard: React.FC<DocumentCardProps> = ({
           <div className="flex-shrink-0">
             <i className={`bi ${getFileIcon(document.file_type)} text-2xl`}></i>
           </div>
-          
+
           <div className="flex-1 min-w-0">
-            <h3 className="text-lg font-medium text-secondary-900 truncate">
+            <h3 className="text-lg font-medium text-secondary-900 dark:text-white truncate">
               {document.title}
             </h3>
-            
+
             {document.description && (
-              <p className="mt-1 text-sm text-secondary-600 line-clamp-2">
+              <p className="mt-1 text-sm text-secondary-600 dark:text-secondary-400 line-clamp-2">
                 {document.description}
               </p>
             )}
-            
-            <div className="mt-2 flex items-center space-x-4 text-xs text-secondary-500">
+
+            <div className="mt-2 flex items-center space-x-4 text-xs text-secondary-500 dark:text-secondary-400">
               <span className="flex items-center">
                 <i className="bi bi-folder mr-1"></i>
                 {document.category?.name || 'Kategorisiz'}
@@ -71,8 +71,8 @@ export const DocumentCard: React.FC<DocumentCardProps> = ({
                 {new Date(document.created_at).toLocaleDateString('tr-TR')}
               </span>
             </div>
-            
-            <div className="mt-2 flex items-center space-x-4 text-xs text-secondary-500">
+
+            <div className="mt-2 flex items-center space-x-4 text-xs text-secondary-500 dark:text-secondary-400">
               <span className="flex items-center">
                 <i className="bi bi-person mr-1"></i>
                 {document.uploader?.display_name || 'Bilinmeyen Kullanıcı'}
@@ -84,7 +84,7 @@ export const DocumentCard: React.FC<DocumentCardProps> = ({
             </div>
           </div>
         </div>
-        
+
         {showActions && (
           <div className="flex items-center space-x-2 ml-4">
             {isPDF && onPreview && (

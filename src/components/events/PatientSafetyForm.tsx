@@ -232,7 +232,7 @@ export const PatientSafetyForm: React.FC<PatientSafetyFormProps> = ({
           <CardContent className="space-y-4">
             {/* Gizlilik Talebi */}
             <div>
-              <label className="block text-sm font-medium text-secondary-700 mb-3">
+              <label className="block text-sm font-medium text-secondary-700 dark:text-secondary-300 mb-3">
                 Gizlilik Talebi *
               </label>
               <div className="flex space-x-4">
@@ -249,9 +249,9 @@ export const PatientSafetyForm: React.FC<PatientSafetyFormProps> = ({
                         working_department: user?.department_name || ''
                       });
                     }}
-                    className="mr-2 h-4 w-4 text-danger-600 focus:ring-danger-500"
+                    className="mr-2 h-4 w-4 text-danger-600 focus:ring-danger-500 dark:bg-secondary-700 dark:border-secondary-600"
                   />
-                  Hayır
+                  <span className="dark:text-secondary-300">Hayır</span>
                 </label>
                 <label className="flex items-center">
                   <input
@@ -266,9 +266,9 @@ export const PatientSafetyForm: React.FC<PatientSafetyFormProps> = ({
                         working_department: ''
                       });
                     }}
-                    className="mr-2 h-4 w-4 text-danger-600 focus:ring-danger-500"
+                    className="mr-2 h-4 w-4 text-danger-600 focus:ring-danger-500 dark:bg-secondary-700 dark:border-secondary-600"
                   />
-                  Evet
+                  <span className="dark:text-secondary-300">Evet</span>
                 </label>
               </div>
             </div>
@@ -278,7 +278,7 @@ export const PatientSafetyForm: React.FC<PatientSafetyFormProps> = ({
                 label="Çalıştığı Bölüm"
                 value={formData.working_department}
                 disabled
-                className="bg-secondary-50"
+                className="bg-secondary-50 dark:bg-secondary-700/50"
               />
 
               <Select
@@ -299,7 +299,7 @@ export const PatientSafetyForm: React.FC<PatientSafetyFormProps> = ({
               />
 
               <div>
-                <label className="block text-sm font-medium text-secondary-700 mb-2">
+                <label className="block text-sm font-medium text-secondary-700 dark:text-secondary-300 mb-2">
                   Cinsiyet
                 </label>
                 <div className="flex space-x-4">
@@ -310,9 +310,9 @@ export const PatientSafetyForm: React.FC<PatientSafetyFormProps> = ({
                       value="erkek"
                       checked={formData.gender === 'erkek'}
                       onChange={(e) => setFormData({ ...formData, gender: e.target.value })}
-                      className="mr-2 h-4 w-4 text-danger-600 focus:ring-danger-500"
+                      className="mr-2 h-4 w-4 text-danger-600 focus:ring-danger-500 dark:bg-secondary-700 dark:border-secondary-600"
                     />
-                    Erkek
+                    <span className="dark:text-secondary-300">Erkek</span>
                   </label>
                   <label className="flex items-center">
                     <input
@@ -321,9 +321,9 @@ export const PatientSafetyForm: React.FC<PatientSafetyFormProps> = ({
                       value="kadin"
                       checked={formData.gender === 'kadin'}
                       onChange={(e) => setFormData({ ...formData, gender: e.target.value })}
-                      className="mr-2 h-4 w-4 text-danger-600 focus:ring-danger-500"
+                      className="mr-2 h-4 w-4 text-danger-600 focus:ring-danger-500 dark:bg-secondary-700 dark:border-secondary-600"
                     />
-                    Kadın
+                    <span className="dark:text-secondary-300">Kadın</span>
                   </label>
                 </div>
               </div>
@@ -357,14 +357,14 @@ export const PatientSafetyForm: React.FC<PatientSafetyFormProps> = ({
                 label="Olay Giriş Tarihi"
                 value={new Date().toLocaleDateString('tr-TR')}
                 disabled
-                className="bg-secondary-50"
+                className="bg-secondary-50 dark:bg-secondary-700/50"
               />
 
               <Input
                 label="Olayı Bildiren Adı Soyadı"
                 value={formData.reporter_name}
                 disabled
-                className="bg-secondary-50"
+                className="bg-secondary-50 dark:bg-secondary-700/50"
               />
             </div>
           </CardContent>
@@ -406,7 +406,7 @@ export const PatientSafetyForm: React.FC<PatientSafetyFormProps> = ({
 
             {/* Score Slider */}
             <div>
-              <label className="block text-sm font-medium text-secondary-700 mb-2">
+              <label className="block text-sm font-medium text-secondary-700 dark:text-secondary-300 mb-2">
                 Olay Puanı (0-7): {formData.score}
               </label>
               <input
@@ -431,9 +431,9 @@ export const PatientSafetyForm: React.FC<PatientSafetyFormProps> = ({
 
                   setFormData({ ...formData, score: newScore, event_category: categoryValue });
                 }}
-                className="w-full h-2 bg-secondary-200 rounded-lg appearance-none cursor-pointer"
+                className="w-full h-2 bg-secondary-200 dark:bg-secondary-700 rounded-lg appearance-none cursor-pointer"
               />
-              <div className="flex justify-between text-xs text-secondary-500 mt-1">
+              <div className="flex justify-between text-xs text-secondary-500 dark:text-secondary-400 mt-1">
                 <span>0</span>
                 <span>1</span>
                 <span>2</span>
@@ -453,15 +453,15 @@ export const PatientSafetyForm: React.FC<PatientSafetyFormProps> = ({
                 options={eventCategoryOptions}
                 error={errors.event_category}
                 disabled
-                className="bg-secondary-50"
+                className="bg-secondary-50 dark:bg-secondary-700/50"
               />
 
               <div>
-                <label className="block text-sm font-medium text-secondary-700 mb-2">
+                <label className="block text-sm font-medium text-secondary-700 dark:text-secondary-300 mb-2">
                   Sentinel Olay
                 </label>
-                <div className="flex items-center h-10 px-3 rounded-lg border border-secondary-300 bg-secondary-50">
-                  <span className="text-secondary-700">
+                <div className="flex items-center h-10 px-3 rounded-lg border border-secondary-300 dark:border-secondary-600 bg-secondary-50 dark:bg-secondary-700/50">
+                  <span className="text-secondary-700 dark:text-secondary-300">
                     {formData.score >= 5 ? 'Evet' : 'Hayır'}
                   </span>
                 </div>
@@ -517,7 +517,7 @@ export const PatientSafetyForm: React.FC<PatientSafetyFormProps> = ({
                 onChange={(e) => setFormData({ ...formData, hss_code: e.target.value })}
                 placeholder="Örnek: HPL.HM.Z1.0"
               />
-              <p className="text-xs text-secondary-500 mt-1">
+              <p className="text-xs text-secondary-500 dark:text-secondary-400 mt-1">
                 HSS kodunu manuel olarak giriniz
               </p>
             </div>
@@ -552,7 +552,7 @@ export const PatientSafetyForm: React.FC<PatientSafetyFormProps> = ({
             {/* Medication Error */}
             <div className="space-y-3">
               <div>
-                <label className="block text-sm font-medium text-secondary-700 mb-2">
+                <label className="block text-sm font-medium text-secondary-700 dark:text-secondary-300 mb-2">
                   İlaç Hatası mı?
                 </label>
                 <label className="flex items-center">
@@ -560,9 +560,9 @@ export const PatientSafetyForm: React.FC<PatientSafetyFormProps> = ({
                     type="checkbox"
                     checked={formData.is_medication_error}
                     onChange={(e) => setFormData({ ...formData, is_medication_error: e.target.checked })}
-                    className="mr-2 h-4 w-4 text-danger-600 focus:ring-danger-500 rounded"
+                    className="mr-2 h-4 w-4 text-danger-600 focus:ring-danger-500 dark:bg-secondary-700 dark:border-secondary-600 rounded"
                   />
-                  <span className="text-sm text-secondary-600">Bu olay bir ilaç hatası</span>
+                  <span className="text-sm text-secondary-600 dark:text-secondary-300">Bu olay bir ilaç hatası</span>
                 </label>
               </div>
 
@@ -578,10 +578,10 @@ export const PatientSafetyForm: React.FC<PatientSafetyFormProps> = ({
 
             {/* File Upload Section */}
             <div className="space-y-3">
-              <label className="block text-sm font-medium text-secondary-700">
+              <label className="block text-sm font-medium text-secondary-700 dark:text-secondary-300">
                 Dosya Ekleri
               </label>
-              <div className="border-2 border-dashed border-secondary-300 rounded-lg p-6 hover:border-danger-400 transition-colors">
+              <div className="border-2 border-dashed border-secondary-300 dark:border-secondary-600 rounded-lg p-6 hover:border-danger-400 transition-colors">
                 <input
                   ref={fileInputRef}
                   type="file"
@@ -596,8 +596,8 @@ export const PatientSafetyForm: React.FC<PatientSafetyFormProps> = ({
                   className="hidden"
                 />
                 <div className="text-center">
-                  <i className="bi bi-cloud-upload text-4xl text-secondary-400 mb-2"></i>
-                  <p className="text-sm text-secondary-600 mb-2">
+                  <i className="bi bi-cloud-upload text-4xl text-secondary-400 dark:text-secondary-500 mb-2"></i>
+                  <p className="text-sm text-secondary-600 dark:text-secondary-400 mb-2">
                     Dosyaları sürükleyip bırakın veya
                   </p>
                   <Button
@@ -609,7 +609,7 @@ export const PatientSafetyForm: React.FC<PatientSafetyFormProps> = ({
                     <i className="bi bi-paperclip mr-2"></i>
                     Dosya Seç
                   </Button>
-                  <p className="text-xs text-secondary-500 mt-2">
+                  <p className="text-xs text-secondary-500 dark:text-secondary-400 mt-2">
                     Desteklenen formatlar: JPG, PNG, PDF, Word, Excel (Max 10MB)
                   </p>
                 </div>
@@ -618,22 +618,22 @@ export const PatientSafetyForm: React.FC<PatientSafetyFormProps> = ({
               {/* Attached Files List */}
               {attachedFiles.length > 0 && (
                 <div className="space-y-2">
-                  <p className="text-sm font-medium text-secondary-700">
+                  <p className="text-sm font-medium text-secondary-700 dark:text-secondary-300">
                     Eklenen Dosyalar ({attachedFiles.length})
                   </p>
                   <div className="space-y-2">
                     {attachedFiles.map((file, index) => (
                       <div
                         key={index}
-                        className="flex items-center justify-between p-3 bg-secondary-50 rounded-lg border border-secondary-200"
+                        className="flex items-center justify-between p-3 bg-secondary-50 dark:bg-secondary-800 rounded-lg border border-secondary-200 dark:border-secondary-700"
                       >
                         <div className="flex items-center space-x-3 flex-1">
-                          <i className="bi bi-file-earmark text-xl text-secondary-500"></i>
+                          <i className="bi bi-file-earmark text-xl text-secondary-500 dark:text-secondary-400"></i>
                           <div className="flex-1 min-w-0">
-                            <p className="text-sm font-medium text-secondary-900 truncate">
+                            <p className="text-sm font-medium text-secondary-900 dark:text-white truncate">
                               {file.name}
                             </p>
-                            <p className="text-xs text-secondary-500">
+                            <p className="text-xs text-secondary-500 dark:text-secondary-400">
                               {(file.size / 1024).toFixed(2)} KB
                             </p>
                           </div>
@@ -679,7 +679,7 @@ export const PatientSafetyForm: React.FC<PatientSafetyFormProps> = ({
             />
 
             <div>
-              <label className="block text-sm font-medium text-secondary-700 mb-2">
+              <label className="block text-sm font-medium text-secondary-700 dark:text-secondary-300 mb-2">
                 Entegrasyon
               </label>
               <label className="flex items-center">
@@ -687,9 +687,9 @@ export const PatientSafetyForm: React.FC<PatientSafetyFormProps> = ({
                   type="checkbox"
                   checked={formData.ministry_integration}
                   onChange={(e) => setFormData({ ...formData, ministry_integration: e.target.checked })}
-                  className="mr-2 h-4 w-4 text-danger-600 focus:ring-danger-500 rounded"
+                  className="mr-2 h-4 w-4 text-danger-600 focus:ring-danger-500 dark:bg-secondary-700 dark:border-secondary-600 rounded"
                 />
-                <span className="text-sm text-secondary-600">Bakanlık Entegrasyonu Yapıldı</span>
+                <span className="text-sm text-secondary-600 dark:text-secondary-300">Bakanlık Entegrasyonu Yapıldı</span>
               </label>
             </div>
           </CardContent>

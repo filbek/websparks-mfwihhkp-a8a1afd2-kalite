@@ -35,8 +35,8 @@ export const FolderList: React.FC<FolderListProps> = ({
         <div className="w-24 h-24 bg-danger-100 rounded-full flex items-center justify-center mx-auto mb-4">
           <i className="bi bi-exclamation-triangle text-4xl text-danger-600"></i>
         </div>
-        <h3 className="text-lg font-medium text-secondary-900 mb-2">Hata Oluştu</h3>
-        <p className="text-secondary-600">{error}</p>
+        <h3 className="text-lg font-medium text-secondary-900 dark:text-white mb-2">Hata Oluştu</h3>
+        <p className="text-secondary-600 dark:text-secondary-400">{error}</p>
       </div>
     );
   }
@@ -44,11 +44,11 @@ export const FolderList: React.FC<FolderListProps> = ({
   if (folders.length === 0) {
     return (
       <div className="text-center py-12">
-        <div className="w-24 h-24 bg-secondary-100 rounded-full flex items-center justify-center mx-auto mb-4">
-          <i className="bi bi-folder text-4xl text-secondary-400"></i>
+        <div className="w-24 h-24 bg-secondary-100 dark:bg-secondary-800 rounded-full flex items-center justify-center mx-auto mb-4">
+          <i className="bi bi-folder text-4xl text-secondary-400 dark:text-secondary-500"></i>
         </div>
-        <h3 className="text-lg font-medium text-secondary-900 mb-2">Klasör Bulunamadı</h3>
-        <p className="text-secondary-600">Henüz klasör oluşturulmamış.</p>
+        <h3 className="text-lg font-medium text-secondary-900 dark:text-white mb-2">Klasör Bulunamadı</h3>
+        <p className="text-secondary-600 dark:text-secondary-400">Henüz klasör oluşturulmamış.</p>
       </div>
     );
   }
@@ -56,7 +56,7 @@ export const FolderList: React.FC<FolderListProps> = ({
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <h2 className="text-lg font-semibold text-secondary-900">
+        <h2 className="text-lg font-semibold text-secondary-900 dark:text-white">
           {folders.length} Klasör
         </h2>
       </div>

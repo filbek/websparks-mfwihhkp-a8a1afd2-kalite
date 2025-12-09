@@ -99,9 +99,9 @@ export const Login: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-primary-50 to-secondary-100 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-primary-50 to-secondary-100 dark:from-secondary-900 dark:to-secondary-950 flex items-center justify-center p-4 transition-colors">
       <div className="w-full max-w-md">
-        <div className="bg-white rounded-2xl shadow-xl p-8">
+        <div className="bg-white dark:bg-secondary-800 rounded-2xl shadow-xl p-8 transition-colors">
           <div className="text-center mb-8">
             {org.logo_url ? (
               <div className="flex justify-center mb-6">
@@ -116,10 +116,10 @@ export const Login: React.FC = () => {
                 <div className="w-20 h-20 bg-primary-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
                   <i className="bi bi-hospital text-white text-4xl"></i>
                 </div>
-                <h1 className="text-2xl font-bold text-secondary-900 mb-2">
+                <h1 className="text-2xl font-bold text-secondary-900 dark:text-white mb-2">
                   {org.name}
                 </h1>
-                <p className="text-secondary-600">Kalite Yönetim Sistemi</p>
+                <p className="text-secondary-600 dark:text-secondary-400">Kalite Yönetim Sistemi</p>
               </div>
             )}
           </div>
@@ -176,7 +176,7 @@ export const Login: React.FC = () => {
         </div>
 
         <div className="text-center mt-6">
-          <p className="text-sm text-secondary-600">
+          <p className="text-sm text-secondary-600 dark:text-secondary-500">
             © {new Date().getFullYear()} {org.name}. Tüm hakları saklıdır.
           </p>
         </div>

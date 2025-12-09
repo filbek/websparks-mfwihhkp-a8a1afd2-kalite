@@ -344,18 +344,18 @@ export const DOFManagement: React.FC = () => {
   return (
     <div className="space-y-6">
       {/* Navigation Header */}
-      <div className="bg-white rounded-xl border border-secondary-200 p-6">
+      <div className="bg-white dark:bg-secondary-800 rounded-xl border border-secondary-200 dark:border-secondary-700 p-6 transition-colors">
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between space-y-4 lg:space-y-0">
           <div>
-            <h1 className="text-2xl font-bold text-secondary-900 mb-2">DÖF Yönetimi</h1>
-            <p className="text-secondary-600">Düzeltici ve Önleyici Faaliyet Yönetim Sistemi</p>
+            <h1 className="text-2xl font-bold text-secondary-900 dark:text-white mb-2">DÖF Yönetimi</h1>
+            <p className="text-secondary-600 dark:text-secondary-400">Düzeltici ve Önleyici Faaliyet Yönetim Sistemi</p>
           </div>
 
           <div className="flex flex-wrap items-center gap-3">
             {renderViewButtons()}
             <Button
               onClick={() => setIsCreateModalOpen(true)}
-              className="bg-success-600 hover:bg-success-700"
+              className="bg-success-600 hover:bg-success-700 text-white"
             >
               <i className="bi bi-plus-lg mr-2"></i>
               Yeni DÖF

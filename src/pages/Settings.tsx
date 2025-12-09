@@ -259,11 +259,11 @@ export const Settings: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      <div className="bg-white rounded-xl border border-secondary-200 p-6">
+      <div className="bg-white dark:bg-secondary-800 rounded-xl border border-secondary-200 dark:border-secondary-700 p-6 transition-colors">
         <div className="flex flex-col space-y-4">
           <div>
-            <h1 className="text-2xl font-bold text-secondary-900 mb-2">Ayarlar</h1>
-            <p className="text-secondary-600">Sistem ayarlarını yönetin</p>
+            <h1 className="text-2xl font-bold text-secondary-900 dark:text-white mb-2">Ayarlar</h1>
+            <p className="text-secondary-600 dark:text-secondary-400">Sistem ayarlarını yönetin</p>
           </div>
 
           <div className="border-b border-secondary-200">
@@ -315,14 +315,14 @@ export const Settings: React.FC = () => {
 
       {/* General Settings Tab Content */}
       {activeTab === 'general' ? (
-        <div className="bg-white rounded-xl border border-secondary-200 p-6">
+        <div className="bg-white dark:bg-secondary-800 rounded-xl border border-secondary-200 dark:border-secondary-700 p-6 transition-colors">
           <div className="flex flex-col space-y-6">
             <div>
-              <h2 className="text-xl font-bold text-secondary-900 mb-2">Genel Ayarlar</h2>
-              <p className="text-secondary-600">Organizasyon bilgileri ve logo ayarları</p>
+              <h2 className="text-xl font-bold text-secondary-900 dark:text-white mb-2">Genel Ayarlar</h2>
+              <p className="text-secondary-600 dark:text-secondary-400">Organizasyon bilgileri ve logo ayarları</p>
             </div>
 
-            <div className="pt-4 border-t border-secondary-200">
+            <div className="pt-4 border-t border-secondary-200 dark:border-secondary-700">
               <div className="max-w-xl">
                 <label className="block text-sm font-medium text-secondary-700 mb-2">
                   Organizasyon Logosu
@@ -350,7 +350,7 @@ export const Settings: React.FC = () => {
                     />
                     <label
                       htmlFor="logo-upload"
-                      className={`inline-flex items-center px-4 py-2 border border-secondary-300 shadow-sm text-sm font-medium rounded-md text-secondary-700 bg-white hover:bg-secondary-50 cursor-pointer ${logoUploading ? 'opacity-50 cursor-not-allowed' : ''
+                      className={`inline-flex items-center px-4 py-2 border border-secondary-300 dark:border-secondary-600 shadow-sm text-sm font-medium rounded-md text-secondary-700 dark:text-secondary-200 bg-white dark:bg-secondary-700 hover:bg-secondary-50 dark:hover:bg-secondary-600 cursor-pointer transition-colors ${logoUploading ? 'opacity-50 cursor-not-allowed' : ''
                         }`}
                     >
                       {logoUploading ? (
@@ -376,12 +376,12 @@ export const Settings: React.FC = () => {
         </div>
       ) : activeTab === 'users' ? (
         <>
-          <div className="bg-white rounded-xl border border-secondary-200 p-6">
+          <div className="bg-white dark:bg-secondary-800 rounded-xl border border-secondary-200 dark:border-secondary-700 p-6 transition-colors">
             <div className="flex flex-col space-y-4">
               <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between">
                 <div>
-                  <h2 className="text-xl font-bold text-secondary-900 mb-2">Kullanıcılar</h2>
-                  <p className="text-secondary-600">Sistem kullanıcılarını yönetin</p>
+                  <h2 className="text-xl font-bold text-secondary-900 dark:text-white mb-2">Kullanıcılar</h2>
+                  <p className="text-secondary-600 dark:text-secondary-400">Sistem kullanıcılarını yönetin</p>
                 </div>
 
                 <Button
@@ -396,7 +396,7 @@ export const Settings: React.FC = () => {
                 </Button>
               </div>
 
-              <div className="pt-4 border-t border-secondary-200">
+              <div className="pt-4 border-t border-secondary-200 dark:border-secondary-700">
                 <UserImportExport
                   users={users}
                   facilities={facilities}
@@ -406,7 +406,7 @@ export const Settings: React.FC = () => {
             </div>
           </div>
 
-          <div className="bg-white rounded-xl border border-secondary-200">
+          <div className="bg-white dark:bg-secondary-800 rounded-xl border border-secondary-200 dark:border-secondary-700 transition-colors">
             <UserList
               users={users}
               facilities={facilities}
@@ -418,11 +418,11 @@ export const Settings: React.FC = () => {
         </>
       ) : activeTab === 'departments' ? (
         <>
-          <div className="bg-white rounded-xl border border-secondary-200 p-6">
+          <div className="bg-white dark:bg-secondary-800 rounded-xl border border-secondary-200 dark:border-secondary-700 p-6 transition-colors">
             <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-6">
               <div>
-                <h2 className="text-xl font-bold text-secondary-900 mb-2">Tespit Edilen Yerler</h2>
-                <p className="text-secondary-600">DÖF formlarında "Tespit Edilen Bölüm/Yer" alanında kullanılacak yerleri yönetin</p>
+                <h2 className="text-xl font-bold text-secondary-900 dark:text-white mb-2">Tespit Edilen Yerler</h2>
+                <p className="text-secondary-600 dark:text-secondary-400">DÖF formlarında "Tespit Edilen Bölüm/Yer" alanında kullanılacak yerleri yönetin</p>
               </div>
 
               <Button
@@ -446,11 +446,11 @@ export const Settings: React.FC = () => {
         </>
       ) : (
         <>
-          <div className="bg-white rounded-xl border border-secondary-200 p-6">
+          <div className="bg-white dark:bg-secondary-800 rounded-xl border border-secondary-200 dark:border-secondary-700 p-6 transition-colors">
             <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-6">
               <div>
-                <h2 className="text-xl font-bold text-secondary-900 mb-2">Sorumlu Müdürlükler</h2>
-                <p className="text-secondary-600">DÖF formlarında "Sorumlu Bölüm" alanında kullanılacak müdürlükleri yönetin</p>
+                <h2 className="text-xl font-bold text-secondary-900 dark:text-white mb-2">Sorumlu Müdürlükler</h2>
+                <p className="text-secondary-600 dark:text-secondary-400">DÖF formlarında "Sorumlu Bölüm" alanında kullanılacak müdürlükleri yönetin</p>
               </div>
 
               <Button

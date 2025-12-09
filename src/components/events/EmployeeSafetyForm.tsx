@@ -273,7 +273,7 @@ export const EmployeeSafetyForm: React.FC<EmployeeSafetyFormProps> = ({
         <Card>
           <CardContent className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-secondary-700 mb-3">
+              <label className="block text-sm font-medium text-secondary-700 dark:text-secondary-300 mb-3">
                 Gizlilik Talebi *
               </label>
               <div className="flex space-x-4">
@@ -292,7 +292,7 @@ export const EmployeeSafetyForm: React.FC<EmployeeSafetyFormProps> = ({
                     }}
                     className="mr-2 h-4 w-4 text-orange-600 focus:ring-orange-500"
                   />
-                  Hayır
+                  <span className="dark:text-secondary-300">Hayır</span>
                 </label>
                 <label className="flex items-center">
                   <input
@@ -309,7 +309,7 @@ export const EmployeeSafetyForm: React.FC<EmployeeSafetyFormProps> = ({
                     }}
                     className="mr-2 h-4 w-4 text-orange-600 focus:ring-orange-500"
                   />
-                  Evet
+                  <span className="dark:text-secondary-300">Evet</span>
                 </label>
               </div>
             </div>
@@ -319,7 +319,7 @@ export const EmployeeSafetyForm: React.FC<EmployeeSafetyFormProps> = ({
                 label="Çalıştığı Bölüm"
                 value={formData.working_department}
                 disabled
-                className="bg-secondary-50"
+                className="bg-secondary-50 dark:bg-secondary-700/50"
               />
 
               <Select
@@ -343,7 +343,7 @@ export const EmployeeSafetyForm: React.FC<EmployeeSafetyFormProps> = ({
                 label="Olay Giriş Tarihi"
                 value={new Date().toLocaleDateString('tr-TR')}
                 disabled
-                className="bg-secondary-50"
+                className="bg-secondary-50 dark:bg-secondary-700/50"
               />
             </div>
 
@@ -351,14 +351,14 @@ export const EmployeeSafetyForm: React.FC<EmployeeSafetyFormProps> = ({
               label="Olayı Bildiren Adı Soyadı"
               value={formData.reporter_name}
               disabled
-              className="bg-secondary-50"
+              className="bg-secondary-50 dark:bg-secondary-700/50"
             />
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
+            <CardTitle className="flex items-center gap-2 text-secondary-900 dark:text-white">
               <span className="text-xl">🏥</span> Kurum Bilgileri
             </CardTitle>
           </CardHeader>
@@ -384,7 +384,7 @@ export const EmployeeSafetyForm: React.FC<EmployeeSafetyFormProps> = ({
 
         <Card>
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
+            <CardTitle className="flex items-center gap-2 text-secondary-900 dark:text-white">
               <span className="text-xl">👤</span> Çalışan Güvenliği Bilgileri
             </CardTitle>
           </CardHeader>
@@ -418,7 +418,7 @@ export const EmployeeSafetyForm: React.FC<EmployeeSafetyFormProps> = ({
 
         <Card>
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
+            <CardTitle className="flex items-center gap-2 text-secondary-900 dark:text-white">
               <span className="text-xl">⚠️</span> Olay Detayları
             </CardTitle>
           </CardHeader>
@@ -450,7 +450,7 @@ export const EmployeeSafetyForm: React.FC<EmployeeSafetyFormProps> = ({
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-secondary-700 mb-2">
+              <label className="block text-sm font-medium text-secondary-700 dark:text-secondary-300 mb-2">
                 Olay Puanı (0-7): {formData.score}
               </label>
               <input
@@ -475,9 +475,9 @@ export const EmployeeSafetyForm: React.FC<EmployeeSafetyFormProps> = ({
 
                   setFormData({ ...formData, score: newScore, event_category: categoryValue });
                 }}
-                className="w-full h-2 bg-secondary-200 rounded-lg appearance-none cursor-pointer"
+                className="w-full h-2 bg-secondary-200 dark:bg-secondary-700 rounded-lg appearance-none cursor-pointer"
               />
-              <div className="flex justify-between text-xs text-secondary-500 mt-1">
+              <div className="flex justify-between text-xs text-secondary-500 dark:text-secondary-400 mt-1">
                 <span>0</span>
                 <span>1</span>
                 <span>2</span>
@@ -497,15 +497,15 @@ export const EmployeeSafetyForm: React.FC<EmployeeSafetyFormProps> = ({
                 options={eventCategoryOptions}
                 error={errors.event_category}
                 disabled
-                className="bg-secondary-50"
+                className="bg-secondary-50 dark:bg-secondary-700/50"
               />
 
               <div>
-                <label className="block text-sm font-medium text-secondary-700 mb-2">
+                <label className="block text-sm font-medium text-secondary-700 dark:text-secondary-300 mb-2">
                   Sentinel Olay
                 </label>
-                <div className="flex items-center h-10 px-3 rounded-lg border border-secondary-300 bg-secondary-50">
-                  <span className="text-secondary-700">
+                <div className="flex items-center h-10 px-3 rounded-lg border border-secondary-300 dark:border-secondary-600 bg-secondary-50 dark:bg-secondary-700/50">
+                  <span className="text-secondary-700 dark:text-secondary-300">
                     {formData.score >= 5 ? 'Evet' : 'Hayır'}
                   </span>
                 </div>
@@ -560,13 +560,13 @@ export const EmployeeSafetyForm: React.FC<EmployeeSafetyFormProps> = ({
 
         <Card>
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
+            <CardTitle className="flex items-center gap-2 text-secondary-900 dark:text-white">
               <span className="text-xl">📋</span> Bildirim ve İşlem Durumları
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-secondary-700 mb-2">
+              <label className="block text-sm font-medium text-secondary-700 dark:text-secondary-300 mb-2">
                 İstenmeyen Olay Bildirimi
               </label>
               <div className="flex space-x-4">
@@ -578,7 +578,7 @@ export const EmployeeSafetyForm: React.FC<EmployeeSafetyFormProps> = ({
                     onChange={() => setFormData({ ...formData, unwanted_event_reported: true })}
                     className="mr-2 h-4 w-4 text-orange-600 focus:ring-orange-500"
                   />
-                  Yapıldı
+                  <span className="dark:text-secondary-300">Yapıldı</span>
                 </label>
                 <label className="flex items-center">
                   <input
@@ -588,13 +588,13 @@ export const EmployeeSafetyForm: React.FC<EmployeeSafetyFormProps> = ({
                     onChange={() => setFormData({ ...formData, unwanted_event_reported: false })}
                     className="mr-2 h-4 w-4 text-orange-600 focus:ring-orange-500"
                   />
-                  Yapılmadı
+                  <span className="dark:text-secondary-300">Yapılmadı</span>
                 </label>
               </div>
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-secondary-700 mb-2">
+              <label className="block text-sm font-medium text-secondary-700 dark:text-secondary-300 mb-2">
                 Hukuki İşlem
               </label>
               <div className="flex space-x-4">
@@ -606,7 +606,7 @@ export const EmployeeSafetyForm: React.FC<EmployeeSafetyFormProps> = ({
                     onChange={() => setFormData({ ...formData, legal_action_status: 'baslatildi' })}
                     className="mr-2 h-4 w-4 text-orange-600 focus:ring-orange-500"
                   />
-                  Başlatıldı
+                  <span className="dark:text-secondary-300">Başlatıldı</span>
                 </label>
                 <label className="flex items-center">
                   <input
@@ -616,13 +616,13 @@ export const EmployeeSafetyForm: React.FC<EmployeeSafetyFormProps> = ({
                     onChange={() => setFormData({ ...formData, legal_action_status: 'baslatilmadi' })}
                     className="mr-2 h-4 w-4 text-orange-600 focus:ring-orange-500"
                   />
-                  Başlatılmadı
+                  <span className="dark:text-secondary-300">Başlatılmadı</span>
                 </label>
               </div>
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-secondary-700 mb-2">
+              <label className="block text-sm font-medium text-secondary-700 dark:text-secondary-300 mb-2">
                 İş Kazası Bildirimi
               </label>
               <div className="flex space-x-4">
@@ -634,7 +634,7 @@ export const EmployeeSafetyForm: React.FC<EmployeeSafetyFormProps> = ({
                     onChange={() => setFormData({ ...formData, work_accident_reported: true })}
                     className="mr-2 h-4 w-4 text-orange-600 focus:ring-orange-500"
                   />
-                  Yapıldı
+                  <span className="dark:text-secondary-300">Yapıldı</span>
                 </label>
                 <label className="flex items-center">
                   <input
@@ -644,13 +644,13 @@ export const EmployeeSafetyForm: React.FC<EmployeeSafetyFormProps> = ({
                     onChange={() => setFormData({ ...formData, work_accident_reported: false })}
                     className="mr-2 h-4 w-4 text-orange-600 focus:ring-orange-500"
                   />
-                  Yapılmadı
+                  <span className="dark:text-secondary-300">Yapılmadı</span>
                 </label>
               </div>
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-secondary-700 mb-2">
+              <label className="block text-sm font-medium text-secondary-700 dark:text-secondary-300 mb-2">
                 Beyaz Kod Süreci
               </label>
               <div className="flex space-x-4">
@@ -662,7 +662,7 @@ export const EmployeeSafetyForm: React.FC<EmployeeSafetyFormProps> = ({
                     onChange={() => setFormData({ ...formData, white_code_initiated: true })}
                     className="mr-2 h-4 w-4 text-orange-600 focus:ring-orange-500"
                   />
-                  Başlatıldı
+                  <span className="dark:text-secondary-300">Başlatıldı</span>
                 </label>
                 <label className="flex items-center">
                   <input
@@ -672,7 +672,7 @@ export const EmployeeSafetyForm: React.FC<EmployeeSafetyFormProps> = ({
                     onChange={() => setFormData({ ...formData, white_code_initiated: false })}
                     className="mr-2 h-4 w-4 text-orange-600 focus:ring-orange-500"
                   />
-                  Başlatılmadı
+                  <span className="dark:text-secondary-300">Başlatılmadı</span>
                 </label>
               </div>
             </div>
@@ -681,7 +681,7 @@ export const EmployeeSafetyForm: React.FC<EmployeeSafetyFormProps> = ({
 
         <Card>
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
+            <CardTitle className="flex items-center gap-2 text-secondary-900 dark:text-white">
               <span className="text-xl">📝</span> Olay Açıklaması
             </CardTitle>
           </CardHeader>
@@ -705,7 +705,7 @@ export const EmployeeSafetyForm: React.FC<EmployeeSafetyFormProps> = ({
 
             <div className="space-y-3">
               <div>
-                <label className="block text-sm font-medium text-secondary-700 mb-2">
+                <label className="block text-sm font-medium text-secondary-700 dark:text-secondary-300 mb-2">
                   İlaç Hatası mı?
                 </label>
                 <label className="flex items-center">
@@ -715,7 +715,7 @@ export const EmployeeSafetyForm: React.FC<EmployeeSafetyFormProps> = ({
                     onChange={(e) => setFormData({ ...formData, is_medication_error: e.target.checked })}
                     className="mr-2 h-4 w-4 text-orange-600 focus:ring-orange-500 rounded"
                   />
-                  <span className="text-sm text-secondary-600">Bu olay bir ilaç hatası</span>
+                  <span className="text-sm text-secondary-600 dark:text-secondary-300">Bu olay bir ilaç hatası</span>
                 </label>
               </div>
 
@@ -730,10 +730,10 @@ export const EmployeeSafetyForm: React.FC<EmployeeSafetyFormProps> = ({
             </div>
 
             <div className="space-y-3">
-              <label className="block text-sm font-medium text-secondary-700">
+              <label className="block text-sm font-medium text-secondary-700 dark:text-secondary-300">
                 Dosya Ekleri
               </label>
-              <div className="border-2 border-dashed border-secondary-300 rounded-lg p-6 hover:border-orange-400 transition-colors">
+              <div className="border-2 border-dashed border-secondary-300 dark:border-secondary-600 rounded-lg p-6 hover:border-orange-400 transition-colors">
                 <input
                   ref={fileInputRef}
                   type="file"
@@ -748,8 +748,8 @@ export const EmployeeSafetyForm: React.FC<EmployeeSafetyFormProps> = ({
                   className="hidden"
                 />
                 <div className="text-center">
-                  <i className="bi bi-cloud-upload text-4xl text-secondary-400 mb-2"></i>
-                  <p className="text-sm text-secondary-600 mb-2">
+                  <i className="bi bi-cloud-upload text-4xl text-secondary-400 dark:text-secondary-500 mb-2"></i>
+                  <p className="text-sm text-secondary-600 dark:text-secondary-400 mb-2">
                     Dosyaları sürükleyip bırakın veya
                   </p>
                   <Button
@@ -761,7 +761,7 @@ export const EmployeeSafetyForm: React.FC<EmployeeSafetyFormProps> = ({
                     <i className="bi bi-paperclip mr-2"></i>
                     Dosya Seç
                   </Button>
-                  <p className="text-xs text-secondary-500 mt-2">
+                  <p className="text-xs text-secondary-500 dark:text-secondary-400 mt-2">
                     Desteklenen formatlar: JPG, PNG, PDF, Word, Excel (Max 10MB)
                   </p>
                 </div>
@@ -769,22 +769,22 @@ export const EmployeeSafetyForm: React.FC<EmployeeSafetyFormProps> = ({
 
               {attachedFiles.length > 0 && (
                 <div className="space-y-2">
-                  <p className="text-sm font-medium text-secondary-700">
+                  <p className="text-sm font-medium text-secondary-700 dark:text-secondary-300">
                     Eklenen Dosyalar ({attachedFiles.length})
                   </p>
                   <div className="space-y-2">
                     {attachedFiles.map((file, index) => (
                       <div
                         key={index}
-                        className="flex items-center justify-between p-3 bg-secondary-50 rounded-lg border border-secondary-200"
+                        className="flex items-center justify-between p-3 bg-secondary-50 dark:bg-secondary-700 rounded-lg border border-secondary-200 dark:border-secondary-600"
                       >
                         <div className="flex items-center space-x-3 flex-1">
-                          <i className="bi bi-file-earmark text-xl text-secondary-500"></i>
+                          <i className="bi bi-file-earmark text-xl text-secondary-500 dark:text-secondary-400"></i>
                           <div className="flex-1 min-w-0">
-                            <p className="text-sm font-medium text-secondary-900 truncate">
+                            <p className="text-sm font-medium text-secondary-900 dark:text-white truncate">
                               {file.name}
                             </p>
-                            <p className="text-xs text-secondary-500">
+                            <p className="text-xs text-secondary-500 dark:text-secondary-400">
                               {(file.size / 1024).toFixed(2)} KB
                             </p>
                           </div>

@@ -6,9 +6,9 @@ interface SearchBarProps {
   placeholder?: string;
 }
 
-export const SearchBar: React.FC<SearchBarProps> = ({ 
-  onSearch, 
-  placeholder = "Dokümanlarda ara..." 
+export const SearchBar: React.FC<SearchBarProps> = ({
+  onSearch,
+  placeholder = "Dokümanlarda ara..."
 }) => {
   const [search, setSearch] = useState('');
 
@@ -32,7 +32,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
           value={search}
           onChange={handleChange}
           placeholder={placeholder}
-          className="w-full pl-10 pr-3 py-2 border border-secondary-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-colors"
+          className="w-full pl-10 pr-3 py-2 bg-white dark:bg-secondary-800 border border-secondary-300 dark:border-secondary-700 rounded-lg text-secondary-900 dark:text-white placeholder:text-secondary-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-colors"
         />
       </div>
     </div>

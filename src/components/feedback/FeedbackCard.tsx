@@ -28,7 +28,7 @@ export const FeedbackCard: React.FC<FeedbackCardProps> = ({
   const handleVote = (voteType: 'up' | 'down') => {
     if (onVote) {
       onVote(feedback.id, voteType);
-      
+
       // Local state güncelleme
       if (localVote === voteType) {
         // Aynı oyu kaldır
@@ -73,17 +73,17 @@ export const FeedbackCard: React.FC<FeedbackCardProps> = ({
 
   if (compact) {
     return (
-      <div className="p-4 bg-white rounded-lg border border-secondary-200 hover:shadow-md transition-shadow cursor-pointer" onClick={() => onViewDetails?.(feedback)}>
+      <div className="p-4 bg-white dark:bg-secondary-800 rounded-lg border border-secondary-200 dark:border-secondary-700 hover:shadow-md transition-shadow cursor-pointer" onClick={() => onViewDetails?.(feedback)}>
         <div className="flex items-start justify-between">
           <div className="flex-1">
             <div className="flex items-center space-x-2 mb-2">
-              <h3 className="text-sm font-medium text-secondary-900 truncate">{feedback.title}</h3>
+              <h3 className="text-sm font-medium text-secondary-900 dark:text-white truncate">{feedback.title}</h3>
               <span className={`px-2 py-1 text-xs rounded-full ${getStatusColor(feedback.status)}`}>
                 {feedback.status}
               </span>
             </div>
-            <p className="text-xs text-secondary-600 line-clamp-2 mb-2">{feedback.content}</p>
-            <div className="flex items-center space-x-4 text-xs text-secondary-500">
+            <p className="text-xs text-secondary-600 dark:text-secondary-400 line-clamp-2 mb-2">{feedback.content}</p>
+            <div className="flex items-center space-x-4 text-xs text-secondary-500 dark:text-secondary-400">
               <span>{feedback.category?.name}</span>
               <span>{formatDate(feedback.created_at)}</span>
             </div>
@@ -124,16 +124,15 @@ export const FeedbackCard: React.FC<FeedbackCardProps> = ({
       <div className="flex items-start justify-between">
         <div className="flex items-start space-x-4 flex-1">
           <div className="flex-shrink-0">
-            <div className={`w-2 h-2 rounded-full mt-2 ${
-              feedback.priority === 'kritik' ? 'bg-red-500' :
-              feedback.priority === 'yüksek' ? 'bg-orange-500' :
-              feedback.priority === 'orta' ? 'bg-blue-500' : 'bg-gray-500'
-            }`}></div>
+            <div className={`w-2 h-2 rounded-full mt-2 ${feedback.priority === 'kritik' ? 'bg-red-500' :
+                feedback.priority === 'yüksek' ? 'bg-orange-500' :
+                  feedback.priority === 'orta' ? 'bg-blue-500' : 'bg-gray-500'
+              }`}></div>
           </div>
-          
+
           <div className="flex-1 min-w-0">
             <div className="flex items-center space-x-2 mb-2">
-              <h3 className="text-lg font-medium text-secondary-900 truncate">{feedback.title}</h3>
+              <h3 className="text-lg font-medium text-secondary-900 dark:text-white truncate">{feedback.title}</h3>
               <span className={`px-2 py-1 text-xs rounded-full ${getStatusColor(feedback.status)}`}>
                 {feedback.status}
               </span>
@@ -141,10 +140,10 @@ export const FeedbackCard: React.FC<FeedbackCardProps> = ({
                 {feedback.priority}
               </span>
             </div>
-            
-            <p className="text-sm text-secondary-600 line-clamp-3 mb-3">{feedback.content}</p>
-            
-            <div className="flex flex-wrap items-center gap-3 mb-3 text-xs text-secondary-500">
+
+            <p className="text-sm text-secondary-600 dark:text-secondary-400 line-clamp-3 mb-3">{feedback.content}</p>
+
+            <div className="flex flex-wrap items-center gap-3 mb-3 text-xs text-secondary-500 dark:text-secondary-400">
               <span className="flex items-center">
                 <i className="bi bi-tag mr-1"></i>
                 {feedback.category?.name}
@@ -168,23 +167,23 @@ export const FeedbackCard: React.FC<FeedbackCardProps> = ({
                 </span>
               )}
             </div>
-            
+
             {feedback.tags && feedback.tags.length > 0 && (
               <div className="flex flex-wrap gap-1 mb-3">
                 {feedback.tags.map((tag, index) => (
-                  <span key={index} className="px-2 py-1 bg-secondary-100 text-secondary-700 text-xs rounded">
+                  <span key={index} className="px-2 py-1 bg-secondary-100 dark:bg-secondary-700 text-secondary-700 dark:text-secondary-300 text-xs rounded">
                     #{tag}
                   </span>
                 ))}
               </div>
             )}
-            
+
             {feedback.responses && feedback.responses.length > 0 && (
               <div className="mb-3">
-                <div className="text-xs text-secondary-500 mb-1">
+                <div className="text-xs text-secondary-500 dark:text-secondary-400 mb-1">
                   {feedback.responses.length} yanıt
                 </div>
-                <div className="bg-secondary-50 p-2 rounded text-xs text-secondary-700">
+                <div className="bg-secondary-50 dark:bg-secondary-700/50 p-2 rounded text-xs text-secondary-700 dark:text-secondary-300">
                   {feedback.responses[0].response.substring(0, 100)}
                   {feedback.responses[0].response.length > 100 ? '...' : ''}
                 </div>
@@ -192,17 +191,16 @@ export const FeedbackCard: React.FC<FeedbackCardProps> = ({
             )}
           </div>
         </div>
-        
+
         {showActions && (
           <div className="flex flex-col items-center space-y-2 ml-4">
             <div className="flex items-center space-x-1">
               <button
                 onClick={() => handleVote('up')}
-                className={`p-2 rounded-lg transition-colors ${
-                  localVote === 'up' 
-                    ? 'bg-primary-100 text-primary-600' 
-                    : 'bg-secondary-100 text-secondary-600 hover:bg-secondary-200'
-                }`}
+                className={`p-2 rounded-lg transition-colors ${localVote === 'up'
+                    ? 'bg-primary-100 text-primary-600'
+                    : 'bg-secondary-100 dark:bg-secondary-700 text-secondary-600 dark:text-secondary-400 hover:bg-secondary-200 dark:hover:bg-secondary-600'
+                  }`}
                 title="Beğen"
               >
                 <i className="bi bi-hand-thumbs-up-fill"></i>
@@ -210,17 +208,16 @@ export const FeedbackCard: React.FC<FeedbackCardProps> = ({
               <span className="text-sm font-medium w-6 text-center">{voteCount}</span>
               <button
                 onClick={() => handleVote('down')}
-                className={`p-2 rounded-lg transition-colors ${
-                  localVote === 'down' 
-                    ? 'bg-danger-100 text-danger-600' 
-                    : 'bg-secondary-100 text-secondary-600 hover:bg-secondary-200'
-                }`}
+                className={`p-2 rounded-lg transition-colors ${localVote === 'down'
+                    ? 'bg-danger-100 text-danger-600'
+                    : 'bg-secondary-100 dark:bg-secondary-700 text-secondary-600 dark:text-secondary-400 hover:bg-secondary-200 dark:hover:bg-secondary-600'
+                  }`}
                 title="Beğenme"
               >
                 <i className="bi bi-hand-thumbs-down-fill"></i>
               </button>
             </div>
-            
+
             <div className="flex flex-col space-y-1">
               <Button
                 variant="outline"
@@ -230,7 +227,7 @@ export const FeedbackCard: React.FC<FeedbackCardProps> = ({
               >
                 Detaylar
               </Button>
-              
+
               {onRespond && (
                 <Button
                   variant="outline"

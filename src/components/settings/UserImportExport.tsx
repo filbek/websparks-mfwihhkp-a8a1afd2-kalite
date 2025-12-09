@@ -203,10 +203,10 @@ export const UserImportExport: React.FC<UserImportExportProps> = ({
         <div className="space-y-6">
           {importStep === 'select' && (
             <>
-              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+              <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4 transition-colors">
                 <div className="flex items-start">
-                  <i className="bi bi-info-circle text-blue-600 text-xl mr-3 mt-0.5"></i>
-                  <div className="text-sm text-blue-800">
+                  <i className="bi bi-info-circle text-blue-600 dark:text-blue-400 text-xl mr-3 mt-0.5"></i>
+                  <div className="text-sm text-blue-800 dark:text-blue-200">
                     <p className="font-medium mb-2">İçe aktarma talimatları:</p>
                     <ol className="list-decimal ml-4 space-y-1">
                       <li>Önce "Şablon İndir" butonuna tıklayarak örnek dosyayı indirin</li>
@@ -219,9 +219,9 @@ export const UserImportExport: React.FC<UserImportExportProps> = ({
                 </div>
               </div>
 
-              <div className="border-2 border-dashed border-secondary-300 rounded-lg p-8 text-center">
-                <i className="bi bi-cloud-upload text-4xl text-secondary-400 mb-3"></i>
-                <p className="text-secondary-700 mb-4">Excel dosyasını seçin</p>
+              <div className="border-2 border-dashed border-secondary-300 dark:border-secondary-600 rounded-lg p-8 text-center transition-colors">
+                <i className="bi bi-cloud-upload text-4xl text-secondary-400 dark:text-secondary-500 mb-3"></i>
+                <p className="text-secondary-700 dark:text-secondary-300 mb-4">Excel dosyasını seçin</p>
                 <input
                   ref={fileInputRef}
                   type="file"
@@ -248,12 +248,12 @@ export const UserImportExport: React.FC<UserImportExportProps> = ({
               </div>
 
               {importErrors.length > 0 && (
-                <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+                <div className="bg-red-50 dark:bg-danger-900/20 border border-red-200 dark:border-danger-800 rounded-lg p-4 transition-colors">
                   <div className="flex items-start">
-                    <i className="bi bi-exclamation-triangle text-red-600 text-xl mr-3 mt-0.5"></i>
+                    <i className="bi bi-exclamation-triangle text-red-600 dark:text-danger-400 text-xl mr-3 mt-0.5"></i>
                     <div className="flex-1">
-                      <p className="font-medium text-red-800 mb-2">Hatalar tespit edildi:</p>
-                      <ul className="text-sm text-red-700 space-y-1">
+                      <p className="font-medium text-red-800 dark:text-danger-200 mb-2">Hatalar tespit edildi:</p>
+                      <ul className="text-sm text-red-700 dark:text-danger-300 space-y-1">
                         {importErrors.map((error, index) => (
                           <li key={index}>• {error}</li>
                         ))}
@@ -267,11 +267,11 @@ export const UserImportExport: React.FC<UserImportExportProps> = ({
 
           {importStep === 'preview' && (
             <>
-              <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+              <div className="bg-green-50 dark:bg-success-900/20 border border-green-200 dark:border-success-800 rounded-lg p-4 transition-colors">
                 <div className="flex items-center">
-                  <i className="bi bi-check-circle text-green-600 text-xl mr-3"></i>
+                  <i className="bi bi-check-circle text-green-600 dark:text-success-400 text-xl mr-3"></i>
                   <div>
-                    <p className="font-medium text-green-800">
+                    <p className="font-medium text-green-800 dark:text-success-200">
                       {parsedUsers.length} kullanıcı içe aktarılmaya hazır
                     </p>
                     <p className="text-sm text-green-700 mt-1">
@@ -297,9 +297,9 @@ export const UserImportExport: React.FC<UserImportExportProps> = ({
                 </div>
               )}
 
-              <div className="max-h-96 overflow-auto border border-secondary-200 rounded-lg">
-                <table className="min-w-full divide-y divide-secondary-200">
-                  <thead className="bg-secondary-50 sticky top-0">
+              <div className="max-h-96 overflow-auto border border-secondary-200 dark:border-secondary-700 rounded-lg transition-colors">
+                <table className="min-w-full divide-y divide-secondary-200 dark:divide-secondary-700">
+                  <thead className="bg-secondary-50 dark:bg-secondary-800 sticky top-0 transition-colors">
                     <tr>
                       <th className="px-4 py-3 text-left text-xs font-medium text-secondary-500 uppercase">
                         E-posta
@@ -318,21 +318,20 @@ export const UserImportExport: React.FC<UserImportExportProps> = ({
                       </th>
                     </tr>
                   </thead>
-                  <tbody className="bg-white divide-y divide-secondary-200">
+                  <tbody className="bg-white dark:bg-secondary-900 divide-y divide-secondary-200 dark:divide-secondary-700 transition-colors">
                     {parsedUsers.map((user, index) => (
-                      <tr key={index} className="hover:bg-secondary-50">
-                        <td className="px-4 py-3 text-sm text-secondary-900">{user.email}</td>
-                        <td className="px-4 py-3 text-sm text-secondary-900">{user.display_name}</td>
-                        <td className="px-4 py-3 text-sm text-secondary-700">{user.role}</td>
-                        <td className="px-4 py-3 text-sm text-secondary-700">
+                      <tr key={index} className="hover:bg-secondary-50 dark:hover:bg-secondary-800 transition-colors">
+                        <td className="px-4 py-3 text-sm text-secondary-900 dark:text-white">{user.email}</td>
+                        <td className="px-4 py-3 text-sm text-secondary-900 dark:text-white">{user.display_name}</td>
+                        <td className="px-4 py-3 text-sm text-secondary-700 dark:text-secondary-300">{user.role}</td>
+                        <td className="px-4 py-3 text-sm text-secondary-700 dark:text-secondary-300">
                           {getFacilityName(user.facility_id)}
                         </td>
                         <td className="px-4 py-3 text-sm">
-                          <span className={`px-2 py-1 rounded-full text-xs ${
-                            user.is_active
+                          <span className={`px-2 py-1 rounded-full text-xs ${user.is_active
                               ? 'bg-green-100 text-green-800'
                               : 'bg-gray-100 text-gray-800'
-                          }`}>
+                            }`}>
                             {user.is_active ? 'Aktif' : 'Pasif'}
                           </span>
                         </td>
@@ -361,24 +360,22 @@ export const UserImportExport: React.FC<UserImportExportProps> = ({
           {importStep === 'importing' && (
             <div className="text-center py-12">
               <div className="animate-spin rounded-full h-16 w-16 border-b-4 border-primary-600 mx-auto mb-4"></div>
-              <p className="text-lg font-medium text-secondary-900">Kullanıcılar içe aktarılıyor...</p>
-              <p className="text-sm text-secondary-600 mt-2">Bu işlem birkaç dakika sürebilir</p>
+              <p className="text-lg font-medium text-secondary-900 dark:text-white">Kullanıcılar içe aktarılıyor...</p>
+              <p className="text-sm text-secondary-600 dark:text-secondary-400 mt-2">Bu işlem birkaç dakika sürebilir</p>
             </div>
           )}
 
           {importStep === 'complete' && (
             <>
-              <div className={`border rounded-lg p-6 ${
-                importResults.failed === 0
-                  ? 'bg-green-50 border-green-200'
-                  : 'bg-yellow-50 border-yellow-200'
-              }`}>
+              <div className={`border rounded-lg p-6 transition-colors ${importResults.failed === 0
+                  ? 'bg-green-50 dark:bg-success-900/20 border-green-200 dark:border-success-800'
+                  : 'bg-yellow-50 dark:bg-warning-900/20 border-yellow-200 dark:border-warning-800'
+                }`}>
                 <div className="flex items-start">
-                  <i className={`text-3xl mr-4 ${
-                    importResults.failed === 0
+                  <i className={`text-3xl mr-4 ${importResults.failed === 0
                       ? 'bi bi-check-circle text-green-600'
                       : 'bi bi-exclamation-triangle text-yellow-600'
-                  }`}></i>
+                    }`}></i>
                   <div className="flex-1">
                     <h3 className="text-lg font-semibold mb-2">İçe aktarma tamamlandı</h3>
                     <div className="space-y-2 text-sm">
@@ -392,12 +389,12 @@ export const UserImportExport: React.FC<UserImportExportProps> = ({
               </div>
 
               {importResults.success > 0 && (
-                <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4 transition-colors">
                   <div className="flex items-start">
-                    <i className="bi bi-shield-lock text-blue-600 text-xl mr-3 mt-0.5"></i>
+                    <i className="bi bi-shield-lock text-blue-600 dark:text-blue-400 text-xl mr-3 mt-0.5"></i>
                     <div className="flex-1">
-                      <p className="font-medium text-blue-800 mb-2">Şifreler oluşturuldu</p>
-                      <p className="text-sm text-blue-700 mb-3">
+                      <p className="font-medium text-blue-800 dark:text-blue-200 mb-2">Şifreler oluşturuldu</p>
+                      <p className="text-sm text-blue-700 dark:text-blue-300 mb-3">
                         Kullanıcılar için güvenli şifreler otomatik oluşturuldu. Şifreleri indirmek için aşağıdaki butona tıklayın.
                       </p>
                       <Button

@@ -200,7 +200,7 @@ export const DOFFormDynamic: React.FC<DOFFormProps> = ({
   }
 
   return (
-    <div className="bg-white">
+    <div className="bg-white dark:bg-secondary-800 transition-colors">
       <div className="bg-gradient-to-r from-primary-600 to-primary-700 rounded-t-xl text-white px-6 py-5 -mx-6 -mt-6 mb-6">
         <h2 className="text-2xl font-bold mb-1">Yeni DÖF Oluştur</h2>
         <p className="text-primary-100 text-sm">Düzeltici ve Önleyici Faaliyet Formu</p>
@@ -209,7 +209,7 @@ export const DOFFormDynamic: React.FC<DOFFormProps> = ({
       <form onSubmit={handleSubmit} className="space-y-6 px-6">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div>
-            <label className="block text-sm font-medium text-secondary-700 mb-2">
+            <label className="block text-sm font-medium text-secondary-700 dark:text-secondary-300 mb-2">
               DÖF Tespit Tarihi
             </label>
             <Input
@@ -221,7 +221,7 @@ export const DOFFormDynamic: React.FC<DOFFormProps> = ({
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-secondary-700 mb-2">
+            <label className="block text-sm font-medium text-secondary-700 dark:text-secondary-300 mb-2">
               DÖF Türü
             </label>
             <Select
@@ -233,7 +233,7 @@ export const DOFFormDynamic: React.FC<DOFFormProps> = ({
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-secondary-700 mb-2">
+            <label className="block text-sm font-medium text-secondary-700 dark:text-secondary-300 mb-2">
               DÖF Tespit Edilen Bölüm/Yer
             </label>
             <SearchableSelect
@@ -248,7 +248,7 @@ export const DOFFormDynamic: React.FC<DOFFormProps> = ({
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div>
-            <label className="block text-sm font-medium text-secondary-700 mb-2">
+            <label className="block text-sm font-medium text-secondary-700 dark:text-secondary-300 mb-2">
               DÖF Kaynağı
             </label>
             <Select
@@ -260,7 +260,7 @@ export const DOFFormDynamic: React.FC<DOFFormProps> = ({
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-secondary-700 mb-2">
+            <label className="block text-sm font-medium text-secondary-700 dark:text-secondary-300 mb-2">
               DÖF Kategorisi
             </label>
             <Select
@@ -276,7 +276,7 @@ export const DOFFormDynamic: React.FC<DOFFormProps> = ({
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-secondary-700 mb-2">
+            <label className="block text-sm font-medium text-secondary-700 dark:text-secondary-300 mb-2">
               DÖF Kısa Açıklama
             </label>
             <Select
@@ -287,7 +287,7 @@ export const DOFFormDynamic: React.FC<DOFFormProps> = ({
               disabled={!formData.dof_kategorisi || aciklamalarLoading}
             />
             {aciklamalarLoading && (
-              <div className="text-xs text-secondary-500 mt-1">
+              <div className="text-xs text-secondary-500 dark:text-secondary-400 mt-1">
                 <i className="bi bi-arrow-clockwise animate-spin mr-1"></i>
                 Yükleniyor...
               </div>
@@ -297,19 +297,19 @@ export const DOFFormDynamic: React.FC<DOFFormProps> = ({
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div>
-            <label className="block text-sm font-medium text-secondary-700 mb-2">
+            <label className="block text-sm font-medium text-secondary-700 dark:text-secondary-300 mb-2">
               DÖF'ü Açan
             </label>
             <Input
               value={formData.dofu_acan}
               onChange={(e) => setFormData({ ...formData, dofu_acan: e.target.value })}
               disabled
-              className="bg-secondary-50"
+              className="bg-secondary-50 dark:bg-secondary-700/50"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-secondary-700 mb-2">
+            <label className="block text-sm font-medium text-secondary-700 dark:text-secondary-300 mb-2">
               DÖF'den Sorumlu Olan Bölüm
             </label>
             <Select
@@ -321,7 +321,7 @@ export const DOFFormDynamic: React.FC<DOFFormProps> = ({
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-secondary-700 mb-2">
+            <label className="block text-sm font-medium text-secondary-700 dark:text-secondary-300 mb-2">
               Atanacak Kişi
             </label>
             <Select
@@ -333,7 +333,7 @@ export const DOFFormDynamic: React.FC<DOFFormProps> = ({
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-secondary-700 mb-2">
+          <label className="block text-sm font-medium text-secondary-700 dark:text-secondary-300 mb-2">
             DÖF Tanım
           </label>
           <Textarea
@@ -346,7 +346,7 @@ export const DOFFormDynamic: React.FC<DOFFormProps> = ({
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-secondary-700 mb-2">
+          <label className="block text-sm font-medium text-secondary-700 dark:text-secondary-300 mb-2">
             Ekler
           </label>
           <div className="flex items-center space-x-4">
@@ -370,7 +370,7 @@ export const DOFFormDynamic: React.FC<DOFFormProps> = ({
               className="hidden"
               accept="image/*,application/pdf,.doc,.docx,.xls,.xlsx"
             />
-            <span className="text-sm text-secondary-600">
+            <span className="text-sm text-secondary-600 dark:text-secondary-400">
               {selectedFiles.length > 0
                 ? `${selectedFiles.length} dosya seçildi`
                 : 'Maksimum 100MB/dosya'
@@ -380,12 +380,12 @@ export const DOFFormDynamic: React.FC<DOFFormProps> = ({
         </div>
 
         {selectedFiles.length > 0 && (
-          <div className="bg-secondary-50 border border-secondary-200 rounded-lg p-4">
-            <h4 className="text-sm font-medium text-secondary-700 mb-3">Seçilen Dosyalar:</h4>
+          <div className="bg-secondary-50 dark:bg-secondary-800 border border-secondary-200 dark:border-secondary-700 rounded-lg p-4">
+            <h4 className="text-sm font-medium text-secondary-700 dark:text-secondary-300 mb-3">Seçilen Dosyalar:</h4>
             <ul className="space-y-2">
               {selectedFiles.map((file, index) => (
-                <li key={index} className="flex items-center justify-between p-2 bg-white rounded border border-secondary-200">
-                  <span className="flex items-center text-sm text-secondary-700">
+                <li key={index} className="flex items-center justify-between p-2 bg-white dark:bg-secondary-700 rounded border border-secondary-200 dark:border-secondary-600">
+                  <span className="flex items-center text-sm text-secondary-700 dark:text-secondary-200">
                     <i className="bi bi-file-earmark text-primary-600 mr-2"></i>
                     {file.name} ({(file.size / 1024 / 1024).toFixed(2)} MB)
                   </span>
@@ -402,7 +402,7 @@ export const DOFFormDynamic: React.FC<DOFFormProps> = ({
           </div>
         )}
 
-        <div className="flex items-center justify-end space-x-3 pt-6 border-t border-secondary-200">
+        <div className="flex items-center justify-end space-x-3 pt-6 border-t border-secondary-200 dark:border-secondary-700">
           <Button
             type="button"
             onClick={onCancel}

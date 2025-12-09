@@ -104,121 +104,121 @@ export const UserList: React.FC<UserListProps> = ({
 
   return (
     <>
-    <div className="overflow-x-auto">
-      <table className="min-w-full divide-y divide-secondary-200">
-        <thead className="bg-secondary-50">
-          <tr>
-            <th className="px-6 py-3 text-left text-xs font-medium text-secondary-500 uppercase tracking-wider">
-              Kullanıcı
-            </th>
-            <th className="px-6 py-3 text-left text-xs font-medium text-secondary-500 uppercase tracking-wider">
-              Rol
-            </th>
-            <th className="px-6 py-3 text-left text-xs font-medium text-secondary-500 uppercase tracking-wider">
-              Şube
-            </th>
-            <th className="px-6 py-3 text-left text-xs font-medium text-secondary-500 uppercase tracking-wider">
-              Birim
-            </th>
-            <th className="px-6 py-3 text-left text-xs font-medium text-secondary-500 uppercase tracking-wider">
-              Durum
-            </th>
-            <th className="px-6 py-3 text-right text-xs font-medium text-secondary-500 uppercase tracking-wider">
-              İşlemler
-            </th>
-          </tr>
-        </thead>
-        <tbody className="bg-white divide-y divide-secondary-200">
-          {users.map((user) => (
-            <tr key={user.id} className="hover:bg-secondary-50 transition-colors">
-              <td className="px-6 py-4 whitespace-nowrap">
-                <div className="flex items-center">
-                  <div className="flex-shrink-0 h-10 w-10 bg-primary-100 rounded-full flex items-center justify-center">
-                    <span className="text-primary-700 font-medium">
-                      {user.display_name.charAt(0).toUpperCase()}
-                    </span>
-                  </div>
-                  <div className="ml-4">
-                    <div className="text-sm font-medium text-secondary-900">
-                      {user.display_name}
-                    </div>
-                    <div className="text-sm text-secondary-500">{user.email}</div>
-                  </div>
-                </div>
-              </td>
-              <td className="px-6 py-4 whitespace-nowrap">
-                {user.role.map((role) => (
-                  <Badge key={role} variant={getRoleBadgeVariant(role)} className="mr-1">
-                    {getRoleLabel(role)}
-                  </Badge>
-                ))}
-              </td>
-              <td className="px-6 py-4 whitespace-nowrap text-sm text-secondary-900">
-                {getFacilityName(user.facility_id)}
-              </td>
-              <td className="px-6 py-4 whitespace-nowrap text-sm text-secondary-500">
-                {user.department_name || '-'}
-              </td>
-              <td className="px-6 py-4 whitespace-nowrap">
-                <Badge variant={user.is_active ? 'success' : 'default'}>
-                  {user.is_active ? 'Aktif' : 'Pasif'}
-                </Badge>
-              </td>
-              <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                <div className="flex justify-end space-x-2">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => onEdit(user)}
-                    title="Kullanıcıyı Düzenle"
-                  >
-                    <i className="bi bi-pencil mr-1"></i>
-                    Düzenle
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => handlePasswordResetClick(user)}
-                    className="text-warning-600 hover:text-warning-700 hover:border-warning-300"
-                    title="Şifre Sıfırla"
-                  >
-                    <i className="bi bi-key mr-1"></i>
-                    Şifre
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => {
-                      if (window.confirm(`${user.display_name} kullanıcısını devre dışı bırakmak istediğinizden emin misiniz?`)) {
-                        onDelete(user.id);
-                      }
-                    }}
-                    className="text-danger-600 hover:text-danger-700 hover:border-danger-300"
-                    title="Kullanıcıyı Sil"
-                  >
-                    <i className="bi bi-trash mr-1"></i>
-                    Sil
-                  </Button>
-                </div>
-              </td>
+      <div className="overflow-x-auto">
+        <table className="min-w-full divide-y divide-secondary-200 dark:divide-secondary-700">
+          <thead className="bg-secondary-50 dark:bg-secondary-800">
+            <tr>
+              <th className="px-6 py-3 text-left text-xs font-medium text-secondary-500 dark:text-secondary-400 uppercase tracking-wider">
+                Kullanıcı
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-secondary-500 dark:text-secondary-400 uppercase tracking-wider">
+                Rol
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-secondary-500 dark:text-secondary-400 uppercase tracking-wider">
+                Şube
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-secondary-500 dark:text-secondary-400 uppercase tracking-wider">
+                Birim
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-secondary-500 dark:text-secondary-400 uppercase tracking-wider">
+                Durum
+              </th>
+              <th className="px-6 py-3 text-right text-xs font-medium text-secondary-500 uppercase tracking-wider">
+                İşlemler
+              </th>
             </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
+          </thead>
+          <tbody className="bg-white dark:bg-secondary-900 divide-y divide-secondary-200 dark:divide-secondary-800">
+            {users.map((user) => (
+              <tr key={user.id} className="hover:bg-secondary-50 dark:hover:bg-secondary-800 transition-colors">
+                <td className="px-6 py-4 whitespace-nowrap">
+                  <div className="flex items-center">
+                    <div className="flex-shrink-0 h-10 w-10 bg-primary-100 dark:bg-primary-900/30 rounded-full flex items-center justify-center">
+                      <span className="text-primary-700 dark:text-primary-400 font-medium">
+                        {user.display_name.charAt(0).toUpperCase()}
+                      </span>
+                    </div>
+                    <div className="ml-4">
+                      <div className="text-sm font-medium text-secondary-900 dark:text-white">
+                        {user.display_name}
+                      </div>
+                      <div className="text-sm text-secondary-500 dark:text-secondary-400">{user.email}</div>
+                    </div>
+                  </div>
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap">
+                  {user.role.map((role) => (
+                    <Badge key={role} variant={getRoleBadgeVariant(role)} className="mr-1">
+                      {getRoleLabel(role)}
+                    </Badge>
+                  ))}
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-secondary-900 dark:text-white">
+                  {getFacilityName(user.facility_id)}
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-secondary-500 dark:text-secondary-400">
+                  {user.department_name || '-'}
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap">
+                  <Badge variant={user.is_active ? 'success' : 'default'}>
+                    {user.is_active ? 'Aktif' : 'Pasif'}
+                  </Badge>
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                  <div className="flex justify-end space-x-2">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => onEdit(user)}
+                      title="Kullanıcıyı Düzenle"
+                    >
+                      <i className="bi bi-pencil mr-1"></i>
+                      Düzenle
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => handlePasswordResetClick(user)}
+                      className="text-warning-600 hover:text-warning-700 hover:border-warning-300"
+                      title="Şifre Sıfırla"
+                    >
+                      <i className="bi bi-key mr-1"></i>
+                      Şifre
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => {
+                        if (window.confirm(`${user.display_name} kullanıcısını devre dışı bırakmak istediğinizden emin misiniz?`)) {
+                          onDelete(user.id);
+                        }
+                      }}
+                      className="text-danger-600 hover:text-danger-700 hover:border-danger-300"
+                      title="Kullanıcıyı Sil"
+                    >
+                      <i className="bi bi-trash mr-1"></i>
+                      Sil
+                    </Button>
+                  </div>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
 
-    {selectedUserForReset && (
-      <PasswordResetModal
-        isOpen={isPasswordResetModalOpen}
-        onClose={() => {
-          setIsPasswordResetModalOpen(false);
-          setSelectedUserForReset(null);
-        }}
-        userEmail={selectedUserForReset.email}
-        userName={selectedUserForReset.display_name}
-        onConfirm={handlePasswordResetConfirm}
-      />
-    )}
+      {selectedUserForReset && (
+        <PasswordResetModal
+          isOpen={isPasswordResetModalOpen}
+          onClose={() => {
+            setIsPasswordResetModalOpen(false);
+            setSelectedUserForReset(null);
+          }}
+          userEmail={selectedUserForReset.email}
+          userName={selectedUserForReset.display_name}
+          onConfirm={handlePasswordResetConfirm}
+        />
+      )}
     </>
   );
 };

@@ -13,8 +13,8 @@ export const UnderConstruction: React.FC<UnderConstructionProps> = ({
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-3xl font-bold text-secondary-900">{title}</h1>
-        <p className="text-secondary-600 mt-2">Yapım Aşamasında</p>
+        <h1 className="text-3xl font-bold text-secondary-900 dark:text-white">{title}</h1>
+        <p className="text-secondary-600 dark:text-secondary-400 mt-2">Yapım Aşamasında</p>
       </div>
 
       <Card>
@@ -24,15 +24,15 @@ export const UnderConstruction: React.FC<UnderConstructionProps> = ({
           </div>
 
           <div className="text-center max-w-md space-y-3">
-            <h2 className="text-2xl font-semibold text-secondary-900">
+            <h2 className="text-2xl font-semibold text-secondary-900 dark:text-white">
               Yapım Aşamasında
             </h2>
-            <p className="text-secondary-600 leading-relaxed">
+            <p className="text-secondary-600 dark:text-secondary-400 leading-relaxed">
               {description}
             </p>
           </div>
 
-          <div className="flex items-center space-x-2 text-sm text-secondary-500 mt-4">
+          <div className="flex items-center space-x-2 text-sm text-secondary-500 dark:text-secondary-400 mt-4">
             <i className="bi bi-clock-history"></i>
             <span>Çok yakında...</span>
           </div>
@@ -43,8 +43,8 @@ export const UnderConstruction: React.FC<UnderConstructionProps> = ({
         <Card>
           <CardContent className="p-6 text-center">
             <i className="bi bi-lightning-charge text-3xl text-primary-600 mb-3"></i>
-            <h3 className="font-semibold text-secondary-900 mb-2">Hızlı Geliştirme</h3>
-            <p className="text-sm text-secondary-600">
+            <h3 className="font-semibold text-secondary-900 dark:text-white mb-2">Hızlı Geliştirme</h3>
+            <p className="text-sm text-secondary-600 dark:text-secondary-400">
               Ekibimiz bu özelliği sizler için hızla geliştiriyor
             </p>
           </CardContent>
@@ -53,8 +53,8 @@ export const UnderConstruction: React.FC<UnderConstructionProps> = ({
         <Card>
           <CardContent className="p-6 text-center">
             <i className="bi bi-shield-check text-3xl text-success-600 mb-3"></i>
-            <h3 className="font-semibold text-secondary-900 mb-2">Güvenli</h3>
-            <p className="text-sm text-secondary-600">
+            <h3 className="font-semibold text-secondary-900 dark:text-white mb-2">Güvenli</h3>
+            <p className="text-sm text-secondary-600 dark:text-secondary-400">
               Tüm özellikler güvenlik standartlarına uygun şekilde hazırlanıyor
             </p>
           </CardContent>
@@ -63,8 +63,8 @@ export const UnderConstruction: React.FC<UnderConstructionProps> = ({
         <Card>
           <CardContent className="p-6 text-center">
             <i className="bi bi-star text-3xl text-warning-500 mb-3"></i>
-            <h3 className="font-semibold text-secondary-900 mb-2">Kaliteli</h3>
-            <p className="text-sm text-secondary-600">
+            <h3 className="font-semibold text-secondary-900 dark:text-white mb-2">Kaliteli</h3>
+            <p className="text-sm text-secondary-600 dark:text-secondary-400">
               En iyi kullanıcı deneyimi için titizlikle çalışıyoruz
             </p>
           </CardContent>

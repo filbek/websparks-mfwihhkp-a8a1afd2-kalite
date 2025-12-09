@@ -11,9 +11,12 @@ interface SidebarProps {
   onPageChange: (page: Page) => void;
 }
 
+import { useTheme } from '../../contexts/ThemeContext';
+
 export const Sidebar: React.FC<SidebarProps> = ({ className, currentPage, onPageChange }) => {
   const { user, hasRole, logout, currentOrganization } = useAuth();
   const { unreadCount } = useNotifications();
+  const { theme, toggleTheme } = useTheme();
 
   const handleLogout = async () => {
     if (confirm('Çıkış yapmak istediğinizden emin misiniz?')) {
@@ -38,7 +41,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ className, currentPage, onPage
   );
 
   return (
-    <aside className={cn('w-64 bg-white dark:bg-secondary-900 border-r border-secondary-200 dark:border-secondary-800 h-full flex flex-col transition-colors duration-200', className)}>
+    <aside className={cn('w-64 glass border-r h-full flex flex-col transition-all duration-300', className)}>
       {/* Header */}
       <div className="flex items-center justify-center p-4 border-b border-secondary-200 dark:border-secondary-800">
         {currentOrganization?.logo_url ? (
@@ -65,6 +68,17 @@ export const Sidebar: React.FC<SidebarProps> = ({ className, currentPage, onPage
               <p className="text-sm font-medium text-secondary-900 dark:text-white truncate">{user.display_name}</p>
               <p className="text-xs text-secondary-500 dark:text-secondary-400 truncate">{user.role.join(', ')}</p>
             </div>
+            <button
+              onClick={toggleTheme}
+              className="p-2 text-secondary-500 dark:text-secondary-400 hover:text-primary-600 dark:hover:text-primary-400 rounded-lg transition-colors"
+              title={theme === 'light' ? 'Gece Moduna Geç' : 'Gündüz Moduna Geç'}
+            >
+              {theme === 'light' ? (
+                <i className="bi bi-moon-stars text-lg"></i>
+              ) : (
+                <i className="bi bi-sun text-lg"></i>
+              )}
+            </button>
             <button
               onClick={handleLogout}
               className="p-2 text-secondary-500 dark:text-secondary-400 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors"

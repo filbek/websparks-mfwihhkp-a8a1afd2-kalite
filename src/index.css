@@ -4,25 +4,43 @@
 
 /* Hide scrollbar globally while maintaining scroll functionality */
 * {
-  scrollbar-width: none; /* Firefox */
-  -ms-overflow-style: none; /* Internet Explorer 10+ */
+  scrollbar-width: none;
+  /* Firefox */
+  -ms-overflow-style: none;
+  /* Internet Explorer 10+ */
 }
 
 *::-webkit-scrollbar {
-  display: none; /* Safari and Chrome */
+  display: none;
+  /* Safari and Chrome */
 }
 
-html, body {
-  scrollbar-width: none; /* Firefox */
-  -ms-overflow-style: none; /* Internet Explorer 10+ */
+html,
+body {
+  scrollbar-width: none;
+  /* Firefox */
+  -ms-overflow-style: none;
+  /* Internet Explorer 10+ */
+  @apply dark:bg-secondary-950;
 }
 
 html::-webkit-scrollbar,
 body::-webkit-scrollbar {
-  display: none; /* Safari and Chrome */
+  display: none;
+  /* Safari and Chrome */
 }
 
 /* Ensure smooth scrolling */
 html {
   scroll-behavior: smooth;
+}
+
+@layer utilities {
+  .glass {
+    @apply bg-white/80 dark:bg-secondary-900/80 backdrop-blur-md border-secondary-200/50 dark:border-secondary-700/50;
+  }
+
+  .glass-card {
+    @apply bg-white/60 dark:bg-secondary-800/60 backdrop-blur-sm border-white/20 dark:border-secondary-700/30;
+  }
 }

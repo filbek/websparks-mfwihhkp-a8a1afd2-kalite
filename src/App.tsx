@@ -11,6 +11,7 @@ import { Login } from './pages/Login';
 import { UnderConstruction } from './pages/UnderConstruction';
 import { KanbanPage } from './pages/KanbanPage';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
+import { Breadcrumbs } from './components/ui/Breadcrumbs';
 
 type Page = 'dashboard' | 'dof-management' | 'event-reporting' | 'document-management' | 'feedback-management' | 'committees' | 'reports' | 'settings' | 'kanban';
 
@@ -101,6 +102,7 @@ const AppContent: React.FC = () => {
 
         <main className="flex-1 p-6 lg:p-8 pt-20 lg:pt-6">
           <div className="max-w-7xl mx-auto">
+            <Breadcrumbs currentPage={currentPage} />
             {renderPage()}
           </div>
         </main>

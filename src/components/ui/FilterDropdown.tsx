@@ -29,17 +29,17 @@ export const FilterDropdown: React.FC<FilterDropdownProps> = ({
     <div className="relative">
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center space-x-2 px-4 py-2 bg-white border border-secondary-300 rounded-lg hover:bg-secondary-50 transition-colors"
+        className="flex items-center space-x-2 px-4 py-2 bg-white dark:bg-secondary-800 border border-secondary-300 dark:border-secondary-600 rounded-lg hover:bg-secondary-50 dark:hover:bg-secondary-700 transition-colors"
       >
-        {icon && <i className={`bi ${icon} text-secondary-600`}></i>}
-        <span className="text-sm font-medium text-secondary-700">
+        {icon && <i className={`bi ${icon} text-secondary-600 dark:text-secondary-400`}></i>}
+        <span className="text-sm font-medium text-secondary-700 dark:text-secondary-200">
           {selectedOption?.label || label}
         </span>
-        <i className={`bi bi-chevron-down text-secondary-400 transition-transform ${isOpen ? 'rotate-180' : ''}`}></i>
+        <i className={`bi bi-chevron-down text-secondary-400 text-xs ml-2 transition-transform ${isOpen ? 'rotate-180' : ''}`}></i>
       </button>
 
       {isOpen && (
-        <div className="absolute top-full left-0 mt-1 w-48 bg-white border border-secondary-200 rounded-lg shadow-lg z-10">
+        <div className="absolute top-full left-0 mt-1 w-48 bg-white dark:bg-secondary-800 border border-secondary-200 dark:border-secondary-600 rounded-lg shadow-lg z-10">
           <div className="py-1">
             {options.map((option) => (
               <button
@@ -49,8 +49,10 @@ export const FilterDropdown: React.FC<FilterDropdownProps> = ({
                   setIsOpen(false);
                 }}
                 className={cn(
-                  'w-full text-left px-4 py-2 text-sm hover:bg-secondary-50 transition-colors',
-                  value === option.value ? 'bg-primary-50 text-primary-700' : 'text-secondary-700'
+                  'w-full text-left px-4 py-2 text-sm hover:bg-secondary-50 dark:hover:bg-secondary-700 transition-colors',
+                  value === option.value
+                    ? 'bg-primary-50 dark:bg-primary-900/30 text-primary-700 dark:text-primary-300'
+                    : 'text-secondary-700 dark:text-secondary-300'
                 )}
               >
                 {option.label}

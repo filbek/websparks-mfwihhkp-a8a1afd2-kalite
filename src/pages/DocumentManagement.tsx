@@ -154,18 +154,18 @@ export const DocumentManagement: React.FC = () => {
   return (
     <div className="space-y-6">
       {/* Page Header */}
-      <div className="bg-white rounded-xl border border-secondary-200 p-6">
+      <div className="bg-white dark:bg-secondary-800 rounded-xl border border-secondary-200 dark:border-secondary-700 p-6 transition-colors">
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between space-y-4 lg:space-y-0">
           <div>
-            <h1 className="text-2xl font-bold text-secondary-900 mb-2">Doküman Yönetimi</h1>
-            <p className="text-secondary-600">Kalite dokümanlarını yönetin ve paylaşın</p>
+            <h1 className="text-2xl font-bold text-secondary-900 dark:text-white mb-2">Doküman Yönetimi</h1>
+            <p className="text-secondary-600 dark:text-secondary-400">Kalite dokümanlarını yönetin ve paylaşın</p>
           </div>
 
           <div className="flex items-center space-x-3">
             {activeTab === 'files' && currentFolderId && (
               <Button
                 onClick={handleCreateFolder}
-                className="bg-secondary-600 hover:bg-secondary-700"
+                className="bg-secondary-600 hover:bg-secondary-700 text-white"
               >
                 <i className="bi bi-folder-plus mr-2"></i>
                 Alt Klasör Oluştur
@@ -174,7 +174,7 @@ export const DocumentManagement: React.FC = () => {
             {activeTab === 'folders' && (
               <Button
                 onClick={handleCreateFolder}
-                className="bg-primary-600 hover:bg-primary-700"
+                className="bg-primary-600 hover:bg-primary-700 text-white"
               >
                 <i className="bi bi-folder-plus mr-2"></i>
                 Yeni Klasör
@@ -183,7 +183,7 @@ export const DocumentManagement: React.FC = () => {
             {activeTab === 'files' && (
               <Button
                 onClick={() => setIsUploadModalOpen(true)}
-                className="bg-primary-600 hover:bg-primary-700"
+                className="bg-primary-600 hover:bg-primary-700 text-white"
               >
                 <i className="bi bi-plus-lg mr-2"></i>
                 Yeni Doküman Yükle
@@ -194,40 +194,36 @@ export const DocumentManagement: React.FC = () => {
       </div>
 
       {/* Tab Navigation */}
-      <div className="bg-white rounded-xl border border-secondary-200">
-        <div className="flex items-center border-b border-secondary-200">
+      <div className="bg-white dark:bg-secondary-800 rounded-xl border border-secondary-200 dark:border-secondary-700 transition-colors">
+        <div className="flex items-center border-b border-secondary-200 dark:border-secondary-700">
           <button
             onClick={() => setActiveTab('folders')}
-            className={`flex items-center space-x-2 px-6 py-4 font-medium transition-colors border-b-2 ${
-              activeTab === 'folders'
-                ? 'border-primary-600 text-primary-600 bg-primary-50'
-                : 'border-transparent text-secondary-600 hover:text-secondary-900 hover:bg-secondary-50'
-            }`}
+            className={`flex items-center space-x-2 px-6 py-4 font-medium transition-colors border-b-2 ${activeTab === 'folders'
+                ? 'border-primary-600 text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-900/20'
+                : 'border-transparent text-secondary-600 dark:text-secondary-400 hover:text-secondary-900 dark:hover:text-secondary-200 hover:bg-secondary-50 dark:hover:bg-secondary-700'
+              }`}
           >
             <i className="bi bi-folder"></i>
             <span>Klasörler</span>
             {folders.length > 0 && (
-              <span className={`ml-2 px-2 py-0.5 rounded-full text-xs ${
-                activeTab === 'folders' ? 'bg-primary-100 text-primary-700' : 'bg-secondary-100 text-secondary-700'
-              }`}>
+              <span className={`ml-2 px-2 py-0.5 rounded-full text-xs ${activeTab === 'folders' ? 'bg-primary-100 dark:bg-primary-900/30 text-primary-700 dark:text-primary-400' : 'bg-secondary-100 dark:bg-secondary-700 text-secondary-700 dark:text-secondary-300'
+                }`}>
                 {folders.length}
               </span>
             )}
           </button>
           <button
             onClick={() => setActiveTab('files')}
-            className={`flex items-center space-x-2 px-6 py-4 font-medium transition-colors border-b-2 ${
-              activeTab === 'files'
-                ? 'border-primary-600 text-primary-600 bg-primary-50'
-                : 'border-transparent text-secondary-600 hover:text-secondary-900 hover:bg-secondary-50'
-            }`}
+            className={`flex items-center space-x-2 px-6 py-4 font-medium transition-colors border-b-2 ${activeTab === 'files'
+                ? 'border-primary-600 text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-900/20'
+                : 'border-transparent text-secondary-600 dark:text-secondary-400 hover:text-secondary-900 dark:hover:text-secondary-200 hover:bg-secondary-50 dark:hover:bg-secondary-700'
+              }`}
           >
             <i className="bi bi-file-earmark"></i>
             <span>Dosyalar</span>
             {documents.length > 0 && (
-              <span className={`ml-2 px-2 py-0.5 rounded-full text-xs ${
-                activeTab === 'files' ? 'bg-primary-100 text-primary-700' : 'bg-secondary-100 text-secondary-700'
-              }`}>
+              <span className={`ml-2 px-2 py-0.5 rounded-full text-xs ${activeTab === 'files' ? 'bg-primary-100 dark:bg-primary-900/30 text-primary-700 dark:text-primary-400' : 'bg-secondary-100 dark:bg-secondary-700 text-secondary-700 dark:text-secondary-300'
+                }`}>
                 {documents.length}
               </span>
             )}
@@ -237,7 +233,7 @@ export const DocumentManagement: React.FC = () => {
 
       {/* Breadcrumb Navigation */}
       {breadcrumbPath.length > 0 && (
-        <div className="bg-white rounded-xl border border-secondary-200 p-4">
+        <div className="bg-white dark:bg-secondary-800 rounded-xl border border-secondary-200 dark:border-secondary-700 p-4 transition-colors">
           <Breadcrumb
             items={breadcrumbPath}
             onNavigate={handleBreadcrumbNavigate}
@@ -246,7 +242,7 @@ export const DocumentManagement: React.FC = () => {
       )}
 
       {/* Filters */}
-      <div className="bg-white rounded-xl border border-secondary-200 p-6">
+      <div className="bg-white dark:bg-secondary-800 rounded-xl border border-secondary-200 dark:border-secondary-700 p-6 transition-colors">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <SearchBar
             onSearch={(search) =>

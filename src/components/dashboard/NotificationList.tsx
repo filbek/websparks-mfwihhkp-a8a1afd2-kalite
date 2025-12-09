@@ -98,7 +98,7 @@ export const NotificationList: React.FC<NotificationListProps> = ({ onPageChange
 
             <CardContent>
                 {displayNotifications.length === 0 ? (
-                    <div className="text-center py-8 text-secondary-500">
+                    <div className="text-center py-8 text-secondary-500 dark:text-secondary-400">
                         <i className="bi bi-bell-slash text-4xl mb-3 block"></i>
                         <p className="text-sm">Henüz bildiriminiz yok</p>
                     </div>

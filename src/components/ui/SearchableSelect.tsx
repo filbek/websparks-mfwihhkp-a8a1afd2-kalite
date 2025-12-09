@@ -51,7 +51,7 @@ export const SearchableSelect: React.FC<SearchableSelectProps> = ({
     return (
         <div className="space-y-1" ref={containerRef}>
             {label && (
-                <label className="block text-sm font-medium text-secondary-700">
+                <label className="block text-sm font-medium text-secondary-700 dark:text-secondary-300">
                     {label}
                 </label>
             )}
@@ -60,25 +60,25 @@ export const SearchableSelect: React.FC<SearchableSelectProps> = ({
                     type="button"
                     onClick={() => !disabled && setIsOpen(!isOpen)}
                     className={cn(
-                        'w-full px-3 py-2 text-left border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 transition-colors bg-white flex justify-between items-center',
-                        error ? 'border-danger-500 focus:ring-danger-500' : 'border-secondary-300',
-                        disabled && 'bg-secondary-50 cursor-not-allowed opacity-70',
+                        'w-full px-3 py-2 text-left border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 transition-colors bg-white dark:bg-secondary-800 flex justify-between items-center',
+                        error ? 'border-danger-500 focus:ring-danger-500' : 'border-secondary-300 dark:border-secondary-600',
+                        disabled && 'bg-secondary-50 dark:bg-secondary-800/50 cursor-not-allowed opacity-70',
                         className
                     )}
                     disabled={disabled}
                 >
-                    <span className={cn('block truncate', !selectedOption && 'text-secondary-400')}>
+                    <span className={cn('block truncate', !selectedOption ? 'text-secondary-400 dark:text-secondary-500' : 'text-secondary-900 dark:text-secondary-200')}>
                         {selectedOption ? selectedOption.label : placeholder}
                     </span>
                     <i className="bi bi-chevron-down text-secondary-400 text-xs ml-2"></i>
                 </button>
 
                 {isOpen && (
-                    <div className="absolute z-10 w-full mt-1 bg-white border border-secondary-200 rounded-lg shadow-lg max-h-60 overflow-hidden flex flex-col">
-                        <div className="p-2 border-b border-secondary-100">
+                    <div className="absolute z-10 w-full mt-1 bg-white dark:bg-secondary-800 border border-secondary-200 dark:border-secondary-700 rounded-lg shadow-lg max-h-60 overflow-hidden flex flex-col">
+                        <div className="p-2 border-b border-secondary-100 dark:border-secondary-700">
                             <input
                                 type="text"
-                                className="w-full px-2 py-1 text-sm border border-secondary-300 rounded focus:outline-none focus:border-primary-500"
+                                className="w-full px-2 py-1 text-sm border border-secondary-300 dark:border-secondary-600 bg-white dark:bg-secondary-900/50 text-secondary-900 dark:text-white rounded focus:outline-none focus:border-primary-500"
                                 placeholder="Ara..."
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
@@ -93,8 +93,10 @@ export const SearchableSelect: React.FC<SearchableSelectProps> = ({
                                         key={option.value}
                                         type="button"
                                         className={cn(
-                                            'w-full px-3 py-2 text-left text-sm hover:bg-primary-50 transition-colors',
-                                            option.value === value && 'bg-primary-50 text-primary-700 font-medium'
+                                            'w-full px-3 py-2 text-left text-sm hover:bg-primary-50 dark:hover:bg-primary-900/20 transition-colors',
+                                            option.value === value
+                                                ? 'bg-primary-50 dark:bg-primary-900/30 text-primary-700 dark:text-primary-300 font-medium'
+                                                : 'text-secondary-700 dark:text-secondary-300'
                                         )}
                                         onClick={() => {
                                             onChange(option.value);
@@ -106,7 +108,7 @@ export const SearchableSelect: React.FC<SearchableSelectProps> = ({
                                     </button>
                                 ))
                             ) : (
-                                <div className="px-3 py-2 text-sm text-secondary-500 text-center">
+                                <div className="px-3 py-2 text-sm text-secondary-500 dark:text-secondary-400 text-center">
                                     Sonuç bulunamadı
                                 </div>
                             )}

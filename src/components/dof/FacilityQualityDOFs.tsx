@@ -375,29 +375,29 @@ export const FacilityQualityDOFs: React.FC<FacilityQualityDOFsProps> = ({
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead>
-                <tr className="border-b border-secondary-200">
-                  <th className="text-left py-3 px-4 font-medium text-secondary-700">DÖF No</th>
-                  <th className="text-left py-3 px-4 font-medium text-secondary-700">Başlık</th>
-                  <th className="text-left py-3 px-4 font-medium text-secondary-700">Bölüm</th>
-                  <th className="text-left py-3 px-4 font-medium text-secondary-700">Durum</th>
-                  <th className="text-left py-3 px-4 font-medium text-secondary-700">Öncelik</th>
-                  <th className="text-left py-3 px-4 font-medium text-secondary-700">Tarih</th>
-                  <th className="text-left py-3 px-4 font-medium text-secondary-700">İşlemler</th>
+                <tr className="border-b border-secondary-200 dark:border-secondary-700">
+                  <th className="text-left py-3 px-4 font-medium text-secondary-700 dark:text-secondary-300">DÖF No</th>
+                  <th className="text-left py-3 px-4 font-medium text-secondary-700 dark:text-secondary-300">Başlık</th>
+                  <th className="text-left py-3 px-4 font-medium text-secondary-700 dark:text-secondary-300">Bölüm</th>
+                  <th className="text-left py-3 px-4 font-medium text-secondary-700 dark:text-secondary-300">Durum</th>
+                  <th className="text-left py-3 px-4 font-medium text-secondary-700 dark:text-secondary-300">Öncelik</th>
+                  <th className="text-left py-3 px-4 font-medium text-secondary-700 dark:text-secondary-300">Tarih</th>
+                  <th className="text-left py-3 px-4 font-medium text-secondary-700 dark:text-secondary-300">İşlemler</th>
                 </tr>
               </thead>
               <tbody>
                 {filteredDOFs.map((dof, index) => (
-                  <tr key={dof.id} className="border-b border-secondary-100 hover:bg-secondary-50">
-                    <td className="py-3 px-4 text-sm font-mono text-secondary-600">
+                  <tr key={dof.id} className="border-b border-secondary-100 dark:border-secondary-800 hover:bg-secondary-50 dark:hover:bg-secondary-800 transition-colors">
+                    <td className="py-3 px-4 text-sm font-mono text-secondary-600 dark:text-secondary-400">
                       DOF-{String(index + 1).padStart(4, '0')}
                     </td>
                     <td className="py-3 px-4">
                       <div>
-                        <p className="font-medium text-secondary-900 line-clamp-1">{dof.title}</p>
-                        <p className="text-sm text-secondary-600 line-clamp-1">{dof.description}</p>
+                        <p className="font-medium text-secondary-900 dark:text-white line-clamp-1">{dof.title}</p>
+                        <p className="text-sm text-secondary-600 dark:text-secondary-400 line-clamp-1">{dof.description}</p>
                       </div>
                     </td>
-                    <td className="py-3 px-4 text-sm text-secondary-700">
+                    <td className="py-3 px-4 text-sm text-secondary-700 dark:text-secondary-300">
                       {dof.tespit_edilen_bolum ? dof.tespit_edilen_bolum.replace('_', ' ').charAt(0).toUpperCase() + dof.tespit_edilen_bolum.replace('_', ' ').slice(1) : '-'}
                     </td>
                     <td className="py-3 px-4">
@@ -414,7 +414,7 @@ export const FacilityQualityDOFs: React.FC<FacilityQualityDOFsProps> = ({
                         {dof.priority.charAt(0).toUpperCase() + dof.priority.slice(1)}
                       </Badge>
                     </td>
-                    <td className="py-3 px-4 text-sm text-secondary-600">
+                    <td className="py-3 px-4 text-sm text-secondary-600 dark:text-secondary-400">
                       {dof.tespit_tarihi ? formatDate(dof.tespit_tarihi) : formatDate(dof.created_at)}
                     </td>
                     <td className="py-3 px-4">
@@ -459,11 +459,11 @@ export const FacilityQualityDOFs: React.FC<FacilityQualityDOFsProps> = ({
 
           {filteredDOFs.length === 0 && (
             <div className="text-center py-12">
-              <div className="w-24 h-24 bg-secondary-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <i className="bi bi-clipboard-x text-4xl text-secondary-400"></i>
+              <div className="w-24 h-24 bg-secondary-100 dark:bg-secondary-800 rounded-full flex items-center justify-center mx-auto mb-4 transition-colors">
+                <i className="bi bi-clipboard-x text-4xl text-secondary-400 dark:text-secondary-500"></i>
               </div>
-              <h3 className="text-lg font-medium text-secondary-900 mb-2">DÖF bulunamadı</h3>
-              <p className="text-secondary-600">Arama kriterlerinize uygun DÖF kaydı bulunamadı.</p>
+              <h3 className="text-lg font-medium text-secondary-900 dark:text-white mb-2">DÖF bulunamadı</h3>
+              <p className="text-secondary-600 dark:text-secondary-400">Arama kriterlerinize uygun DÖF kaydı bulunamadı.</p>
             </div>
           )}
         </CardContent>

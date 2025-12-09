@@ -430,7 +430,7 @@ export const EventList: React.FC<EventListProps> = ({
 
       {/* Active Filters Breadcrumb */}
       {hasActiveFilters && (
-        <div className="bg-secondary-50 rounded-lg p-4">
+        <div className="bg-secondary-50 dark:bg-secondary-800 rounded-lg p-4">
           <div className="flex items-center space-x-2 text-sm">
             <span className="font-medium text-secondary-700">Aktif Filtreler:</span>
             {filters.facility !== 'all' && (
@@ -467,10 +467,10 @@ export const EventList: React.FC<EventListProps> = ({
         <CardContent className="p-0">
           <div className="overflow-x-auto">
             <table className="w-full">
-              <thead className="bg-secondary-50 border-b border-secondary-200">
+              <thead className="bg-secondary-50 dark:bg-secondary-800 border-b border-secondary-200 dark:border-secondary-700">
                 <tr>
                   <th
-                    className="text-left py-3 px-4 font-medium text-secondary-700 cursor-pointer hover:bg-secondary-100"
+                    className="text-left py-3 px-4 font-medium text-secondary-700 dark:text-secondary-300 cursor-pointer hover:bg-secondary-100 dark:hover:bg-secondary-700"
                     onClick={() => handleSort('code')}
                   >
                     <div className="flex items-center">
@@ -481,7 +481,7 @@ export const EventList: React.FC<EventListProps> = ({
                     </div>
                   </th>
                   <th
-                    className="text-left py-3 px-4 font-medium text-secondary-700 cursor-pointer hover:bg-secondary-100"
+                    className="text-left py-3 px-4 font-medium text-secondary-700 dark:text-secondary-300 cursor-pointer hover:bg-secondary-100 dark:hover:bg-secondary-700"
                     onClick={() => handleSort('event_class')}
                   >
                     <div className="flex items-center">
@@ -491,10 +491,10 @@ export const EventList: React.FC<EventListProps> = ({
                       )}
                     </div>
                   </th>
-                  <th className="text-left py-3 px-4 font-medium text-secondary-700">Ana/Alt Başlık</th>
-                  <th className="text-left py-3 px-4 font-medium text-secondary-700">Yer</th>
+                  <th className="text-left py-3 px-4 font-medium text-secondary-700 dark:text-secondary-300">Ana/Alt Başlık</th>
+                  <th className="text-left py-3 px-4 font-medium text-secondary-700 dark:text-secondary-300">Yer</th>
                   <th
-                    className="text-left py-3 px-4 font-medium text-secondary-700 cursor-pointer hover:bg-secondary-100"
+                    className="text-left py-3 px-4 font-medium text-secondary-700 dark:text-secondary-300 cursor-pointer hover:bg-secondary-100 dark:hover:bg-secondary-700"
                     onClick={() => handleSort('event_date')}
                   >
                     <div className="flex items-center">
@@ -505,7 +505,7 @@ export const EventList: React.FC<EventListProps> = ({
                     </div>
                   </th>
                   <th
-                    className="text-left py-3 px-4 font-medium text-secondary-700 cursor-pointer hover:bg-secondary-100"
+                    className="text-left py-3 px-4 font-medium text-secondary-700 dark:text-secondary-300 cursor-pointer hover:bg-secondary-100 dark:hover:bg-secondary-700"
                     onClick={() => handleSort('score')}
                   >
                     <div className="flex items-center">
@@ -515,22 +515,22 @@ export const EventList: React.FC<EventListProps> = ({
                       )}
                     </div>
                   </th>
-                  <th className="text-left py-3 px-4 font-medium text-secondary-700">Durum</th>
-                  <th className="text-left py-3 px-4 font-medium text-secondary-700">Atanan</th>
-                  <th className="text-left py-3 px-4 font-medium text-secondary-700">Şube</th>
-                  <th className="text-left py-3 px-4 font-medium text-secondary-700">İşlemler</th>
+                  <th className="text-left py-3 px-4 font-medium text-secondary-700 dark:text-secondary-300">Durum</th>
+                  <th className="text-left py-3 px-4 font-medium text-secondary-700 dark:text-secondary-300">Atanan</th>
+                  <th className="text-left py-3 px-4 font-medium text-secondary-700 dark:text-secondary-300">Şube</th>
+                  <th className="text-left py-3 px-4 font-medium text-secondary-700 dark:text-secondary-300">İşlemler</th>
                 </tr>
               </thead>
               <tbody>
                 {sortedEvents.map((event, index) => (
                   <tr
                     key={event.id}
-                    className={`border-b border-secondary-100 hover:bg-secondary-50 ${event.status === 'kapatildi' ? 'bg-success-50' :
-                      event.status === 'reddedildi' ? 'bg-danger-50' :
-                        event.status === 'iptal' ? 'bg-secondary-100' : ''
+                    className={`border-b border-secondary-100 dark:border-secondary-700/50 hover:bg-secondary-50 dark:hover:bg-secondary-700/50 transition-colors ${event.status === 'kapatildi' ? 'bg-success-50 dark:bg-success-900/10' :
+                        event.status === 'reddedildi' ? 'bg-danger-50 dark:bg-danger-900/10' :
+                          event.status === 'iptal' ? 'bg-secondary-100 dark:bg-secondary-800/50' : ''
                       }`}
                   >
-                    <td className="py-3 px-4 text-sm font-mono text-secondary-600">
+                    <td className="py-3 px-4 text-sm font-mono text-secondary-600 dark:text-secondary-400">
                       {generateEventCode(event)}
                     </td>
                     <td className="py-3 px-4">
@@ -541,31 +541,31 @@ export const EventList: React.FC<EventListProps> = ({
                         {eventClassifications.find(c => c.id === event.event_class)?.class_name}
                       </Badge>
                     </td>
-                    <td className="py-3 px-4 text-sm text-secondary-700">
+                    <td className="py-3 px-4 text-sm text-secondary-700 dark:text-secondary-300">
                       <div>
                         <p className="font-medium">
                           {selectedClass?.main_categories.find(m => m.id === event.main_category)?.name}
                         </p>
-                        <p className="text-xs text-secondary-500">
+                        <p className="text-xs text-secondary-500 dark:text-secondary-500">
                           {selectedClass?.main_categories
                             .find(m => m.id === event.main_category)?.sub_categories
                             .find(s => s.id === event.sub_category)?.name}
                         </p>
                       </div>
                     </td>
-                    <td className="py-3 px-4 text-sm text-secondary-700">
+                    <td className="py-3 px-4 text-sm text-secondary-700 dark:text-secondary-300">
                       {event.location?.replace('_', ' ').charAt(0).toUpperCase() + event.location?.replace('_', ' ').slice(1)}
                     </td>
-                    <td className="py-3 px-4 text-sm text-secondary-700">
+                    <td className="py-3 px-4 text-sm text-secondary-700 dark:text-secondary-300">
                       <div>
                         <p>{new Date(event.event_date).toLocaleDateString('tr-TR')}</p>
-                        <p className="text-xs text-secondary-500">{event.event_time}</p>
+                        <p className="text-xs text-secondary-500 dark:text-secondary-500">{event.event_time}</p>
                       </div>
                     </td>
                     <td className="py-3 px-4">
                       <div className="flex items-center">
-                        <span className="text-sm font-medium text-secondary-900 mr-2">{event.score}</span>
-                        <div className="w-16 h-2 bg-secondary-200 rounded-full">
+                        <span className="text-sm font-medium text-secondary-900 dark:text-white mr-2">{event.score}</span>
+                        <div className="w-16 h-2 bg-secondary-200 dark:bg-secondary-700 rounded-full">
                           <div
                             className={`h-full rounded-full ${event.score >= 6 ? 'bg-danger-500' :
                               event.score >= 4 ? 'bg-warning-500' :
@@ -581,7 +581,7 @@ export const EventList: React.FC<EventListProps> = ({
                         {event.status.replace('_', ' ').charAt(0).toUpperCase() + event.status.replace('_', ' ').slice(1)}
                       </span>
                     </td>
-                    <td className="py-3 px-4 text-sm text-secondary-700">
+                    <td className="py-3 px-4 text-sm text-secondary-700 dark:text-secondary-300">
                       {event.assignee?.display_name || '-'}
                     </td>
                     <td className="py-3 px-4">
@@ -613,11 +613,11 @@ export const EventList: React.FC<EventListProps> = ({
           {/* Empty State */}
           {sortedEvents.length === 0 && (
             <div className="text-center py-12">
-              <div className="w-24 h-24 bg-secondary-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <i className="bi bi-clipboard-x text-4xl text-secondary-400"></i>
+              <div className="w-24 h-24 bg-secondary-100 dark:bg-secondary-800 rounded-full flex items-center justify-center mx-auto mb-4">
+                <i className="bi bi-clipboard-x text-4xl text-secondary-400 dark:text-secondary-500"></i>
               </div>
-              <h3 className="text-lg font-medium text-secondary-900 mb-2">Olay bulunamadı</h3>
-              <p className="text-secondary-600 mb-4">
+              <h3 className="text-lg font-medium text-secondary-900 dark:text-white mb-2">Olay bulunamadı</h3>
+              <p className="text-secondary-600 dark:text-secondary-400 mb-4">
                 {hasActiveFilters
                   ? 'Arama kriterlerinize uygun olay bulunamadı. Filtreleri genişletmeyi deneyin.'
                   : 'Henüz hiç olay kaydı bulunmamaktadır.'

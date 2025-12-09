@@ -29,19 +29,19 @@ export const Modal: React.FC<ModalProps> = ({
   return (
     <div className="fixed inset-0 z-50 overflow-y-auto">
       <div className="flex min-h-screen items-center justify-center p-4">
-        <div 
+        <div
           className="fixed inset-0 bg-black bg-opacity-50 transition-opacity"
           onClick={onClose}
         />
         <div className={cn(
-          'relative w-full bg-white rounded-xl shadow-xl transform transition-all',
+          'relative w-full bg-white dark:bg-secondary-800 rounded-xl shadow-xl transform transition-all',
           sizeClasses[size]
         )}>
-          <div className="flex items-center justify-between p-6 border-b border-secondary-200">
-            <h3 className="text-lg font-semibold text-secondary-900">{title}</h3>
+          <div className="flex items-center justify-between p-6 border-b border-secondary-200 dark:border-secondary-700">
+            <h3 className="text-lg font-semibold text-secondary-900 dark:text-white">{title}</h3>
             <button
               onClick={onClose}
-              className="text-secondary-400 hover:text-secondary-600 transition-colors"
+              className="text-secondary-400 hover:text-secondary-600 dark:hover:text-secondary-200 transition-colors"
             >
               <i className="bi bi-x-lg text-xl"></i>
             </button>

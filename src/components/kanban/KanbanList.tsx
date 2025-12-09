@@ -76,7 +76,7 @@ export const KanbanList: React.FC<KanbanListProps> = ({
         <div
             ref={setNodeRef}
             style={style}
-            className="bg-gray-100 rounded-lg p-3 w-80 flex-shrink-0 flex flex-col max-h-full"
+            className="bg-secondary-100 dark:bg-secondary-900 rounded-lg p-3 w-80 flex-shrink-0 flex flex-col max-h-full transition-colors"
         >
             <div className="flex items-center justify-between mb-3 p-1">
                 {isEditing ? (
@@ -92,14 +92,14 @@ export const KanbanList: React.FC<KanbanListProps> = ({
                                 setIsEditing(false);
                             }
                         }}
-                        className="flex-1 px-2 py-1 text-sm font-semibold text-gray-700 bg-white border border-primary-500 rounded focus:outline-none focus:ring-2 focus:ring-primary-500"
+                        className="flex-1 px-2 py-1 text-sm font-semibold text-secondary-900 dark:text-white bg-white dark:bg-secondary-800 border border-primary-500 rounded focus:outline-none focus:ring-2 focus:ring-primary-500"
                         autoFocus
                     />
                 ) : (
                     <h3
                         {...attributes}
                         {...listeners}
-                        className="font-semibold text-gray-700 cursor-grab active:cursor-grabbing flex-1"
+                        className="font-semibold text-secondary-700 dark:text-secondary-200 cursor-grab active:cursor-grabbing flex-1"
                     >
                         {title}
                     </h3>
@@ -108,7 +108,7 @@ export const KanbanList: React.FC<KanbanListProps> = ({
                 <div className="relative">
                     <button
                         onClick={() => setShowMenu(!showMenu)}
-                        className="text-gray-500 hover:text-gray-700 p-1 rounded hover:bg-gray-200"
+                        className="text-secondary-500 hover:text-secondary-700 dark:text-secondary-400 dark:hover:text-secondary-200 p-1 rounded hover:bg-secondary-200 dark:hover:bg-secondary-700 transition-colors"
                     >
                         <MoreHorizontal className="w-4 h-4" />
                     </button>
@@ -119,13 +119,13 @@ export const KanbanList: React.FC<KanbanListProps> = ({
                                 className="fixed inset-0 z-10"
                                 onClick={() => setShowMenu(false)}
                             />
-                            <div className="absolute right-0 top-full mt-1 w-48 bg-white border border-gray-200 rounded-lg shadow-lg z-20">
+                            <div className="absolute right-0 top-full mt-1 w-48 bg-white dark:bg-secondary-800 border border-secondary-200 dark:border-secondary-700 rounded-lg shadow-lg z-20">
                                 <button
                                     onClick={() => {
                                         setIsEditing(true);
                                         setShowMenu(false);
                                     }}
-                                    className="w-full flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
+                                    className="w-full flex items-center px-4 py-2 text-sm text-secondary-700 dark:text-secondary-200 hover:bg-secondary-50 dark:hover:bg-secondary-700 transition-colors"
                                 >
                                     <Edit2 className="w-4 h-4 mr-2" />
                                     Başlığı Düzenle
@@ -137,7 +137,7 @@ export const KanbanList: React.FC<KanbanListProps> = ({
                                         }
                                         setShowMenu(false);
                                     }}
-                                    className="w-full flex items-center px-4 py-2 text-sm text-red-600 hover:bg-red-50"
+                                    className="w-full flex items-center px-4 py-2 text-sm text-danger-600 dark:text-danger-400 hover:bg-danger-50 dark:hover:bg-danger-900/20 transition-colors"
                                 >
                                     <Trash2 className="w-4 h-4 mr-2" />
                                     Listeyi Sil
@@ -168,7 +168,7 @@ export const KanbanList: React.FC<KanbanListProps> = ({
 
             <Button
                 variant="ghost"
-                className="mt-2 w-full justify-start text-gray-500 hover:text-gray-700 hover:bg-gray-200"
+                className="mt-2 w-full justify-start text-secondary-500 hover:text-secondary-700 hover:bg-secondary-200 dark:text-secondary-400 dark:hover:text-secondary-200 dark:hover:bg-secondary-700 transition-colors"
                 onClick={onAddCard}
             >
                 <Plus className="w-4 h-4 mr-2" />

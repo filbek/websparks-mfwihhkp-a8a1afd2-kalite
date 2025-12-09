@@ -254,11 +254,11 @@ export const MyDOFs: React.FC<MyDOFsProps> = ({
         {filteredDOFs.length === 0 ? (
           <Card>
             <CardContent className="p-12 text-center">
-              <div className="w-24 h-24 bg-secondary-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <i className="bi bi-clipboard-x text-4xl text-secondary-400"></i>
+              <div className="w-24 h-24 bg-secondary-100 dark:bg-secondary-800 rounded-full flex items-center justify-center mx-auto mb-4">
+                <i className="bi bi-clipboard-x text-4xl text-secondary-400 dark:text-secondary-500"></i>
               </div>
-              <h3 className="text-lg font-medium text-secondary-900 mb-2">DÖF bulunamadı</h3>
-              <p className="text-secondary-600">Arama kriterlerinize uygun DÖF kaydı bulunamadı.</p>
+              <h3 className="text-lg font-medium text-secondary-900 dark:text-white mb-2">DÖF bulunamadı</h3>
+              <p className="text-secondary-600 dark:text-secondary-400">Arama kriterlerinize uygun DÖF kaydı bulunamadı.</p>
             </CardContent>
           </Card>
         ) : (
@@ -268,15 +268,15 @@ export const MyDOFs: React.FC<MyDOFsProps> = ({
                 <div className="flex items-start justify-between mb-4">
                   <div className="flex-1">
                     <div className="flex items-center space-x-3 mb-2">
-                      <h3 className="text-lg font-semibold text-secondary-900">{dof.title}</h3>
+                      <h3 className="text-lg font-semibold text-secondary-900 dark:text-white">{dof.title}</h3>
                       <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusColor(dof.status)}`}>
                         <i className={`bi ${getStatusIcon(dof.status)} mr-1`}></i>
                         {dof.status.replace('_', ' ').charAt(0).toUpperCase() + dof.status.replace('_', ' ').slice(1)}
                       </span>
                     </div>
-                    <p className="text-secondary-600 mb-3 line-clamp-2">{dof.description}</p>
+                    <p className="text-secondary-600 dark:text-secondary-400 mb-3 line-clamp-2">{dof.description}</p>
 
-                    <div className="flex items-center space-x-4 text-sm text-secondary-500">
+                    <div className="flex items-center space-x-4 text-sm text-secondary-500 dark:text-secondary-400">
                       <span className="flex items-center">
                         <i className="bi bi-calendar mr-1"></i>
                         {dof.tespit_tarihi ? formatDate(dof.tespit_tarihi) : formatDate(dof.created_at)}
@@ -300,14 +300,14 @@ export const MyDOFs: React.FC<MyDOFsProps> = ({
                     </div>
 
                     {dof.last_comment && (
-                      <div className="mt-3 p-2 bg-secondary-50 rounded border-l-2 border-primary-500">
-                        <div className="flex items-center text-xs text-secondary-500 mb-1">
+                      <div className="mt-3 p-2 bg-secondary-50 dark:bg-secondary-700/50 rounded border-l-2 border-primary-500">
+                        <div className="flex items-center text-xs text-secondary-500 dark:text-secondary-400 mb-1">
                           <i className="bi bi-chat mr-1"></i>
                           <span className="font-medium">{dof.last_comment.user?.display_name}</span>
                           <span className="mx-1">•</span>
                           <span>{formatDate(dof.last_comment.created_at)}</span>
                         </div>
-                        <p className="text-sm text-secondary-700 line-clamp-2">{dof.last_comment.comment}</p>
+                        <p className="text-sm text-secondary-700 dark:text-secondary-300 line-clamp-2">{dof.last_comment.comment}</p>
                       </div>
                     )}
                   </div>

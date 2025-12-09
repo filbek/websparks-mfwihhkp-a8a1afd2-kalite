@@ -56,12 +56,12 @@ export const RecentActivity: React.FC<RecentActivityProps> = ({ activities }) =>
       <CardContent>
         <div className="space-y-4">
           {activities.length === 0 ? (
-            <div className="text-center py-6 text-secondary-500">
+            <div className="text-center py-6 text-secondary-500 dark:text-secondary-400">
               <p>Henüz aktivite bulunmuyor.</p>
             </div>
           ) : (
             activities.map((activity) => (
-              <div key={activity.id} className="flex items-start space-x-4 p-4 bg-secondary-50 rounded-lg">
+              <div key={activity.id} className="flex items-start space-x-4 p-4 bg-secondary-50 dark:bg-secondary-700/50 rounded-lg">
                 <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${activity.type === 'dof' ? 'bg-primary-100 text-primary-600' : 'bg-warning-100 text-warning-600'
                   }`}>
                   <i className={`bi ${activity.type === 'dof' ? 'bi-clipboard-check' : 'bi-exclamation-triangle'}`}></i>
@@ -69,10 +69,10 @@ export const RecentActivity: React.FC<RecentActivityProps> = ({ activities }) =>
                 <div className="flex-1 min-w-0">
                   <div className="flex items-start justify-between">
                     <div>
-                      <h4 className="text-sm font-medium text-secondary-900 mb-1">
+                      <h4 className="text-sm font-medium text-secondary-900 dark:text-white mb-1">
                         {activity.title}
                       </h4>
-                      <div className="flex items-center space-x-2 text-xs text-secondary-600">
+                      <div className="flex items-center space-x-2 text-xs text-secondary-600 dark:text-secondary-400">
                         <span>{activity.facility}</span>
                         <span>•</span>
                         <span>{formatDate(activity.created_at)}</span>

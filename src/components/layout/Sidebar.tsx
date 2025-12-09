@@ -122,10 +122,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ className, currentPage, onPage
       {/* Footer */}
       <div className="p-4 border-t border-secondary-200 dark:border-secondary-800">
         <div className="flex items-center justify-center space-x-2 text-xs text-secondary-500 dark:text-secondary-400">
-          <span>© 2025 - 2026</span>
-          <span>•</span>
-          <span>Powered by</span>
-          <span className="font-semibold text-primary-600 dark:text-primary-500">Bekir Filizdağ</span>
+          <span className="font-mono">v1.0.0</span>
         </div>
       </div>
     </aside>

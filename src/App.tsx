@@ -19,7 +19,7 @@ import DiningMenu from './pages/DiningMenu';
 type Page = 'dashboard' | 'dof-management' | 'event-reporting' | 'document-management' | 'feedback-management' | 'committees' | 'social' | 'dining-menu' | 'reports' | 'settings' | 'kanban';
 
 const AppContent: React.FC = () => {
-  const { user, loading } = useAuth();
+  const { user, loading, currentOrganization } = useAuth();
   const [currentPage, setCurrentPage] = useState<Page>('dashboard');
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
@@ -120,11 +120,11 @@ const AppContent: React.FC = () => {
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           <div className="flex flex-col sm:flex-row justify-between items-center">
             <div className="flex items-center space-x-2 text-sm text-secondary-600 dark:text-secondary-400">
-              <span>© 2025 Anadolu Hastaneleri. Tüm hakları saklıdır.</span>
+              <span>© {new Date().getFullYear()} {currentOrganization?.name || 'Anadolu Hastaneleri'}. Tüm hakları saklıdır.</span>
             </div>
             <div className="flex items-center space-x-2 text-sm text-secondary-600 dark:text-secondary-400 mt-2 sm:mt-0">
-              <span>Powered by</span>
-              <span className="font-semibold text-primary-600 dark:text-primary-500">Bekir Filizdağ</span>
+              <span>Software & Design by</span>
+              <span className="font-semibold text-primary-600 dark:text-primary-500">Bekir FİLİZDAĞ</span>
             </div>
           </div>
         </div>

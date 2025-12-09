@@ -3,7 +3,7 @@ import { cn } from '../../lib/utils';
 import { useAuth } from '../../contexts/AuthContext';
 import { useNotifications } from '../../hooks/useNotifications';
 
-type Page = 'dashboard' | 'dof-management' | 'event-reporting' | 'document-management' | 'feedback-management' | 'committees' | 'reports' | 'settings' | 'kanban';
+type Page = 'dashboard' | 'dof-management' | 'event-reporting' | 'document-management' | 'feedback-management' | 'committees' | 'social' | 'dining-menu' | 'reports' | 'settings' | 'kanban';
 
 interface SidebarProps {
   className?: string;
@@ -32,6 +32,8 @@ export const Sidebar: React.FC<SidebarProps> = ({ className, currentPage, onPage
     { id: 'feedback-management' as Page, icon: 'bi-chat-dots', label: 'Görüş-Öneri', roles: ['personel', 'sube_kalite', 'merkez_kalite', 'admin'] },
     { id: 'kanban' as Page, icon: 'bi-kanban', label: 'İş Takibi', roles: ['personel', 'sube_kalite', 'merkez_kalite', 'admin'] },
     { id: 'committees' as Page, icon: 'bi-people', label: 'Komiteler', roles: ['personel', 'sube_kalite', 'merkez_kalite', 'admin'] },
+    { id: 'social' as Page, icon: 'bi-people-fill', label: 'Sosyal Duvar', roles: ['personel', 'sube_kalite', 'merkez_kalite', 'admin'] },
+    { id: 'dining-menu' as Page, icon: 'bi-cup-hot', label: 'Yemek Listesi', roles: ['personel', 'sube_kalite', 'merkez_kalite', 'admin'] },
     { id: 'reports' as Page, icon: 'bi-bar-chart', label: 'Raporlar', roles: ['sube_kalite', 'merkez_kalite', 'admin'] },
     { id: 'settings' as Page, icon: 'bi-gear', label: 'Ayarlar', roles: ['admin'] }
   ];

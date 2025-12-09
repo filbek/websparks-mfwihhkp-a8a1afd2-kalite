@@ -13,7 +13,10 @@ import { KanbanPage } from './pages/KanbanPage';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { Breadcrumbs } from './components/ui/Breadcrumbs';
 
-type Page = 'dashboard' | 'dof-management' | 'event-reporting' | 'document-management' | 'feedback-management' | 'committees' | 'reports' | 'settings' | 'kanban';
+import SocialWall from './pages/SocialWall';
+import DiningMenu from './pages/DiningMenu';
+
+type Page = 'dashboard' | 'dof-management' | 'event-reporting' | 'document-management' | 'feedback-management' | 'committees' | 'social' | 'dining-menu' | 'reports' | 'settings' | 'kanban';
 
 const AppContent: React.FC = () => {
   const { user, loading } = useAuth();
@@ -49,6 +52,10 @@ const AppContent: React.FC = () => {
         return <FeedbackManagement />;
       case 'committees':
         return <UnderConstruction title="Komiteler" description="Komite yönetimi modülü şu anda geliştirilme aşamasındadır. Yakında komite toplantılarını, üyeleri ve kararları yönetebileceksiniz." />;
+      case 'social':
+        return <SocialWall />;
+      case 'dining-menu':
+        return <DiningMenu />;
       case 'reports':
         return <UnderConstruction title="Raporlar" description="Raporlama modülü şu anda geliştirilme aşamasındadır. Yakında detaylı analiz ve raporlara erişebileceksiniz." />;
       case 'kanban':

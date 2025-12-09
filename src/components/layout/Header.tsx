@@ -35,8 +35,16 @@ export const Header: React.FC<HeaderProps> = ({ currentPage, onPageChange }) => 
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
           <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 bg-primary-600 rounded-lg flex items-center justify-center">
-              <i className="bi bi-hospital text-white text-xl"></i>
+            <div className="w-10 h-10 bg-primary-600 rounded-lg flex items-center justify-center overflow-hidden">
+              {currentOrganization?.logo_url ? (
+                <img
+                  src={currentOrganization.logo_url}
+                  alt={currentOrganization.name}
+                  className="w-full h-full object-cover"
+                />
+              ) : (
+                <i className="bi bi-hospital text-white text-xl"></i>
+              )}
             </div>
             <div>
               <h1 className="text-xl font-bold text-secondary-900">
@@ -98,8 +106,8 @@ export const Header: React.FC<HeaderProps> = ({ currentPage, onPageChange }) => 
                     setIsMobileMenuOpen(false);
                   }}
                   className={`flex items-center space-x-3 w-full text-left px-3 py-2 rounded-lg transition-colors ${currentPage === item.id
-                      ? 'bg-primary-50 text-primary-700'
-                      : 'text-secondary-700 hover:bg-secondary-50'
+                    ? 'bg-primary-50 text-primary-700'
+                    : 'text-secondary-700 hover:bg-secondary-50'
                     }`}
                 >
                   <i className={`bi ${item.icon}`}></i>

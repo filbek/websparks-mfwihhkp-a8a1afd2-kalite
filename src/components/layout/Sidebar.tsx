@@ -41,8 +41,16 @@ export const Sidebar: React.FC<SidebarProps> = ({ className, currentPage, onPage
     <aside className={cn('w-64 bg-white border-r border-secondary-200 h-full flex flex-col', className)}>
       {/* Header */}
       <div className="flex items-center space-x-3 px-6 py-4 border-b border-secondary-200">
-        <div className="w-10 h-10 bg-primary-600 rounded-lg flex items-center justify-center">
-          <i className="bi bi-hospital text-white text-xl"></i>
+        <div className="w-10 h-10 bg-primary-600 rounded-lg flex items-center justify-center overflow-hidden">
+          {currentOrganization?.logo_url ? (
+            <img
+              src={currentOrganization.logo_url}
+              alt={currentOrganization.name}
+              className="w-full h-full object-cover"
+            />
+          ) : (
+            <i className="bi bi-hospital text-white text-xl"></i>
+          )}
         </div>
         <div>
           <h2 className="text-lg font-semibold text-secondary-900">

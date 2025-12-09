@@ -59,7 +59,7 @@ const mockUsers: User[] = [
 
 export const DOFManagement: React.FC = () => {
   const { user } = useAuth();
-  const { dofs, loading, error, createDOF, updateDOF, deleteDOF, assignDOF, addComment, addAttachment, changeStatus } = useDOFs();
+  const { dofs, loading, error, createDOF, updateDOF, deleteDOF, assignDOF, addComment, addAttachment, changeStatus, fetchDOFs } = useDOFs();
   const { users: dbUsers } = useUsers();
   const [currentView, setCurrentView] = useState<DOFView>('my-dofs');
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
@@ -69,6 +69,7 @@ export const DOFManagement: React.FC = () => {
   const [isAttachmentModalOpen, setIsAttachmentModalOpen] = useState(false);
   const [isStatusModalOpen, setIsStatusModalOpen] = useState(false);
   const [selectedDOF, setSelectedDOF] = useState<DOF | null>(null);
+  const [targetStatus, setTargetStatus] = useState<string | undefined>(undefined);
   const [formLoading, setFormLoading] = useState(false);
 
   const userRole: UserRole = user?.role?.[0] || 'personel';
@@ -81,7 +82,7 @@ export const DOFManagement: React.FC = () => {
       await createDOF(data);
       alert('DÖF başarıyla oluşturuldu!');
       setIsCreateModalOpen(false);
-      refetch();
+      fetchDOFs();
     } catch (error) {
       console.error('Error creating DOF:', error);
       const errorMessage = error instanceof Error ? error.message : 'DÖF oluşturulurken bir hata oluştu';
@@ -103,6 +104,7 @@ export const DOFManagement: React.FC = () => {
 
   const handleCloseDOF = (dof: DOF) => {
     setSelectedDOF(dof);
+    setTargetStatus('kapatıldı');
     setIsStatusModalOpen(true);
   };
 
@@ -227,8 +229,11 @@ export const DOFManagement: React.FC = () => {
     try {
       await changeStatus(selectedDOF.id, newStatus, notes);
       setIsStatusModalOpen(false);
+      alert('Durum başarıyla güncellendi: ' + newStatus);
     } catch (error) {
       console.error('Error changing status:', error);
+      const errorMessage = error instanceof Error ? error.message : 'Durum değiştirilirken bir hata oluştu';
+      alert('Hata: ' + errorMessage);
     } finally {
       setFormLoading(false);
     }
@@ -432,9 +437,13 @@ export const DOFManagement: React.FC = () => {
       {selectedDOF && (
         <DOFStatusModal
           isOpen={isStatusModalOpen}
-          onClose={() => setIsStatusModalOpen(false)}
+          onClose={() => {
+            setIsStatusModalOpen(false);
+            setTargetStatus(undefined);
+          }}
           onSubmit={handleChangeStatus}
           currentStatus={selectedDOF.status}
+          defaultStatus={targetStatus}
           loading={formLoading}
         />
       )}

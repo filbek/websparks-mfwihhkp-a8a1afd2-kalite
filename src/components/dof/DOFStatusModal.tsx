@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Modal } from '../ui/Modal';
 import { Button } from '../ui/Button';
 import { Textarea } from '../ui/Textarea';
@@ -8,6 +8,7 @@ interface DOFStatusModalProps {
   onClose: () => void;
   onSubmit: (newStatus: string, notes: string) => Promise<void>;
   currentStatus: string;
+  defaultStatus?: string;
   loading?: boolean;
 }
 
@@ -27,11 +28,20 @@ export const DOFStatusModal: React.FC<DOFStatusModalProps> = ({
   onClose,
   onSubmit,
   currentStatus,
+  defaultStatus,
   loading = false
 }) => {
-  const [newStatus, setNewStatus] = useState(currentStatus);
+  const [newStatus, setNewStatus] = useState(defaultStatus || currentStatus);
   const [notes, setNotes] = useState('');
   const [error, setError] = useState('');
+
+  useEffect(() => {
+    if (isOpen) {
+      setNewStatus(defaultStatus || currentStatus);
+      setNotes('');
+      setError('');
+    }
+  }, [isOpen, currentStatus, defaultStatus]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

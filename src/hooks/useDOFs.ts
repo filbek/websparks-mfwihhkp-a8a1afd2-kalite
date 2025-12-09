@@ -98,7 +98,8 @@ export const useDOFs = () => {
                 facility_id: dofData.facility_id || 1,
                 reporter_id: userData.user.id,
                 dofu_acan: dofData.dofu_acan || userData.user.id,
-                status: dofData.status || 'atanmayi_bekleyen',
+                // Eğer atanan kişi varsa durum 'çözüm_bekleyen', yoksa 'atanmayı_bekleyen' veya gelen status. Taslak varsayılan
+                status: dofData.assigned_to ? 'çözüm_bekleyen' : (dofData.status || 'atanmayı_bekleyen'),
                 priority: dofData.priority || 'orta',
                 dof_turu: dofData.dof_turu,
                 tespit_tarihi: dofData.tespit_tarihi,
@@ -109,7 +110,8 @@ export const useDOFs = () => {
                 kisa_aciklama: dofData.kisa_aciklama,
                 sorumlu_bolum: dofData.sorumlu_bolum,
                 tanim: dofData.tanim,
-                due_date: dofData.due_date
+                due_date: dofData.due_date,
+                assigned_to: dofData.assigned_to // Atanan kişi eklendi
             };
 
             const { data, error: insertError } = await supabase
@@ -123,6 +125,18 @@ export const useDOFs = () => {
                 .single();
 
             if (insertError) throw insertError;
+
+            // Eğer atama yapıldıysa bildirim oluştur
+            if (dofData.assigned_to) {
+                await supabase
+                    .from('notifications')
+                    .insert({
+                        user_id: dofData.assigned_to,
+                        type: 'dof_assignment',
+                        related_type: 'dof',
+                        related_id: data.id
+                    });
+            }
 
             await fetchDOFs();
 
@@ -193,7 +207,7 @@ export const useDOFs = () => {
                 .update({
                     assigned_to: userId,
                     cc_users: ccUserIds || [],
-                    status: 'cozum_bekleyen',
+                    status: 'çözüm_bekleyen',
                     updated_at: new Date().toISOString()
                 })
                 .eq('id', dofId)

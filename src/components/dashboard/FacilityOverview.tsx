@@ -3,42 +3,20 @@ import { Card, CardHeader, CardTitle, CardContent } from '../ui/Card';
 import { Badge } from '../ui/Badge';
 
 interface FacilityData {
-  id: number;
-  name: string;
+  facilityId: number;
+  facilityName: string;
   activeDofs: number;
   activeEvents: number;
   completedThisMonth: number;
   status: 'normal' | 'warning' | 'critical';
 }
 
-const mockFacilities: FacilityData[] = [
-  {
-    id: 1,
-    name: 'Silivri',
-    activeDofs: 12,
-    activeEvents: 8,
-    completedThisMonth: 25,
-    status: 'normal'
-  },
-  {
-    id: 2,
-    name: 'Avcılar',
-    activeDofs: 18,
-    activeEvents: 15,
-    completedThisMonth: 32,
-    status: 'warning'
-  },
-  {
-    id: 3,
-    name: 'Ereğli',
-    activeDofs: 7,
-    activeEvents: 4,
-    completedThisMonth: 18,
-    status: 'normal'
-  }
-];
+interface FacilityOverviewProps {
+  facilityStats: FacilityData[];
+  loading?: boolean;
+}
 
-export const FacilityOverview: React.FC = () => {
+export const FacilityOverview: React.FC<FacilityOverviewProps> = ({ facilityStats, loading = false }) => {
   const getStatusBadge = (status: string) => {
     switch (status) {
       case 'normal':
@@ -52,6 +30,42 @@ export const FacilityOverview: React.FC = () => {
     }
   };
 
+  if (loading) {
+    return (
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center">
+            <i className="bi bi-building mr-2 text-primary-600"></i>
+            Şube Durumu
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="flex items-center justify-center py-12">
+            <i className="bi bi-arrow-clockwise animate-spin text-2xl text-primary-600"></i>
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
+
+  if (facilityStats.length === 0) {
+    return (
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center">
+            <i className="bi bi-building mr-2 text-primary-600"></i>
+            Şube Durumu
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="text-center py-12 text-secondary-600">
+            Henüz şube verisi bulunmamaktadır.
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
+
   return (
     <Card>
       <CardHeader>
@@ -62,11 +76,11 @@ export const FacilityOverview: React.FC = () => {
       </CardHeader>
       <CardContent>
         <div className="space-y-4">
-          {mockFacilities.map((facility) => (
-            <div key={facility.id} className="p-4 border border-secondary-200 rounded-lg hover:bg-secondary-50 transition-colors">
+          {facilityStats.map((facility) => (
+            <div key={facility.facilityId} className="p-4 border border-secondary-200 rounded-lg hover:bg-secondary-50 transition-colors">
               <div className="flex items-center justify-between mb-3">
                 <h4 className="text-lg font-semibold text-secondary-900">
-                  {facility.name} Şubesi
+                  {facility.facilityName} Şubesi
                 </h4>
                 {getStatusBadge(facility.status)}
               </div>

@@ -4,6 +4,7 @@ import { RecentActivity } from '../components/dashboard/RecentActivity';
 import { FacilityOverview } from '../components/dashboard/FacilityOverview';
 import { NotificationList } from '../components/dashboard/NotificationList';
 import { useAuth } from '../contexts/AuthContext';
+import { useDashboardStats } from '../hooks/useDashboardStats';
 
 type Page = 'dashboard' | 'dof-management' | 'event-reporting' | 'document-management' | 'feedback-management' | 'committees' | 'reports' | 'settings' | 'kanban';
 
@@ -13,6 +14,7 @@ interface DashboardProps {
 
 export const Dashboard: React.FC<DashboardProps> = ({ onPageChange }) => {
   const { user } = useAuth();
+  const { stats, facilityStats, canSeeAllFacilities } = useDashboardStats();
 
   // Kalite yöneticisi kontrolü
   const isQualityManager = user?.role.some(r => r === 'sube_kalite' || r === 'merkez_kalite') || false;
@@ -41,28 +43,28 @@ export const Dashboard: React.FC<DashboardProps> = ({ onPageChange }) => {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <StatsCard
           title="Toplam Aktif DÖF"
-          value={37}
+          value={stats.totalActiveDofs}
           icon="bi-clipboard-check"
           trend={{ value: 12, isPositive: false }}
           color="primary"
         />
         <StatsCard
           title="Toplam Aktif Olay"
-          value={27}
+          value={stats.totalActiveEvents}
           icon="bi-exclamation-triangle"
           trend={{ value: 8, isPositive: true }}
           color="warning"
         />
         <StatsCard
           title="Bu Ay Kapatılan"
-          value={75}
+          value={stats.completedThisMonth}
           icon="bi-check-circle"
           trend={{ value: 15, isPositive: true }}
           color="success"
         />
         <StatsCard
           title="Geciken İşlemler"
-          value={5}
+          value={stats.overdueItems}
           icon="bi-clock"
           trend={{ value: 3, isPositive: false }}
           color="danger"
@@ -82,7 +84,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ onPageChange }) => {
         {/* Facility Overview - Only for quality managers */}
         {isQualityManager && (
           <div className="lg:col-span-1">
-            <FacilityOverview />
+            <FacilityOverview facilityStats={facilityStats} loading={stats.loading} />
           </div>
         )}
       </div>

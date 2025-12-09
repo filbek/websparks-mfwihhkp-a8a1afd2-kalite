@@ -10,6 +10,7 @@ import { useDofKisaAciklamalar } from '../../hooks/useDofKisaAciklamalar';
 import { useDofLocations } from '../../hooks/useDofLocations';
 import { useDofSorumluBolumler } from '../../hooks/useDofSorumluBolumler';
 import { useAuth } from '../../contexts/AuthContext';
+import { useUsers } from '../../hooks/useUsers';
 
 interface DOFFormProps {
   dof?: DOF;
@@ -25,6 +26,7 @@ export const DOFFormDynamic: React.FC<DOFFormProps> = ({
   loading = false
 }) => {
   const { user } = useAuth();
+  const { users: dbUsers, loading: usersLoading } = useUsers();
   const { kaynaklar, loading: kaynakLoading } = useDofKaynaklari();
   const { kategoriler, loading: kategoriLoading } = useDofKategorileri();
   const { locations, loading: locationsLoading } = useDofLocations();
@@ -41,12 +43,28 @@ export const DOFFormDynamic: React.FC<DOFFormProps> = ({
     sorumlu_bolum: dof?.sorumlu_bolum || '',
     description: dof?.description || '',
     priority: dof?.priority || 'orta',
-    facility_id: dof?.facility_id || user?.facility_id || 1
+    facility_id: dof?.facility_id || user?.facility_id || 1,
+    assigned_to: dof?.assigned_to || ''
   });
 
   const { aciklamalar, loading: aciklamalarLoading } = useDofKisaAciklamalar(
     formData.dof_kategorisi || null
   );
+
+  // Facility based user filtering
+  const activeUsers = dbUsers.filter(u =>
+    u.is_active &&
+    formData.facility_id &&
+    (u.facility_id?.toString() === formData.facility_id.toString())
+  );
+
+  const assigneeOptions = [
+    { value: '', label: 'Atanacak Kişi Seçiniz (İsteğe Bağlı)' },
+    ...activeUsers.map(user => ({
+      value: user.id,
+      label: `${user.display_name} - ${user.department_name || user.role.join(', ')}`
+    }))
+  ];
 
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -111,7 +129,8 @@ export const DOFFormDynamic: React.FC<DOFFormProps> = ({
         dof_kategorisi: formData.dof_kategorisi,
         kisa_aciklama: formData.dof_kisa_aciklama,
         sorumlu_bolum: formData.sorumlu_bolum,
-        status: dof?.status || 'taslak'
+        status: dof?.status || 'taslak',
+        assigned_to: formData.assigned_to
       });
     } catch (error) {
       console.error('Form submission error:', error);
@@ -273,7 +292,7 @@ export const DOFFormDynamic: React.FC<DOFFormProps> = ({
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div>
             <label className="block text-sm font-medium text-secondary-700 mb-2">
               DÖF'ü Açan
@@ -295,6 +314,17 @@ export const DOFFormDynamic: React.FC<DOFFormProps> = ({
               onChange={(e) => setFormData({ ...formData, sorumlu_bolum: e.target.value })}
               options={sorumluBolumOptions}
               error={errors.sorumlu_bolum}
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-secondary-700 mb-2">
+              Atanacak Kişi
+            </label>
+            <Select
+              value={formData.assigned_to}
+              onChange={(e) => setFormData({ ...formData, assigned_to: e.target.value })}
+              options={assigneeOptions}
             />
           </div>
         </div>

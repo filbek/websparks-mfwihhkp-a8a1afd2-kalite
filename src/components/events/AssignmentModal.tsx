@@ -26,7 +26,11 @@ export const AssignmentModal: React.FC<AssignmentModalProps> = ({
   const [errors, setErrors] = useState<Record<string, string>>({});
   const { users } = useUsers();
 
-  const activeUsers = users.filter(u => u.is_active);
+  const activeUsers = users.filter(u =>
+    u.is_active &&
+    event?.facility_id &&
+    u.facility_id?.toString() === event.facility_id.toString()
+  );
 
   const managerOptions = [
     { value: '', label: 'Müdür/Birim Seçiniz' },

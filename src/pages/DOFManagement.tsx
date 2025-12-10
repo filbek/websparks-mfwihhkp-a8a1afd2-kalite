@@ -14,53 +14,18 @@ import { DOFAttachmentModal } from '../components/dof/DOFAttachmentModal';
 import { DOFStatusModal } from '../components/dof/DOFStatusModal';
 import { useDOFs } from '../hooks/useDOFs';
 import { useUsers } from '../hooks/useUsers';
+import { useFacilities } from '../hooks/useFacilities';
 import { useAuth } from '../contexts/AuthContext';
-import { DOF, UserRole, User, TaskAssignmentData } from '../types';
+import { DOF, UserRole, TaskAssignmentData } from '../types';
 import { format } from 'date-fns';
 
 type DOFView = 'create' | 'my-dofs' | 'facility-quality' | 'central-quality' | 'task-assignment';
-
-// Mock users data
-const mockUsers: User[] = [
-  {
-    id: 'user-1',
-    email: 'mehmet@hospital.com',
-    display_name: 'Dr. Mehmet Yılmaz',
-    role: ['personel'],
-    facility_id: 1,
-    department_id: 1,
-    is_active: true,
-    created_at: '2024-01-01T00:00:00Z',
-    updated_at: '2024-01-01T00:00:00Z'
-  },
-  {
-    id: 'user-2',
-    email: 'ayse@hospital.com',
-    display_name: 'Ayşe Kaya',
-    role: ['sube_kalite'],
-    facility_id: 1,
-    department_id: 2,
-    is_active: true,
-    created_at: '2024-01-01T00:00:00Z',
-    updated_at: '2024-01-01T00:00:00Z'
-  },
-  {
-    id: 'user-3',
-    email: 'fatma@hospital.com',
-    display_name: 'Fatma Demir',
-    role: ['personel'],
-    facility_id: 2,
-    department_id: 3,
-    is_active: true,
-    created_at: '2024-01-01T00:00:00Z',
-    updated_at: '2024-01-01T00:00:00Z'
-  }
-];
 
 export const DOFManagement: React.FC = () => {
   const { user } = useAuth();
   const { dofs, loading, error, createDOF, updateDOF, deleteDOF, assignDOF, addComment, addAttachment, changeStatus, fetchDOFs } = useDOFs();
   const { users: dbUsers } = useUsers();
+  const { facilities } = useFacilities();
   const [currentView, setCurrentView] = useState<DOFView>('my-dofs');
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
@@ -314,8 +279,9 @@ export const DOFManagement: React.FC = () => {
       case 'task-assignment':
         return (
           <TaskAssignment
-            users={mockUsers}
+            users={dbUsers}
             dofs={dofs}
+            facilities={facilities}
             onAssign={handleTaskAssignment}
             loading={formLoading}
           />

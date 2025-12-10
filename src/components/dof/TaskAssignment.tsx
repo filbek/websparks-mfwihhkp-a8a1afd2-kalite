@@ -3,12 +3,13 @@ import { Card, CardHeader, CardTitle, CardContent } from '../ui/Card';
 import { Button } from '../ui/Button';
 import { Select } from '../ui/Select';
 import { Textarea } from '../ui/Textarea';
-import { DOF, User, TaskAssignmentData } from '../../types';
+import { DOF, User, TaskAssignmentData, Facility } from '../../types';
 import { getStatusLabel } from '../../lib/utils';
 
 interface TaskAssignmentProps {
   users: User[];
   dofs: DOF[];
+  facilities: Facility[];
   onAssign: (assignment: Partial<TaskAssignmentData>) => Promise<void>;
   loading?: boolean;
 }
@@ -16,6 +17,7 @@ interface TaskAssignmentProps {
 export const TaskAssignment: React.FC<TaskAssignmentProps> = ({
   users,
   dofs,
+  facilities,
   onAssign,
   loading = false
 }) => {
@@ -28,12 +30,13 @@ export const TaskAssignment: React.FC<TaskAssignmentProps> = ({
 
   const facilityOptions = [
     { value: '', label: 'Şube Seçiniz' },
-    { value: '1', label: 'Silivri Şubesi' },
-    { value: '2', label: 'Avcılar Şubesi' },
-    { value: '3', label: 'Ereğli Şubesi' }
+    ...facilities.map(f => ({
+      value: f.id.toString(),
+      label: f.name
+    }))
   ];
 
-  const filteredUsers = users.filter(user => 
+  const filteredUsers = users.filter(user =>
     !selectedFacility || user.facility_id.toString() === selectedFacility
   );
 
@@ -53,7 +56,7 @@ export const TaskAssignment: React.FC<TaskAssignmentProps> = ({
     }))
   ];
 
-  const userDOFs = dofs.filter(dof => 
+  const userDOFs = dofs.filter(dof =>
     dof.assigned_to === fromUser || dof.reporter_id === fromUser
   );
 
@@ -71,7 +74,7 @@ export const TaskAssignment: React.FC<TaskAssignmentProps> = ({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!validateForm()) return;
 
     try {
@@ -260,19 +263,17 @@ export const TaskAssignment: React.FC<TaskAssignmentProps> = ({
                             </div>
                           </div>
                           <div className="flex items-center space-x-2 ml-4">
-                            <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
-                              dof.priority === 'kritik' ? 'bg-danger-100 text-danger-700' :
-                              dof.priority === 'yüksek' ? 'bg-warning-100 text-warning-700' :
-                              dof.priority === 'orta' ? 'bg-primary-100 text-primary-700' :
-                              'bg-secondary-100 text-secondary-700'
-                            }`}>
+                            <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${dof.priority === 'kritik' ? 'bg-danger-100 text-danger-700' :
+                                dof.priority === 'yüksek' ? 'bg-warning-100 text-warning-700' :
+                                  dof.priority === 'orta' ? 'bg-primary-100 text-primary-700' :
+                                    'bg-secondary-100 text-secondary-700'
+                              }`}>
                               {dof.priority.charAt(0).toUpperCase() + dof.priority.slice(1)}
                             </span>
-                            <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
-                              dof.status === 'kapatıldı' ? 'bg-success-100 text-success-700' :
-                              dof.status === 'atanan' ? 'bg-primary-100 text-primary-700' :
-                              'bg-warning-100 text-warning-700'
-                            }`}>
+                            <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${dof.status === 'kapatıldı' ? 'bg-success-100 text-success-700' :
+                                dof.status === 'atanan' ? 'bg-primary-100 text-primary-700' :
+                                  'bg-warning-100 text-warning-700'
+                              }`}>
                               {getStatusLabel(dof.status)}
                             </span>
                           </div>

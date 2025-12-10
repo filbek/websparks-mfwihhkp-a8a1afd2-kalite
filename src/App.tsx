@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import { Sidebar } from './components/layout/Sidebar';
 import { Dashboard } from './pages/Dashboard';
@@ -22,6 +22,13 @@ const AppContent: React.FC = () => {
   const { user, loading, currentOrganization } = useAuth();
   const [currentPage, setCurrentPage] = useState<Page>('dashboard');
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  // Dinamik sayfa başlığı
+  useEffect(() => {
+    if (currentOrganization) {
+      document.title = `${currentOrganization.name} - İntranet Sistemi`;
+    }
+  }, [currentOrganization]);
 
   if (loading) {
     return (

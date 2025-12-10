@@ -33,6 +33,8 @@ export const Login: React.FC = () => {
 
         if (organization) {
           setOrg(organization);
+          // Dinamik sayfa başlığı
+          document.title = `${organization.name} - İntranet Sistemi`;
         } else {
           setError('Organizasyon bulunamadı. Lütfen doğru adresten girdiğinize emin olun.');
         }

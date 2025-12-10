@@ -25,16 +25,16 @@ export const Sidebar: React.FC<SidebarProps> = ({ className, currentPage, onPage
   };
 
   const menuItems = [
-    { id: 'dashboard' as Page, icon: 'bi-speedometer2', label: 'Dashboard', roles: ['personel', 'sube_kalite', 'merkez_kalite', 'admin'] },
-    { id: 'dof-management' as Page, icon: 'bi-clipboard-check', label: 'DÖF Yönetimi', roles: ['personel', 'sube_kalite', 'merkez_kalite', 'admin'] },
-    { id: 'event-reporting' as Page, icon: 'bi-exclamation-triangle', label: 'Olay Bildirimi', roles: ['personel', 'sube_kalite', 'merkez_kalite', 'admin'] },
-    { id: 'document-management' as Page, icon: 'bi-file-earmark-text', label: 'Doküman Yönetimi', roles: ['personel', 'sube_kalite', 'merkez_kalite', 'admin'] },
-    { id: 'feedback-management' as Page, icon: 'bi-chat-dots', label: 'Görüş-Öneri', roles: ['personel', 'sube_kalite', 'merkez_kalite', 'admin'] },
-    { id: 'kanban' as Page, icon: 'bi-kanban', label: 'İş Takibi', roles: ['personel', 'sube_kalite', 'merkez_kalite', 'admin'] },
-    { id: 'committees' as Page, icon: 'bi-people', label: 'Komiteler', roles: ['personel', 'sube_kalite', 'merkez_kalite', 'admin'] },
-    { id: 'social' as Page, icon: 'bi-people-fill', label: 'Sosyal Duvar', roles: ['personel', 'sube_kalite', 'merkez_kalite', 'admin'] },
-    { id: 'dining-menu' as Page, icon: 'bi-cup-hot', label: 'Yemek Listesi', roles: ['personel', 'sube_kalite', 'merkez_kalite', 'admin'] },
-    { id: 'reports' as Page, icon: 'bi-bar-chart', label: 'Raporlar', roles: ['sube_kalite', 'merkez_kalite', 'admin'] },
+    { id: 'dashboard' as Page, icon: 'bi-speedometer2', label: 'Dashboard', roles: ['personel', 'sube_kalite', 'merkez_kalite', 'admin', 'system_admin'] },
+    { id: 'dof-management' as Page, icon: 'bi-clipboard-check', label: 'DÖF Yönetimi', roles: ['personel', 'sube_kalite', 'merkez_kalite', 'admin', 'system_admin'] },
+    { id: 'event-reporting' as Page, icon: 'bi-exclamation-triangle', label: 'Olay Bildirimi', roles: ['personel', 'sube_kalite', 'merkez_kalite', 'admin', 'system_admin'] },
+    { id: 'document-management' as Page, icon: 'bi-file-earmark-text', label: 'Doküman Yönetimi', roles: ['personel', 'sube_kalite', 'merkez_kalite', 'admin', 'system_admin'] },
+    { id: 'feedback-management' as Page, icon: 'bi-chat-dots', label: 'Görüş-Öneri', roles: ['personel', 'sube_kalite', 'merkez_kalite', 'admin', 'system_admin'] },
+    { id: 'kanban' as Page, icon: 'bi-kanban', label: 'İş Takibi', roles: ['personel', 'sube_kalite', 'merkez_kalite', 'admin', 'system_admin'] },
+    { id: 'committees' as Page, icon: 'bi-people', label: 'Komiteler', roles: ['personel', 'sube_kalite', 'merkez_kalite', 'admin', 'system_admin'] },
+    { id: 'social' as Page, icon: 'bi-people-fill', label: 'Sosyal Duvar', roles: ['personel', 'sube_kalite', 'merkez_kalite', 'admin', 'system_admin'] },
+    { id: 'dining-menu' as Page, icon: 'bi-cup-hot', label: 'Yemek Listesi', roles: ['personel', 'sube_kalite', 'merkez_kalite', 'admin', 'system_admin'] },
+    { id: 'reports' as Page, icon: 'bi-bar-chart', label: 'Raporlar', roles: ['sube_kalite', 'merkez_kalite', 'admin', 'system_admin'] },
     { id: 'settings' as Page, icon: 'bi-gear', label: 'Ayarlar', roles: ['system_admin'] }
   ];
 

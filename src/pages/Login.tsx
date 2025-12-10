@@ -62,11 +62,14 @@ export const Login: React.FC = () => {
       if (user) {
         const { data: profile } = await supabase
           .from('users')
-          .select('organization_id')
+          .select('organization_id, role')
           .eq('id', user.id)
           .single();
 
-        if (profile?.organization_id !== org.id) {
+        // System Admin her yere girebilir
+        if (profile?.role.includes('system_admin')) {
+          // İzin ver, bypass et
+        } else if (profile?.organization_id !== org.id) {
           await logout();
           throw new Error(`Bu hesaba sadece ${org.name} sistemi üzerinden erişilebilir.`);
         }

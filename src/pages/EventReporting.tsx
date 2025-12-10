@@ -11,6 +11,7 @@ import { RejectModal } from '../components/events/RejectModal';
 import { AttachmentsPanel } from '../components/events/AttachmentsPanel';
 import { EventDetailModal } from '../components/events/EventDetailModal';
 import { useEvents } from '../hooks/useEvents';
+import { useFacilities } from '../hooks/useFacilities';
 import { Event } from '../types/events';
 
 type EventFormType = 'patient-safety' | 'employee-safety' | 'emergency-code' | null;
@@ -18,6 +19,7 @@ type EventView = 'create' | 'list' | 'central-tracking';
 
 export const EventReporting: React.FC = () => {
   const { events, createEvent, updateEvent, generateEventCode } = useEvents();
+  const { facilities } = useFacilities();
   const [currentView, setCurrentView] = useState<EventView>('create');
   const [currentForm, setCurrentForm] = useState<EventFormType>(null);
   const [formLoading, setFormLoading] = useState(false);
@@ -530,6 +532,7 @@ export const EventReporting: React.FC = () => {
           <EventList
             events={events}
             loading={false}
+            facilities={facilities}
             onAssign={(event) => setAssignmentModal({ isOpen: true, event })}
             onReject={(event) => setRejectModal({ isOpen: true, event })}
             onPrintReport={handlePrintReport}
@@ -546,6 +549,7 @@ export const EventReporting: React.FC = () => {
           <CentralTracking
             events={events}
             loading={false}
+            facilities={facilities}
             onExport={handleExport}
           />
         );

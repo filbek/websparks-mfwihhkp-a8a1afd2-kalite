@@ -7,12 +7,14 @@ import { FilterDropdown } from '../ui/FilterDropdown';
 import { Input } from '../ui/Input';
 import { Select } from '../ui/Select';
 import { Event } from '../../types/events';
+import { Facility } from '../../types';
 import { formatDate, getStatusColor } from '../../lib/utils';
 import { eventClassifications, eventTypes } from '../../data/eventData';
 
 interface EventListProps {
   events: Event[];
   loading: boolean;
+  facilities: Facility[];
   onAssign: (event: Event) => void;
   onReject: (event: Event) => void;
   onPrintReport: (event: Event) => void;
@@ -26,6 +28,7 @@ interface EventListProps {
 export const EventList: React.FC<EventListProps> = ({
   events,
   loading,
+  facilities,
   onAssign,
   onReject,
   onPrintReport,
@@ -53,9 +56,7 @@ export const EventList: React.FC<EventListProps> = ({
 
   const facilityOptions = [
     { value: 'all', label: 'Tüm Şubeler' },
-    { value: '1', label: 'Silivri (SIL)' },
-    { value: '2', label: 'Avcılar (AVC)' },
-    { value: '3', label: 'Ereğli (ERG)' }
+    ...facilities.map(f => ({ value: f.id.toString(), label: f.name }))
   ];
 
   const eventClassOptions = [
@@ -526,8 +527,8 @@ export const EventList: React.FC<EventListProps> = ({
                   <tr
                     key={event.id}
                     className={`border-b border-secondary-100 dark:border-secondary-700/50 hover:bg-secondary-50 dark:hover:bg-secondary-700/50 transition-colors ${event.status === 'kapatildi' ? 'bg-success-50 dark:bg-success-900/10' :
-                        event.status === 'reddedildi' ? 'bg-danger-50 dark:bg-danger-900/10' :
-                          event.status === 'iptal' ? 'bg-secondary-100 dark:bg-secondary-800/50' : ''
+                      event.status === 'reddedildi' ? 'bg-danger-50 dark:bg-danger-900/10' :
+                        event.status === 'iptal' ? 'bg-secondary-100 dark:bg-secondary-800/50' : ''
                       }`}
                   >
                     <td className="py-3 px-4 text-sm font-mono text-secondary-600 dark:text-secondary-400">

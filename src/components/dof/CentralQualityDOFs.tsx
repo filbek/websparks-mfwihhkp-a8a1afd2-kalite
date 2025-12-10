@@ -6,7 +6,7 @@ import { SearchInput } from '../ui/SearchInput';
 import { FilterDropdown } from '../ui/FilterDropdown';
 import { Input } from '../ui/Input';
 import { Select } from '../ui/Select';
-import { DOF } from '../../types';
+import { DOF, Facility } from '../../types';
 import { formatDate, getStatusColor } from '../../lib/utils';
 import { useAuth } from '../../contexts/AuthContext';
 import { useDofKaynaklari } from '../../hooks/useDofKaynaklari';
@@ -17,6 +17,7 @@ import { useDofLocations } from '../../hooks/useDofLocations';
 interface CentralQualityDOFsProps {
   dofs: DOF[];
   loading: boolean;
+  facilities: Facility[];
   onView: (dof: DOF) => void;
 
   onAssign: (dof: DOF) => void;
@@ -27,6 +28,7 @@ interface CentralQualityDOFsProps {
 export const CentralQualityDOFs: React.FC<CentralQualityDOFsProps> = ({
   dofs,
   loading,
+  facilities,
   onView,
 
   onAssign,
@@ -73,9 +75,7 @@ export const CentralQualityDOFs: React.FC<CentralQualityDOFsProps> = ({
 
   const facilityOptions = [
     { value: 'all', label: 'Tüm Şubeler' },
-    { value: '1', label: 'Silivri Şubesi' },
-    { value: '2', label: 'Avcılar Şubesi' },
-    { value: '3', label: 'Ereğli Şubesi' }
+    ...facilities.map(f => ({ value: f.id.toString(), label: f.name }))
   ];
 
   const dofTuruOptions = [

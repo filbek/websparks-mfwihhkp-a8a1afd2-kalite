@@ -269,6 +269,7 @@ export const DOFManagement: React.FC = () => {
           <CentralQualityDOFs
             dofs={dofs}
             loading={loading}
+            facilities={facilities}
             onView={handleViewDOF}
             onAssign={handleAssignDOF}
             onClose={handleCloseDOF}

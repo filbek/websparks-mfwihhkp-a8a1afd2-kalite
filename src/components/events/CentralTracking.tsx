@@ -5,18 +5,21 @@ import { Badge } from '../ui/Badge';
 import { Input } from '../ui/Input';
 import { Select } from '../ui/Select';
 import { Event } from '../../types/events';
+import { Facility } from '../../types';
 import { formatDate } from '../../lib/utils';
 import { eventClassifications } from '../../data/eventData';
 
 interface CentralTrackingProps {
   events: Event[];
   loading: boolean;
+  facilities: Facility[];
   onExport: (format: 'csv' | 'xlsx') => void;
 }
 
 export const CentralTracking: React.FC<CentralTrackingProps> = ({
   events,
   loading,
+  facilities,
   onExport
 }) => {
   const [filters, setFilters] = useState({
@@ -31,9 +34,7 @@ export const CentralTracking: React.FC<CentralTrackingProps> = ({
 
   const facilityOptions = [
     { value: '', label: 'Şube Seçiniz *' },
-    { value: '1', label: 'Silivri (SIL)' },
-    { value: '2', label: 'Avcılar (AVC)' },
-    { value: '3', label: 'Ereğli (ERG)' }
+    ...facilities.map(f => ({ value: f.id.toString(), label: f.name }))
   ];
 
   const pageSizeOptions = [
@@ -46,7 +47,7 @@ export const CentralTracking: React.FC<CentralTrackingProps> = ({
 
   const filteredEvents = events.filter(event => {
     if (!canList) return false;
-    
+
     const matchesFacility = event.facility_id.toString() === filters.facility;
     const matchesDateFrom = new Date(event.event_date) >= new Date(filters.dateFrom);
     const matchesDateTo = new Date(event.event_date) <= new Date(filters.dateTo);
@@ -77,8 +78,8 @@ export const CentralTracking: React.FC<CentralTrackingProps> = ({
   };
 
   const generateEventCode = (event: Event) => {
-    const prefix = event.event_type === 'acil_durum' ? 'ACL' : 
-                   event.event_type === 'hasta_guvenlik' ? 'HG' : 'CG';
+    const prefix = event.event_type === 'acil_durum' ? 'ACL' :
+      event.event_type === 'hasta_guvenlik' ? 'HG' : 'CG';
     const year = new Date(event.created_at).getFullYear();
     return `${prefix}-${year}-${event.id.padStart(3, '0')}`;
   };
@@ -191,7 +192,7 @@ export const CentralTracking: React.FC<CentralTrackingProps> = ({
                   Toplam: {filteredEvents.length} kayıt
                 </Badge>
               </div>
-              
+
               <div className="flex items-center space-x-4">
                 {/* Page Size Selector */}
                 <div className="flex items-center space-x-2">
@@ -211,22 +212,20 @@ export const CentralTracking: React.FC<CentralTrackingProps> = ({
                 <div className="flex rounded-lg border border-secondary-300">
                   <button
                     onClick={() => setViewMode('table')}
-                    className={`px-3 py-1 text-sm rounded-l-lg transition-colors ${
-                      viewMode === 'table' 
-                        ? 'bg-primary-600 text-white' 
+                    className={`px-3 py-1 text-sm rounded-l-lg transition-colors ${viewMode === 'table'
+                        ? 'bg-primary-600 text-white'
                         : 'bg-white text-secondary-600 hover:bg-secondary-50'
-                    }`}
+                      }`}
                   >
                     <i className="bi bi-table mr-1"></i>
                     Tablo
                   </button>
                   <button
                     onClick={() => setViewMode('card')}
-                    className={`px-3 py-1 text-sm rounded-r-lg transition-colors ${
-                      viewMode === 'card' 
-                        ? 'bg-primary-600 text-white' 
+                    className={`px-3 py-1 text-sm rounded-r-lg transition-colors ${viewMode === 'card'
+                        ? 'bg-primary-600 text-white'
                         : 'bg-white text-secondary-600 hover:bg-secondary-50'
-                    }`}
+                      }`}
                   >
                     <i className="bi bi-grid mr-1"></i>
                     Kart
@@ -264,7 +263,7 @@ export const CentralTracking: React.FC<CentralTrackingProps> = ({
                         <td className="py-3 px-4">
                           <Badge variant={
                             event.event_class === 'hasta_guvenlik' ? 'danger' :
-                            event.event_class === 'calisan_guvenlik' ? 'warning' : 'info'
+                              event.event_class === 'calisan_guvenlik' ? 'warning' : 'info'
                           }>
                             {eventClassifications.find(c => c.id === event.event_class)?.class_name}
                           </Badge>
@@ -320,17 +319,17 @@ export const CentralTracking: React.FC<CentralTrackingProps> = ({
                         {event.status.replace('_', ' ').charAt(0).toUpperCase() + event.status.replace('_', ' ').slice(1)}
                       </span>
                     </div>
-                    
+
                     <div className="space-y-2">
                       <div>
                         <Badge variant={
                           event.event_class === 'hasta_guvenlik' ? 'danger' :
-                          event.event_class === 'calisan_guvenlik' ? 'warning' : 'info'
+                            event.event_class === 'calisan_guvenlik' ? 'warning' : 'info'
                         }>
                           {eventClassifications.find(c => c.id === event.event_class)?.class_name}
                         </Badge>
                       </div>
-                      
+
                       <div>
                         <p className="font-medium text-sm text-secondary-900">
                           {eventClassifications
@@ -344,7 +343,7 @@ export const CentralTracking: React.FC<CentralTrackingProps> = ({
                             .find(s => s.id === event.sub_category)?.name}
                         </p>
                       </div>
-                      
+
                       <div className="flex items-center justify-between text-xs text-secondary-500">
                         <span>
                           {event.location?.replace('_', ' ').charAt(0).toUpperCase() + event.location?.replace('_', ' ').slice(1)}
@@ -365,7 +364,7 @@ export const CentralTracking: React.FC<CentralTrackingProps> = ({
                 <div className="text-sm text-secondary-600">
                   {startIndex + 1}-{Math.min(startIndex + pageSize, filteredEvents.length)} / {filteredEvents.length} kayıt gösteriliyor
                 </div>
-                
+
                 <div className="flex items-center space-x-2">
                   <Button
                     size="sm"
@@ -375,7 +374,7 @@ export const CentralTracking: React.FC<CentralTrackingProps> = ({
                   >
                     <i className="bi bi-chevron-left"></i>
                   </Button>
-                  
+
                   <div className="flex items-center space-x-1">
                     {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
                       const page = i + 1;
@@ -383,18 +382,17 @@ export const CentralTracking: React.FC<CentralTrackingProps> = ({
                         <button
                           key={page}
                           onClick={() => setCurrentPage(page)}
-                          className={`px-3 py-1 text-sm rounded transition-colors ${
-                            currentPage === page
+                          className={`px-3 py-1 text-sm rounded transition-colors ${currentPage === page
                               ? 'bg-primary-600 text-white'
                               : 'text-secondary-600 hover:bg-secondary-100'
-                          }`}
+                            }`}
                         >
                           {page}
                         </button>
                       );
                     })}
                   </div>
-                  
+
                   <Button
                     size="sm"
                     variant="outline"

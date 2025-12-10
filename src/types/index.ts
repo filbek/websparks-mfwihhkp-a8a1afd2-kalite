@@ -2,7 +2,7 @@ export interface User {
   id: string;
   email: string;
   display_name: string;
-  role: ('personel' | 'sube_kalite' | 'merkez_kalite' | 'admin')[];
+  role: ('personel' | 'sube_kalite' | 'merkez_kalite' | 'admin' | 'system_admin')[];
   facility_id: number;
   department_id: number | null;
   department_name?: string;
@@ -72,7 +72,7 @@ export interface TaskAssignmentData {
   created_at: string;
 }
 
-export type UserRole = 'personel' | 'sube_kalite' | 'merkez_kalite' | 'admin';
+export type UserRole = 'personel' | 'sube_kalite' | 'merkez_kalite' | 'admin' | 'system_admin';
 
 export interface Notification {
   id: string;

@@ -19,30 +19,30 @@ interface AuthContextType {
 // Permissionler
 const PERMISSIONS = {
   // Feedback permissions
-  'feedback:create': ['personel', 'sube_kalite', 'merkez_kalite', 'admin'],
-  'feedback:view_all': ['sube_kalite', 'merkez_kalite', 'admin'],
-  'feedback:respond': ['sube_kalite', 'merkez_kalite', 'admin'],
-  'feedback:manage_categories': ['merkez_kalite', 'admin'],
+  'feedback:create': ['personel', 'sube_kalite', 'merkez_kalite', 'admin', 'system_admin'],
+  'feedback:view_all': ['sube_kalite', 'merkez_kalite', 'admin', 'system_admin'],
+  'feedback:respond': ['sube_kalite', 'merkez_kalite', 'admin', 'system_admin'],
+  'feedback:manage_categories': ['merkez_kalite', 'admin', 'system_admin'],
 
   // Document permissions
-  'document:create': ['personel', 'sube_kalite', 'merkez_kalite', 'admin'],
-  'document:view_all': ['sube_kalite', 'merkez_kalite', 'admin'],
-  'document:manage_all': ['merkez_kalite', 'admin'],
+  'document:create': ['personel', 'sube_kalite', 'merkez_kalite', 'admin', 'system_admin'],
+  'document:view_all': ['sube_kalite', 'merkez_kalite', 'admin', 'system_admin'],
+  'document:manage_all': ['merkez_kalite', 'admin', 'system_admin'],
 
   // DOF permissions
-  'dof:create': ['personel', 'sube_kalite', 'merkez_kalite', 'admin'],
-  'dof:assign': ['sube_kalite', 'merkez_kalite', 'admin'],
-  'dof:manage_all': ['merkez_kalite', 'admin'],
-  'dof:edit_opened': ['sube_kalite', 'merkez_kalite', 'admin'],
+  'dof:create': ['personel', 'sube_kalite', 'merkez_kalite', 'admin', 'system_admin'],
+  'dof:assign': ['sube_kalite', 'merkez_kalite', 'admin', 'system_admin'],
+  'dof:manage_all': ['merkez_kalite', 'admin', 'system_admin'],
+  'dof:edit_opened': ['sube_kalite', 'merkez_kalite', 'admin', 'system_admin'],
 
   // Event permissions
-  'event:create': ['personel', 'sube_kalite', 'merkez_kalite', 'admin'],
-  'event:manage_all': ['sube_kalite', 'merkez_kalite', 'admin'],
+  'event:create': ['personel', 'sube_kalite', 'merkez_kalite', 'admin', 'system_admin'],
+  'event:manage_all': ['sube_kalite', 'merkez_kalite', 'admin', 'system_admin'],
 
   // Admin permissions
-  'admin:users': ['admin'],
-  'admin:facilities': ['admin'],
-  'admin:system': ['admin'],
+  'admin:users': ['admin', 'system_admin'],
+  'admin:facilities': ['admin', 'system_admin'],
+  'admin:system': ['system_admin'],
 };
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -202,7 +202,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     if (!user) return false;
 
     // Admin ve merkez kalite tüm şubelere erişebilir
-    if (user.role.includes('admin') || user.role.includes('merkez_kalite')) {
+    if (user.role.includes('admin') || user.role.includes('merkez_kalite') || user.role.includes('system_admin')) {
       return true;
     }
 
@@ -219,7 +219,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     }
 
     // Admin: Tüm DÖF'leri düzenleyebilir
-    if (user.role.includes('admin')) {
+    if (user.role.includes('admin') || user.role.includes('system_admin')) {
       return true;
     }
 

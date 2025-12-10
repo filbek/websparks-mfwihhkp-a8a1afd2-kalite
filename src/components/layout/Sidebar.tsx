@@ -35,7 +35,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ className, currentPage, onPage
     { id: 'social' as Page, icon: 'bi-people-fill', label: 'Sosyal Duvar', roles: ['personel', 'sube_kalite', 'merkez_kalite', 'admin'] },
     { id: 'dining-menu' as Page, icon: 'bi-cup-hot', label: 'Yemek Listesi', roles: ['personel', 'sube_kalite', 'merkez_kalite', 'admin'] },
     { id: 'reports' as Page, icon: 'bi-bar-chart', label: 'Raporlar', roles: ['sube_kalite', 'merkez_kalite', 'admin'] },
-    { id: 'settings' as Page, icon: 'bi-gear', label: 'Ayarlar', roles: ['admin'] }
+    { id: 'settings' as Page, icon: 'bi-gear', label: 'Ayarlar', roles: ['system_admin'] }
   ];
 
   const filteredMenuItems = menuItems.filter(item =>

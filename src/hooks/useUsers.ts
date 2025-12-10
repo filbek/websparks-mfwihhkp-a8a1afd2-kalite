@@ -31,10 +31,36 @@ export const useUsers = () => {
       setLoading(true);
       setError(null);
 
-      const { data, error: fetchError } = await supabase
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error('Oturum bulunamadı');
+
+      // Get current user's role and organization
+      const { data: currentUserData } = await supabase
+        .from('users')
+        .select('role, organization_id')
+        .eq('id', user.id)
+        .single();
+
+      if (!currentUserData) throw new Error('Kullanıcı bilgileri alınamadı');
+
+      const isSystemAdmin = currentUserData.role.includes('system_admin');
+
+      let query = supabase
         .from('users')
         .select('*')
         .order('created_at', { ascending: false });
+
+      if (!isSystemAdmin) {
+        // If not system_admin, only show users from same organization OR users who are system_admin
+        // We use an OR filter: (organization_id = my_org_id) OR (role contains system_admin)
+        // PostgreSQL array contains operator is @> but PostgREST uses cs (contains)
+        // Syntax for OR is .or(condition1,condition2)
+        const orgFilter = `organization_id.eq.${currentUserData.organization_id}`;
+        const sysAdminFilter = `role.cs.{system_admin}`;
+        query = query.or(`${orgFilter},${sysAdminFilter}`);
+      }
+
+      const { data, error: fetchError } = await query;
 
       if (fetchError) throw fetchError;
 

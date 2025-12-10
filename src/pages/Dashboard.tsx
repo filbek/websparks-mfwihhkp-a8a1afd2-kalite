@@ -2,9 +2,7 @@ import React from 'react';
 import { Skeleton } from '../components/ui/Skeleton';
 import { StatsCard } from '../components/dashboard/StatsCard';
 import { RecentActivity } from '../components/dashboard/RecentActivity';
-import { FacilityOverview } from '../components/dashboard/FacilityOverview';
 import { NotificationList } from '../components/dashboard/NotificationList';
-import { useAuth } from '../contexts/AuthContext';
 import { useDashboardStats } from '../hooks/useDashboardStats';
 
 type Page = 'dashboard' | 'dof-management' | 'event-reporting' | 'document-management' | 'feedback-management' | 'committees' | 'reports' | 'settings' | 'kanban';
@@ -14,11 +12,8 @@ interface DashboardProps {
 }
 
 export const Dashboard: React.FC<DashboardProps> = ({ onPageChange }) => {
-  const { user } = useAuth();
-  const { stats, facilityStats, recentActivities } = useDashboardStats();
+  const { stats, recentActivities } = useDashboardStats();
 
-  // Kalite yöneticisi kontrolü
-  const isQualityManager = user?.role.some(r => r === 'sube_kalite' || r === 'merkez_kalite') || false;
   return (
     <div className="space-y-6">
       {/* Page Header */}
@@ -91,18 +86,11 @@ export const Dashboard: React.FC<DashboardProps> = ({ onPageChange }) => {
       <NotificationList onPageChange={onPageChange} />
 
       {/* Main Content Grid */}
-      <div className={`grid grid-cols-1 ${isQualityManager ? 'lg:grid-cols-3' : 'lg:grid-cols-1'} gap-6`}>
-        {/* Recent Activity - Takes 2 columns if quality manager, full width otherwise */}
-        <div className={isQualityManager ? 'lg:col-span-2' : 'lg:col-span-1'}>
+      <div className="grid grid-cols-1 gap-6">
+        {/* Recent Activity - Full width */}
+        <div>
           <RecentActivity activities={recentActivities} />
         </div>
-
-        {/* Facility Overview - Only for quality managers */}
-        {isQualityManager && (
-          <div className="lg:col-span-1">
-            <FacilityOverview facilityStats={facilityStats} loading={stats.loading} />
-          </div>
-        )}
       </div>
 
       {/* Quick Actions */}

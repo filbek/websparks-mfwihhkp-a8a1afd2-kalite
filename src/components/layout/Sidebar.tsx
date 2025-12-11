@@ -18,7 +18,9 @@ export const Sidebar: React.FC<SidebarProps> = ({ className, currentPage, onPage
   const { unreadCount } = useNotifications();
   const { theme, toggleTheme } = useTheme();
 
-  const handleLogout = async () => {
+  const handleLogout = async (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
     if (confirm('Çıkış yapmak istediğinizden emin misiniz?')) {
       await logout();
     }

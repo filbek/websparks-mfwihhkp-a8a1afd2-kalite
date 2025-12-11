@@ -112,7 +112,10 @@ export const DocumentCard: React.FC<DocumentCardProps> = ({
               <Button
                 variant="outline"
                 size="sm"
-                onClick={() => onDelete(document.id)}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onDelete(document.id);
+                }}
                 className="text-danger-600 border-danger-600 hover:bg-danger-50"
               >
                 <i className="bi bi-trash"></i>

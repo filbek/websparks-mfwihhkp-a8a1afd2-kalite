@@ -59,7 +59,7 @@ export const DocumentUpload: React.FC<DocumentUploadProps> = ({
     e.preventDefault();
     e.stopPropagation();
     setDragActive(false);
-    
+
     if (e.dataTransfer.files && e.dataTransfer.files[0]) {
       setSelectedFile(e.dataTransfer.files[0]);
     }
@@ -67,17 +67,17 @@ export const DocumentUpload: React.FC<DocumentUploadProps> = ({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!selectedFile) {
       alert('Lütfen bir dosya seçin.');
       return;
     }
-    
+
     if (!formData.title) {
       alert('Lütfen doküman başlığı girin.');
       return;
     }
-    
+
     if (!formData.category_id) {
       alert('Lütfen bir kategori seçin.');
       return;
@@ -102,10 +102,13 @@ export const DocumentUpload: React.FC<DocumentUploadProps> = ({
     return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
   };
 
-  const categoryOptions = categories.map(category => ({
-    value: category.id,
-    label: category.name
-  }));
+  const categoryOptions = [
+    { value: '', label: 'Kategori Seçiniz' },
+    ...categories.map(category => ({
+      value: category.id,
+      label: category.name
+    }))
+  ];
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
@@ -146,11 +149,10 @@ export const DocumentUpload: React.FC<DocumentUploadProps> = ({
           Dosya Yükle
         </label>
         <div
-          className={`relative border-2 border-dashed rounded-lg p-6 text-center transition-colors ${
-            dragActive
+          className={`relative border-2 border-dashed rounded-lg p-6 text-center transition-colors ${dragActive
               ? 'border-primary-500 bg-primary-50'
               : 'border-secondary-300 hover:border-secondary-400'
-          }`}
+            }`}
           onDragEnter={handleDrag}
           onDragLeave={handleDrag}
           onDragOver={handleDrag}
@@ -163,12 +165,12 @@ export const DocumentUpload: React.FC<DocumentUploadProps> = ({
             className="hidden"
             accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.jpg,.jpeg,.png"
           />
-          
+
           <div className="space-y-2">
             <div className="w-12 h-12 bg-primary-100 rounded-full flex items-center justify-center mx-auto">
               <i className="bi bi-cloud-upload text-primary-600 text-xl"></i>
             </div>
-            
+
             {!selectedFile ? (
               <>
                 <p className="text-secondary-700">Dosyaları buraya sürükleyin</p>
@@ -201,7 +203,7 @@ export const DocumentUpload: React.FC<DocumentUploadProps> = ({
               </div>
             )}
           </div>
-          
+
           <p className="text-xs text-secondary-400 mt-4">
             PDF, DOC, DOCX, XLS, XLSX, PPT, PPTX, JPG, JPEG, PNG (Max 10MB)
           </p>

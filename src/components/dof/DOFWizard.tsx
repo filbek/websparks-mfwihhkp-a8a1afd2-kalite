@@ -771,7 +771,8 @@ export const DOFWizard: React.FC<DOFWizardProps> = ({
         sorumlu_bolum: formData.sorumlu_bolum,
         reporter_id: user?.id || 'unknown',
         organization_id: user?.organization_id,
-        status: 'atanmayı_bekleyen'
+        status: 'atanmayı_bekleyen',
+        dofu_acan: user?.id || 'unknown'
       });
     } catch (error) {
       console.error('Form submission error:', error);

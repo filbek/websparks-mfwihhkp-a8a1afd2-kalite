@@ -85,6 +85,7 @@ export const useDocuments = (filters?: DocumentFilters) => {
                 name: category.name,
                 category_id: formData.category_id,
                 facility_id: user.facility_id,
+                organization_id: user.organization_id, // Add organization_id
                 created_by: user.id,
                 is_active: true
               })
@@ -121,7 +122,8 @@ export const useDocuments = (filters?: DocumentFilters) => {
           file_type: formData.file.type,
           file_size: formData.file.size,
           file_path: filePath,
-          facility_id: user?.facility_id || 1,
+          facility_id: user?.facility_id || (user as any)?.user_metadata?.facility_id, // Fallback if needed, logic relies on user context
+          organization_id: user?.organization_id, // Add organization_id
           uploaded_by: user?.id || null,
         })
         .select()

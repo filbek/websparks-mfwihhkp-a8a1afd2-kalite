@@ -5,6 +5,7 @@ import { Textarea } from '../ui/Textarea';
 import { Select } from '../ui/Select';
 import { DOF } from '../../types';
 import { useDofLocations } from '../../hooks/useDofLocations';
+import { useAuth } from '../../contexts/AuthContext';
 
 interface DOFWizardProps {
   onSubmit: (data: Partial<DOF>) => Promise<void>;
@@ -42,7 +43,7 @@ const dofKaynagiOptions = [
 // Kategoriye göre kısa açıklama seçenekleri - Güncellenmiş tam liste
 const getKisaAciklamaOptions = (kategori: string) => {
   const baseOption = { value: '', label: 'Seçim yapınız' };
-  
+
   switch (kategori) {
     case 'atik_yonetimi':
       return [
@@ -696,7 +697,8 @@ export const DOFWizard: React.FC<DOFWizardProps> = ({
   onCancel,
   loading = false
 }) => {
-  const { locations, loading: locationsLoading } = useDofLocations();
+  const { user } = useAuth();
+  const { locations } = useDofLocations();
   const [currentStep, setCurrentStep] = useState(1);
   const [formData, setFormData] = useState({
     tespit_tarihi: new Date().toISOString().split('T')[0],
@@ -705,11 +707,11 @@ export const DOFWizard: React.FC<DOFWizardProps> = ({
     dof_kaynagi: '',
     dof_kategorisi: '',
     kisa_aciklama: '',
-    dofu_acan: 'Hanife Sena Şahin',
+    dofu_acan: user?.display_name || '',
     sorumlu_bolum: '',
     tanim: '',
     priority: 'orta' as const,
-    facility_id: 1
+    facility_id: user?.facility_id || 1
   });
 
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
@@ -758,7 +760,8 @@ export const DOFWizard: React.FC<DOFWizardProps> = ({
       await onSubmit({
         title: `${formData.dof_kategorisi} - ${formData.kisa_aciklama}`,
         description: formData.tanim,
-        priority: formData.dof_turu as DOF['priority'],
+        priority: formData.priority,
+        dof_turu: formData.dof_turu,
         facility_id: formData.facility_id,
         tespit_edilen_yer: formData.tespit_edilen_bolum,
         tespit_tarihi: formData.tespit_tarihi,
@@ -766,8 +769,9 @@ export const DOFWizard: React.FC<DOFWizardProps> = ({
         dof_kategorisi: formData.dof_kategorisi,
         kisa_aciklama: formData.kisa_aciklama,
         sorumlu_bolum: formData.sorumlu_bolum,
-        reporter_id: 'current-user-id',
-        status: 'yeni'
+        reporter_id: user?.id || 'unknown',
+        organization_id: user?.organization_id,
+        status: 'atanmayı_bekleyen'
       });
     } catch (error) {
       console.error('Form submission error:', error);
@@ -779,6 +783,8 @@ export const DOFWizard: React.FC<DOFWizardProps> = ({
       setSelectedFiles(Array.from(e.target.files));
     }
   };
+
+
 
   // Options for dropdowns
   const dofTuruOptions = [
@@ -860,7 +866,7 @@ export const DOFWizard: React.FC<DOFWizardProps> = ({
                 label="DÖF Türü"
                 value={formData.dof_turu}
                 onChange={(e) => setFormData({ ...formData, dof_turu: e.target.value as 'duzeltici' | 'onleyici' })}
-                options={dofTuruOptions}
+                options={dofTuruOptions as any}
                 error={errors.dof_turu}
               />
             </div>
@@ -898,8 +904,8 @@ export const DOFWizard: React.FC<DOFWizardProps> = ({
               <Select
                 label="DÖF Kategorisi"
                 value={formData.dof_kategorisi}
-                onChange={(e) => setFormData({ 
-                  ...formData, 
+                onChange={(e) => setFormData({
+                  ...formData,
                   dof_kategorisi: e.target.value,
                   kisa_aciklama: '' // Reset kısa açıklama when category changes
                 })}
@@ -1057,12 +1063,12 @@ export const DOFWizard: React.FC<DOFWizardProps> = ({
                   <p className="text-secondary-900">{sorumluBolumOptions.find(opt => opt.value === formData.sorumlu_bolum)?.label}</p>
                 </div>
               </div>
-              
+
               <div>
                 <label className="text-sm font-medium text-secondary-600">Kısa Açıklama</label>
                 <p className="text-secondary-900">{kisaAciklamaOptions.find(opt => opt.value === formData.kisa_aciklama)?.label}</p>
               </div>
-              
+
               <div>
                 <label className="text-sm font-medium text-secondary-600">Detaylı Tanım</label>
                 <p className="text-secondary-900 whitespace-pre-wrap">{formData.tanim}</p>
@@ -1097,11 +1103,10 @@ export const DOFWizard: React.FC<DOFWizardProps> = ({
         <div className="flex items-center justify-between">
           {wizardSteps.map((step, index) => (
             <div key={step.id} className="flex items-center">
-              <div className={`flex items-center justify-center w-10 h-10 rounded-full border-2 transition-all ${
-                currentStep >= step.id
-                  ? 'bg-primary-600 border-primary-600 text-white'
-                  : 'border-secondary-300 text-secondary-400'
-              }`}>
+              <div className={`flex items-center justify-center w-10 h-10 rounded-full border-2 transition-all ${currentStep >= step.id
+                ? 'bg-primary-600 border-primary-600 text-white'
+                : 'border-secondary-300 text-secondary-400'
+                }`}>
                 {currentStep > step.id ? (
                   <i className="bi bi-check text-sm"></i>
                 ) : (
@@ -1109,14 +1114,13 @@ export const DOFWizard: React.FC<DOFWizardProps> = ({
                 )}
               </div>
               {index < wizardSteps.length - 1 && (
-                <div className={`w-16 h-0.5 mx-2 transition-all ${
-                  currentStep > step.id ? 'bg-primary-600' : 'bg-secondary-300'
-                }`}></div>
+                <div className={`w-16 h-0.5 mx-2 transition-all ${currentStep > step.id ? 'bg-primary-600' : 'bg-secondary-300'
+                  }`}></div>
               )}
             </div>
           ))}
         </div>
-        
+
         <div className="mt-4 text-center">
           <h2 className="text-lg font-semibold text-secondary-900">
             {wizardSteps[currentStep - 1]?.title}

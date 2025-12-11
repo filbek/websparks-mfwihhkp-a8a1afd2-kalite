@@ -4,6 +4,7 @@ export interface User {
   display_name: string;
   role: ('personel' | 'sube_kalite' | 'merkez_kalite' | 'admin' | 'system_admin')[];
   facility_id: number;
+  organization_id: string; // Add organization_id
   department_id: number | null;
   department_name?: string;
   is_active: boolean;
@@ -36,6 +37,7 @@ export interface DOF {
   title: string;
   description: string;
   facility_id: number;
+  organization_id?: string; // Add organization_id
   reporter_id: string;
   assigned_to: string | null;
   cc_users?: string[];

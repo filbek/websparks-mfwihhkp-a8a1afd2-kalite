@@ -3,7 +3,7 @@ import { cn } from '../../lib/utils';
 import { useAuth } from '../../contexts/AuthContext';
 import { useNotifications } from '../../hooks/useNotifications';
 
-type Page = 'dashboard' | 'dof-management' | 'event-reporting' | 'document-management' | 'feedback-management' | 'committees' | 'social' | 'dining-menu' | 'reports' | 'settings' | 'kanban';
+type Page = 'dashboard' | 'dof-management' | 'event-reporting' | 'document-management' | 'feedback-management' | 'committees' | 'social' | 'dining-menu' | 'reports' | 'settings' | 'kanban' | 'surveys';
 
 interface SidebarProps {
   className?: string;
@@ -33,6 +33,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ className, currentPage, onPage
     { id: 'document-management' as Page, icon: 'bi-file-earmark-text', label: 'Doküman Yönetimi', roles: ['personel', 'sube_kalite', 'merkez_kalite', 'admin', 'system_admin'] },
     { id: 'feedback-management' as Page, icon: 'bi-chat-dots', label: 'Görüş-Öneri', roles: ['personel', 'sube_kalite', 'merkez_kalite', 'admin', 'system_admin'] },
     { id: 'kanban' as Page, icon: 'bi-kanban', label: 'İş Takibi', roles: ['personel', 'sube_kalite', 'merkez_kalite', 'admin', 'system_admin'] },
+    { id: 'surveys' as Page, icon: 'bi-list-check', label: 'Anketler', roles: ['personel', 'sube_kalite', 'merkez_kalite', 'admin', 'system_admin'] },
     { id: 'committees' as Page, icon: 'bi-people', label: 'Komiteler', roles: ['personel', 'sube_kalite', 'merkez_kalite', 'admin', 'system_admin'] },
     { id: 'social' as Page, icon: 'bi-people-fill', label: 'Sosyal Duvar', roles: ['personel', 'sube_kalite', 'merkez_kalite', 'admin', 'system_admin'] },
     { id: 'dining-menu' as Page, icon: 'bi-cup-hot', label: 'Yemek Listesi', roles: ['personel', 'sube_kalite', 'merkez_kalite', 'admin', 'system_admin'] },

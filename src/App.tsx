@@ -10,13 +10,14 @@ import { Settings } from './pages/Settings';
 import { Login } from './pages/Login';
 import { UnderConstruction } from './pages/UnderConstruction';
 import { KanbanPage } from './pages/KanbanPage';
+import { Surveys } from './pages/Surveys';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { Breadcrumbs } from './components/ui/Breadcrumbs';
 
 import SocialWall from './pages/SocialWall';
 import DiningMenu from './pages/DiningMenu';
 
-type Page = 'dashboard' | 'dof-management' | 'event-reporting' | 'document-management' | 'feedback-management' | 'committees' | 'social' | 'dining-menu' | 'reports' | 'settings' | 'kanban';
+type Page = 'dashboard' | 'dof-management' | 'event-reporting' | 'document-management' | 'feedback-management' | 'committees' | 'social' | 'dining-menu' | 'reports' | 'settings' | 'kanban' | 'surveys';
 
 const AppContent: React.FC = () => {
   const { user, loading, currentOrganization } = useAuth();
@@ -67,6 +68,8 @@ const AppContent: React.FC = () => {
         return <UnderConstruction title="Raporlar" description="Raporlama modülü şu anda geliştirilme aşamasındadır. Yakında detaylı analiz ve raporlara erişebileceksiniz." />;
       case 'kanban':
         return <KanbanPage />;
+      case 'surveys':
+        return <Surveys />;
       case 'settings':
         return <Settings />;
       default:

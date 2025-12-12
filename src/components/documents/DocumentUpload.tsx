@@ -24,11 +24,28 @@ export const DocumentUpload: React.FC<DocumentUploadProps> = ({
     title: '',
     description: '',
     category_id: '',
-    folder_id: currentFolderId || ''
+    folder_id: currentFolderId || '',
+    is_downloadable: true
   });
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [dragActive, setDragActive] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // Check if current category is restricted (Procedure or Instruction)
+  const isRestrictedCategory = React.useMemo(() => {
+    if (!formData.category_id) return false;
+    const category = categories.find(c => c.id === formData.category_id);
+    if (!category) return false;
+    const name = category.name.toLowerCase();
+    return name.includes('prosed') || name.includes('talimat');
+  }, [formData.category_id, categories]);
+
+  // Update is_downloadable when category changes
+  React.useEffect(() => {
+    if (isRestrictedCategory) {
+      setFormData(prev => ({ ...prev, is_downloadable: false }));
+    }
+  }, [isRestrictedCategory]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -144,14 +161,31 @@ export const DocumentUpload: React.FC<DocumentUploadProps> = ({
         />
       </div>
 
+      <div className="flex items-center space-x-2">
+        <input
+          type="checkbox"
+          id="is_downloadable"
+          name="is_downloadable"
+          checked={formData.is_downloadable}
+          onChange={(e) => setFormData(prev => ({ ...prev, is_downloadable: e.target.checked }))}
+          disabled={isRestrictedCategory}
+          className="rounded border-secondary-300 text-primary-600 focus:ring-primary-500 disabled:opacity-50 disabled:cursor-not-allowed"
+        />
+        <label htmlFor="is_downloadable" className={`text-sm font-medium select-none ${isRestrictedCategory ? 'text-secondary-400' : 'text-secondary-700'}`}>
+          {isRestrictedCategory
+            ? 'Bu kategori için doküman indirme kısıtlanmıştır (Prosedür/Talimat)'
+            : 'Doküman İndirilebilir (İşaretlenirse kullanıcılar dosyayı indirebilir)'}
+        </label>
+      </div>
+
       <div>
         <label className="block text-sm font-medium text-secondary-700 mb-2">
           Dosya Yükle
         </label>
         <div
           className={`relative border-2 border-dashed rounded-lg p-6 text-center transition-colors ${dragActive
-              ? 'border-primary-500 bg-primary-50'
-              : 'border-secondary-300 hover:border-secondary-400'
+            ? 'border-primary-500 bg-primary-50'
+            : 'border-secondary-300 hover:border-secondary-400'
             }`}
           onDragEnter={handleDrag}
           onDragLeave={handleDrag}

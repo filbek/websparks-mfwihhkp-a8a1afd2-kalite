@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
 import { Document, DocumentFormData, DocumentFilters } from '../types/documents';
-import { User, Facility } from '../types';
 import { useAuth } from '../contexts/AuthContext';
 
 export const useDocuments = (filters?: DocumentFilters) => {
@@ -125,6 +124,7 @@ export const useDocuments = (filters?: DocumentFilters) => {
           facility_id: user?.facility_id || (user as any)?.user_metadata?.facility_id, // Fallback if needed, logic relies on user context
           organization_id: user?.organization_id, // Add organization_id
           uploaded_by: user?.id || null,
+          is_downloadable: formData.is_downloadable ?? true,
         })
         .select()
         .single();

@@ -19,6 +19,7 @@ export interface Document {
   folder?: DocumentFolder;
   uploader?: User;
   facility?: Facility;
+  is_downloadable?: boolean; // New field
 }
 
 export interface DocumentCategory {
@@ -56,6 +57,7 @@ export interface DocumentFormData {
   category_id: string;
   folder_id?: string;
   file: File;
+  is_downloadable?: boolean; // New field
 }
 
 export interface FolderFormData {

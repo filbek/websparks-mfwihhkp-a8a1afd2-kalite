@@ -98,15 +98,17 @@ export const DocumentCard: React.FC<DocumentCardProps> = ({
                 Önizle
               </Button>
             )}
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => onDownload(document)}
-              className="text-primary-600 border-primary-600 hover:bg-primary-50"
-            >
-              <i className="bi bi-download mr-1"></i>
-              İndir
-            </Button>
+            {document.is_downloadable !== false && (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => onDownload(document)}
+                className="text-primary-600 border-primary-600 hover:bg-primary-50"
+              >
+                <i className="bi bi-download mr-1"></i>
+                İndir
+              </Button>
+            )}
 
             {onDelete && (
               <Button

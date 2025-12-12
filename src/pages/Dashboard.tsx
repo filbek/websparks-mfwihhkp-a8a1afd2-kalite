@@ -4,6 +4,7 @@ import { StatsCard } from '../components/dashboard/StatsCard';
 import { RecentActivity } from '../components/dashboard/RecentActivity';
 import { NotificationList } from '../components/dashboard/NotificationList';
 import { useDashboardStats } from '../hooks/useDashboardStats';
+import { useAuth } from '../contexts/AuthContext';
 
 type Page = 'dashboard' | 'dof-management' | 'event-reporting' | 'document-management' | 'feedback-management' | 'committees' | 'reports' | 'settings' | 'kanban';
 
@@ -13,6 +14,7 @@ interface DashboardProps {
 
 export const Dashboard: React.FC<DashboardProps> = ({ onPageChange }) => {
   const { stats, recentActivities } = useDashboardStats();
+  const { currentOrganization } = useAuth();
 
   return (
     <div className="space-y-6">
@@ -21,7 +23,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ onPageChange }) => {
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-2xl font-bold mb-2">Dashboard</h1>
-            <p className="text-primary-100">Anadolu Hastaneleri İntranet Sistemi</p>
+            <p className="text-primary-100">{currentOrganization?.name || 'Hastane'} İntranet Sistemi</p>
           </div>
           <div className="text-right">
             <p className="text-sm text-primary-100">Bugün</p>

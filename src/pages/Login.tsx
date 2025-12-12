@@ -25,8 +25,6 @@ export const Login: React.FC = () => {
           const parts = hostname.split('.');
           if (parts.length > 2) {
             slug = parts[0];
-            // Temp Fix: Database slug might be different
-            if (slug === 'oztan') slug = 'oztanhastanesi';
           }
         }
 

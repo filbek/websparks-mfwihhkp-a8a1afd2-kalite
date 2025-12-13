@@ -226,10 +226,24 @@ export const FeedbackForm: React.FC<FeedbackFormProps> = ({
         </p>
       </div>
 
-      {formData.is_anonymous && (
+      {formData.is_anonymous ? (
+        <div className="border-t border-secondary-200 pt-4 bg-secondary-50 p-4 rounded-lg">
+          <div className="flex items-start">
+            <i className="bi bi-shield-check text-green-600 text-xl mr-3 mt-0.5"></i>
+            <div>
+              <h3 className="text-sm font-medium text-secondary-900 mb-1">
+                Tamamen Anonim Gönderim
+              </h3>
+              <p className="text-sm text-secondary-600">
+                Kimlik ve iletişim bilgileriniz sistemde saklanmayacak ve kimse tarafından görüntülenemeyecektir.
+              </p>
+            </div>
+          </div>
+        </div>
+      ) : (
         <div className="border-t border-secondary-200 pt-4 bg-secondary-50 p-4 rounded-lg">
           <h3 className="text-sm font-medium text-secondary-900 mb-3">
-            İletişim Bilgileri (Anonim gönderim için zorunlu)
+            İletişim Bilgileri
           </h3>
           <div className="space-y-4">
             <Input
@@ -238,7 +252,6 @@ export const FeedbackForm: React.FC<FeedbackFormProps> = ({
               value={formData.reporter_name}
               onChange={handleInputChange}
               placeholder="Adınızı girin"
-              required={formData.is_anonymous}
             />
 
             <Input
@@ -257,10 +270,6 @@ export const FeedbackForm: React.FC<FeedbackFormProps> = ({
               onChange={handleInputChange}
               placeholder="Telefon numaranız"
             />
-
-            <p className="text-xs text-secondary-500">
-              E-posta veya telefon numaranızdan en az birini girmeniz gerekmektedir.
-            </p>
           </div>
         </div>
       )}

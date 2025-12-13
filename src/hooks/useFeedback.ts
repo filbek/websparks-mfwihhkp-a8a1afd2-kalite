@@ -88,26 +88,15 @@ export const useFeedback = (filters?: FeedbackFilters) => {
         facility_id: user.facility_id,
       };
 
-      // Kullanıcının organizasyonunu al
-      const { data: userData, error: userError } = await supabase
-        .from('users')
-        .select('organization_id')
-        .eq('id', user.id)
-        .single();
 
-      if (userError) throw userError;
-
-      insertData.organization_id = userData.organization_id;
+      // Context'ten gelen organization_id'yi kullan
+      insertData.organization_id = user.organization_id;
 
       // Anonim değilse reporter_id ekle
       if (!formData.is_anonymous) {
         insertData.reporter_id = user.id;
-      } else {
-        // Anonim ise iletişim bilgilerini ekle
-        insertData.reporter_name = formData.reporter_name;
-        insertData.reporter_email = formData.reporter_email;
-        insertData.reporter_phone = formData.reporter_phone;
       }
+      // Anonim ise reporter_id, name, email, phone boş bırakılır (null)
 
       const { data, error } = await supabase
         .from('feedback_suggestions')

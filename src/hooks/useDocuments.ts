@@ -208,6 +208,29 @@ export const useDocuments = (filters?: DocumentFilters) => {
     }
   };
 
+  const updateDocument = async (id: string, updates: Partial<DocumentFormData>) => {
+    try {
+      const { data, error } = await supabase
+        .from('documents')
+        .update({
+          title: updates.title,
+          description: updates.description,
+          category_id: updates.category_id,
+          is_downloadable: updates.is_downloadable
+        })
+        .eq('id', id)
+        .select()
+        .single();
+
+      if (error) throw error;
+
+      await fetchDocuments();
+      return data;
+    } catch (err) {
+      throw new Error(err instanceof Error ? err.message : 'Doküman güncellenirken hata oluştu');
+    }
+  };
+
   useEffect(() => {
     fetchDocuments();
   }, [filters]);
@@ -217,6 +240,7 @@ export const useDocuments = (filters?: DocumentFilters) => {
     loading,
     error,
     uploadDocument,
+    updateDocument,
     deleteDocument,
     downloadDocument,
     getDocumentUrl,

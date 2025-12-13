@@ -2,13 +2,14 @@ import React from 'react';
 import { Button } from '../ui/Button';
 import { Card } from '../ui/Card';
 import { Document } from '../../types/documents';
-import { User, Facility } from '../../types';
+
 
 interface DocumentCardProps {
   document: Document;
   onDownload: (document: Document) => void;
   onDelete?: (documentId: string) => void;
   onPreview?: (document: Document) => void;
+  onEdit?: (document: Document) => void;
   showActions?: boolean;
 }
 
@@ -17,6 +18,7 @@ export const DocumentCard: React.FC<DocumentCardProps> = ({
   onDownload,
   onDelete,
   onPreview,
+  onEdit,
   showActions = true
 }) => {
   const isPDF = document.file_type.includes('pdf');
@@ -98,6 +100,19 @@ export const DocumentCard: React.FC<DocumentCardProps> = ({
                 Önizle
               </Button>
             )}
+
+            {onEdit && (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => onEdit(document)}
+                className="text-warning-600 border-warning-600 hover:bg-warning-50"
+              >
+                <i className="bi bi-pencil mr-1"></i>
+                Düzenle
+              </Button>
+            )}
+
             {document.is_downloadable !== false && (
               <Button
                 variant="outline"

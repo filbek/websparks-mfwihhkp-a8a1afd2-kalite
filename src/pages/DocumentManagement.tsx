@@ -9,6 +9,7 @@ import { FolderList } from '../components/documents/FolderList';
 import { FolderForm } from '../components/documents/FolderForm';
 import { Breadcrumb, BreadcrumbItem } from '../components/documents/Breadcrumb';
 import { PDFPreview } from '../components/documents/PDFPreview';
+import { DocumentEditModal } from '../components/documents/DocumentEditModal';
 import { useDocuments } from '../hooks/useDocuments';
 import { useDocumentCategories } from '../hooks/useDocumentCategories';
 import { useFolders } from '../hooks/useFolders';
@@ -28,10 +29,13 @@ export const DocumentManagement: React.FC = () => {
   const [uploadLoading, setUploadLoading] = useState(false);
   const [folderLoading, setFolderLoading] = useState(false);
   const [isPDFPreviewOpen, setIsPDFPreviewOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [editLoading, setEditLoading] = useState(false);
+  const [editingDocument, setEditingDocument] = useState<Document | null>(null);
   const [previewDocument, setPreviewDocument] = useState<Document | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string>('');
 
-  const { documents, loading, error, uploadDocument, deleteDocument, downloadDocument, getDocumentUrl } = useDocuments(filters);
+  const { documents, loading, error, uploadDocument, updateDocument, deleteDocument, downloadDocument, getDocumentUrl } = useDocuments(filters);
   const { folders, loading: foldersLoading, error: foldersError, createFolder, updateFolder, deleteFolder, getFolderPath } = useFolders(folderFilters);
   const { categories } = useDocumentCategories();
 
@@ -130,6 +134,25 @@ export const DocumentManagement: React.FC = () => {
     }
   };
 
+  const handleEditDocument = (document: Document) => {
+    setEditingDocument(document);
+    setIsEditModalOpen(true);
+  };
+
+  const handleUpdateDocument = async (id: string, updates: any) => {
+    try {
+      setEditLoading(true);
+      await updateDocument(id, updates);
+      setIsEditModalOpen(false);
+      setEditingDocument(null);
+    } catch (error) {
+      console.error('Doküman güncelleme hatası:', error);
+      alert('Doküman güncellenirken bir hata oluştu. Lütfen tekrar deneyin.');
+    } finally {
+      setEditLoading(false);
+    }
+  };
+
   const handlePreviewDocument = async (document: Document) => {
     try {
       const url = await getDocumentUrl(document);
@@ -199,8 +222,8 @@ export const DocumentManagement: React.FC = () => {
           <button
             onClick={() => setActiveTab('folders')}
             className={`flex items-center space-x-2 px-6 py-4 font-medium transition-colors border-b-2 ${activeTab === 'folders'
-                ? 'border-primary-600 text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-900/20'
-                : 'border-transparent text-secondary-600 dark:text-secondary-400 hover:text-secondary-900 dark:hover:text-secondary-200 hover:bg-secondary-50 dark:hover:bg-secondary-700'
+              ? 'border-primary-600 text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-900/20'
+              : 'border-transparent text-secondary-600 dark:text-secondary-400 hover:text-secondary-900 dark:hover:text-secondary-200 hover:bg-secondary-50 dark:hover:bg-secondary-700'
               }`}
           >
             <i className="bi bi-folder"></i>
@@ -215,8 +238,8 @@ export const DocumentManagement: React.FC = () => {
           <button
             onClick={() => setActiveTab('files')}
             className={`flex items-center space-x-2 px-6 py-4 font-medium transition-colors border-b-2 ${activeTab === 'files'
-                ? 'border-primary-600 text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-900/20'
-                : 'border-transparent text-secondary-600 dark:text-secondary-400 hover:text-secondary-900 dark:hover:text-secondary-200 hover:bg-secondary-50 dark:hover:bg-secondary-700'
+              ? 'border-primary-600 text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-900/20'
+              : 'border-transparent text-secondary-600 dark:text-secondary-400 hover:text-secondary-900 dark:hover:text-secondary-200 hover:bg-secondary-50 dark:hover:bg-secondary-700'
               }`}
           >
             <i className="bi bi-file-earmark"></i>
@@ -281,6 +304,7 @@ export const DocumentManagement: React.FC = () => {
           onDelete={handleDeleteDocument}
           onDownload={downloadDocument}
           onPreview={handlePreviewDocument}
+          onEdit={handleEditDocument}
         />
       )}
 
@@ -321,6 +345,21 @@ export const DocumentManagement: React.FC = () => {
           loading={folderLoading}
         />
       </Modal>
+
+      {/* Edit Document Modal */}
+      {editingDocument && (
+        <DocumentEditModal
+          document={editingDocument}
+          categories={categories}
+          isOpen={isEditModalOpen}
+          onClose={() => {
+            setIsEditModalOpen(false);
+            setEditingDocument(null);
+          }}
+          onUpdate={handleUpdateDocument}
+          loading={editLoading}
+        />
+      )}
 
       {/* PDF Preview Modal */}
       {previewDocument && (

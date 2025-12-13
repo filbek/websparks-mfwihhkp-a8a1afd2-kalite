@@ -2,6 +2,7 @@ import React from 'react';
 import { DocumentCard } from './DocumentCard';
 import { Document } from '../../types/documents';
 
+
 interface DocumentListProps {
   documents: Document[];
   loading: boolean;
@@ -9,6 +10,7 @@ interface DocumentListProps {
   onDelete?: (documentId: string) => void;
   onDownload: (document: Document) => void;
   onPreview?: (document: Document) => void;
+  onEdit?: (document: Document) => void;
   showActions?: boolean;
 }
 
@@ -19,6 +21,7 @@ export const DocumentList: React.FC<DocumentListProps> = ({
   onDelete,
   onDownload,
   onPreview,
+  onEdit,
   showActions = true
 }) => {
   if (loading) {
@@ -69,6 +72,7 @@ export const DocumentList: React.FC<DocumentListProps> = ({
             onDownload={onDownload}
             onDelete={onDelete}
             onPreview={onPreview}
+            onEdit={onEdit}
             showActions={showActions}
           />
         ))}
